@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>IES/ISS 2024 — General Studies</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#1a1f2e;--ink2:#1a3a5c;
+  --gold:#1565c0;--gold-dim:rgba(21,101,192,0.11);
+  --cream:#f4f7fb;--cream2:#e8f0fe;
+  --muted:#5a6a7a;
+  --green:#2d6a4f;--green-bg:#d8f3dc;
+  --red:#9b2335;--red-bg:#fde8ea;
+  --blue:#1a3a5c;--blue-bg:#dbeafe;
+  --border:rgba(21,101,192,0.15);--radius:14px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px}
+#app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;background:var(--cream);overflow:hidden}
+
+/* HEADER */
+.header{background:var(--blue);color:var(--cream);padding:14px 18px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.header-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700}
+.header-sub{font-size:11px;color:#90caf9;letter-spacing:1px;text-transform:uppercase;margin-top:1px}
+.header-badge{background:var(--gold);color:#fff;font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px}
+
+/* NAV */
+.nav{display:flex;background:#0d2440;flex-shrink:0}
+.nav-btn{flex:1;padding:10px 4px 9px;font-size:11px;color:rgba(144,202,249,0.5);border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color 0.2s}
+.nav-btn.active{color:#90caf9;border-bottom:2px solid #90caf9}
+
+/* SCROLL / SCREEN */
+.scroll{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.screen{display:none}.screen.active{display:block}
+
+/* HERO */
+.hero{background:var(--blue);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.hero-label{font-size:10px;color:#90caf9;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.hero-title{font-family:'Playfair Display',serif;font-size:22px;color:#fff;font-weight:700;line-height:1.25}
+.hero-meta{font-size:12px;color:rgba(144,202,249,0.65);margin-top:8px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.stat{background:#fff;border-radius:10px;padding:12px 10px;text-align:center;border:1px solid var(--border)}
+.stat-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--blue)}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+
+/* Q LIST */
+.section-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:10px}
+.q-row{background:#fff;border-radius:10px;border:1px solid var(--border);padding:13px 14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:border-color 0.2s}
+.q-row:hover{border-color:var(--gold)}
+.q-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);background:var(--gold-dim);padding:3px 7px;border-radius:6px;flex-shrink:0;margin-top:1px}
+.q-text{font-size:13px;color:var(--ink);line-height:1.5;flex:1}
+.q-marks{font-size:11px;color:var(--muted);margin-top:3px}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;background:var(--border)}
+.dot-good{background:var(--green)}.dot-ok{background:#f59e0b}.dot-poor{background:var(--red)}
+
+/* PRACTICE */
+.prac-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.prac-progress{font-size:12px;color:var(--muted)}
+.prog-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:16px}
+.prog-bar-fill{height:4px;background:var(--gold);border-radius:2px;transition:width 0.4s}
+.section-chip{display:inline-block;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:500;letter-spacing:0.5px;margin-bottom:10px;background:var(--gold-dim);color:var(--gold)}
+.q-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:18px;margin-bottom:14px}
+.q-main{font-family:'Playfair Display',serif;font-size:16px;line-height:1.65;color:var(--ink);font-weight:500}
+.q-part{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:14px;color:var(--ink2);line-height:1.6}
+.q-part-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);margin-bottom:4px}
+.marks-tag{display:inline-flex;align-items:center;gap:4px;background:var(--gold-dim);color:#0d47a1;font-size:11px;padding:3px 9px;border-radius:20px;margin-bottom:10px;font-weight:500}
+
+/* ANSWER AREA */
+.answer-area{background:#fff;border-radius:var(--radius);border:1.5px solid var(--border);padding:14px;margin-bottom:14px;transition:border-color 0.2s}
+.answer-area:focus-within{border-color:var(--gold)}
+.answer-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.answer-textarea{width:100%;min-height:160px;border:none;outline:none;resize:vertical;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);line-height:1.7;background:transparent}
+.answer-textarea::placeholder{color:var(--muted);font-style:italic}
+.word-limit{font-size:10px;color:var(--muted);text-align:right;margin-top:4px}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:8px;margin-bottom:12px}
+.btn{padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.18s;font-family:'DM Sans',sans-serif}
+.btn-primary{background:var(--blue);color:#fff;flex:2}
+.btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--border);flex:1}
+.btn-gold{background:var(--gold);color:#fff;font-weight:500;width:100%;display:block;padding:12px;border-radius:10px;font-size:13px;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
+
+/* MODEL ANSWER BOX */
+.model-answer-box{display:none;margin-bottom:8px}
+.model-section{background:#fff;border-radius:10px;border:1px solid var(--border);padding:14px;margin-bottom:8px}
+.model-section-title{font-size:11px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:10px}
+.concept-pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{background:var(--gold-dim);color:var(--gold);font-size:11px;padding:4px 10px;border-radius:20px;font-family:'DM Mono',monospace}
+.model-text{font-size:13px;line-height:1.75;color:var(--ink)}
+.model-text p{margin-bottom:10px}
+.model-text strong{color:var(--blue)}
+.tip-box{background:#f0f7ff;border-left:3px solid var(--gold);padding:10px 12px;border-radius:0 8px 8px 0;font-size:12px;color:#1a2a3a;line-height:1.65}
+
+/* EVAL BUTTONS */
+.eval-row{display:flex;gap:6px;margin-bottom:8px}
+.eval-btn{flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;transition:all 0.18s;display:flex;align-items:center;justify-content:center;gap:4px}
+.eval-btn[data-rating="good"]{color:var(--green)}.eval-btn[data-rating="good"].sel{background:var(--green-bg);border-color:var(--green)}
+.eval-btn[data-rating="ok"]{color:#92400e}.eval-btn[data-rating="ok"].sel{background:#fff3cd;border-color:#f59e0b}
+.eval-btn[data-rating="poor"]{color:var(--red)}.eval-btn[data-rating="poor"].sel{background:var(--red-bg);border-color:var(--red)}
+
+/* MOCK SCREEN */
+.mock-hero{background:var(--blue);border-radius:var(--radius);padding:18px;margin-bottom:14px;color:#fff}
+.mock-hero-title{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:6px}
+.mock-hero-sub{font-size:12px;color:#90caf9}
+.timer-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px}
+.timer-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+.timer-display{font-family:'DM Mono',monospace;font-size:36px;color:var(--blue);letter-spacing:2px;margin-bottom:10px}
+.timer-btns{display:flex;gap:8px}
+.mode-toggle{display:flex;gap:6px;margin-bottom:12px}
+.mode-btn{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:#fff;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;color:var(--muted);transition:all 0.18s}
+.mode-btn.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+.mock-q-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.mock-q-btn{border-radius:8px;border:1.5px solid var(--border);background:#fff;padding:10px 4px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Mono',monospace;transition:all 0.18s}
+.mock-q-btn:hover{border-color:var(--gold)}
+
+/* ANALYTICS */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.a-card{background:#fff;border-radius:10px;padding:14px 10px;text-align:center;border:1px solid var(--border)}
+.a-val{font-family:'DM Mono',monospace;font-size:26px;color:var(--blue)}
+.a-lbl{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.5px}
+.history-row{background:#fff;border-radius:10px;border:1px solid var(--border);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:10px}
+.history-q{font-size:13px;color:var(--ink);flex:1;line-height:1.4}
+.history-status{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;flex-shrink:0}
+.hs-good{background:var(--green-bg);color:var(--green)}
+.hs-ok{background:#fff3cd;color:#92400e}
+.hs-poor{background:var(--red-bg);color:var(--red)}
+.danger-zone{background:#fff;border-radius:var(--radius);border:1px solid var(--red-bg);padding:14px;margin-top:8px}
+.danger-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--red);margin-bottom:10px}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <div class="header-title">IES / ISS 2024</div>
+      <div class="header-sub">General Studies</div>
+    </div>
+    <div class="header-badge">100 Marks</div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav">
+    <button class="nav-btn active" data-screen="home">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </button>
+    <button class="nav-btn" data-screen="practice">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Practice
+    </button>
+    <button class="nav-btn" data-screen="mock">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Mock
+    </button>
+    <button class="nav-btn" data-screen="analytics">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Analytics
+    </button>
+  </div>
+
+  <!-- ═══ HOME ═══ -->
+  <div id="screen-home" class="screen active scroll">
+    <div class="hero">
+      <div class="hero-label">UPSC · SGSE-A-GST</div>
+      <div class="hero-title">General Studies<br/>Paper 2024</div>
+      <div class="hero-meta">4 Questions · 20 Sub-parts · Max 200 words each</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-val" id="stat-done">0</div><div class="stat-lbl">Attempted</div></div>
+      <div class="stat"><div class="stat-val">4</div><div class="stat-lbl">Questions</div></div>
+      <div class="stat"><div class="stat-val" id="stat-score">—</div><div class="stat-lbl">Readiness</div></div>
+    </div>
+    <div class="section-label">All Questions</div>
+    <div id="home-qs"></div>
+  </div>
+
+  <!-- ═══ PRACTICE ═══ -->
+  <div id="screen-practice" class="screen scroll">
+    <div class="prac-top">
+      <button class="btn btn-secondary" id="btn-back" style="padding:7px 12px;font-size:12px">← Back</button>
+      <span class="prac-progress" id="prac-progress"></span>
+    </div>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-fill" style="width:25%"></div></div>
+    <div id="q-display"></div>
+    <div class="answer-area">
+      <div class="answer-label">Your Answer</div>
+      <textarea class="answer-textarea" id="user-answer" placeholder="Write your answer here — aim for 5 sub-parts, ~200 words each…"></textarea>
+      <div class="word-limit" id="word-limit-hint"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-show-answer">Show Model Answer</button>
+      <button class="btn btn-secondary" id="btn-prev">← Prev</button>
+      <button class="btn btn-secondary" id="btn-next">Next →</button>
+    </div>
+    <div id="model-answer-box" class="model-answer-box">
+      <div id="model-answer-content"></div>
+      <div class="section-label" style="margin-top:4px">Self-Evaluation</div>
+      <div class="eval-row">
+        <button class="eval-btn" data-rating="good">✓ Good</button>
+        <button class="eval-btn" data-rating="ok">~ Partial</button>
+        <button class="eval-btn" data-rating="poor">✗ Revise</button>
+      </div>
+      <div class="btn-row" style="margin-top:4px">
+        <button class="btn btn-primary" id="btn-next2">Next Question →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MOCK ═══ -->
+  <div id="screen-mock" class="screen scroll">
+    <div class="mock-hero">
+      <div class="mock-hero-title">Mock Exam</div>
+      <div class="mock-hero-sub">3 hours · All 4 questions compulsory</div>
+    </div>
+    <div class="timer-card">
+      <div class="timer-label">Exam Timer</div>
+      <div class="timer-display" id="timer-display">3:00:00</div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="mode-timed">Timed Mode</button>
+        <button class="mode-btn" id="mode-free">Free Practice</button>
+      </div>
+      <div class="timer-btns" id="timer-bar">
+        <button class="btn btn-primary" id="timer-start-btn" style="flex:2">Start</button>
+        <button class="btn btn-secondary" id="timer-reset-btn" style="flex:1">Reset</button>
+      </div>
+    </div>
+    <div class="section-label">Jump to Question</div>
+    <div class="mock-q-grid" id="mock-q-grid"></div>
+    <button class="btn-gold" id="btn-start-mock">Start Full Mock →</button>
+  </div>
+
+  <!-- ═══ ANALYTICS ═══ -->
+  <div id="screen-analytics" class="screen scroll">
+    <div class="hero" style="margin-bottom:16px">
+      <div class="hero-label">Your Progress</div>
+      <div class="hero-title" style="font-size:20px">Performance<br/>Overview</div>
+    </div>
+    <div class="analytics-grid">
+      <div class="a-card"><div class="a-val" id="a-attempted">0</div><div class="a-lbl">Attempted</div></div>
+      <div class="a-card"><div class="a-val" id="a-good">0</div><div class="a-lbl">Good</div></div>
+      <div class="a-card"><div class="a-val" id="a-poor">0</div><div class="a-lbl">Revise</div></div>
+    </div>
+    <div class="section-label">Attempt History</div>
+    <div id="history-list"></div>
+    <div class="danger-zone">
+      <div class="danger-title">⚠ Reset Progress</div>
+      <button class="btn btn-secondary" id="btn-reset" style="width:100%;font-size:12px">Clear All Data</button>
+    </div>
+  </div>
+
+</div>
+<script>
+const QUESTIONS=[
+  {id:1,num:'Q1',title:'Ancient & Modern Indian History (5×5=25)',marks:25,marksNote:'5×5=25',wordLimit:200,
+   parts:[
+    {label:'a',text:'Why did the Harappan civilization degenerate and finally collapse?',marks:5},
+    {label:'b',text:'Why, of all the <em>janapadas</em>, did Magadha alone come into prominence and become the seat of a powerful monarchy?',marks:5},
+    {label:'c',text:"What was Akbar's attitude towards women?",marks:5},
+    {label:'d',text:'Do you agree that the formation of the Indian National Congress was in the air even if A.O. Hume had not taken any initiative?',marks:5},
+    {label:'e',text:'What is the significance of the Rowlatt Satyagraha of 1919?',marks:5}
+   ],
+   concepts:['Indus Valley Civilisation','Harappan Collapse','Magadha Mahajanapada','Akbar Mughal Policy','INC Formation 1885','Rowlatt Act 1919','Jallianwala Bagh','Satyagraha'],
+   modelAnswer:'<p><strong>(a) Harappan Collapse:</strong> Multi-causal process spanning centuries (c. 1900–1300 BCE). Key factors: (i) <em>Climate change & drought</em> — palaeoclimatic evidence shows prolonged aridification disrupting monsoon patterns, drying the Ghaggar-Hakra river system (identified with the Vedic Saraswati); (ii) <em>River shifts</em> — tectonic activity caused Indus course changes, causing floods and desertification; (iii) <em>Ecological degradation</em> — deforestation for fuel/construction led to soil erosion and declining yields; (iv) <em>Trade network breakdown</em> — collapse of Mesopotamian trade links disrupted economic prosperity; (v) <em>Epidemic disease</em> — skeletal evidence at Mohenjo-daro suggests possible outbreaks; (vi) <em>Socio-political fragmentation</em> — absence of centralised state may have accelerated disintegration. Population gradually dispersed eastward toward the Gangetic plains, contributing to Vedic culture.</p><p><strong>(b) Magadha\'s Rise:</strong> Among the sixteen Mahajanapadas, Magadha (modern Bihar) dominated by 6th–4th centuries BCE due to: (i) Fertile alluvial plains between Ganges and Son rivers; Vindhya and Chota Nagpur plateaus providing natural defence; (ii) Iron ore proximity (Chota Nagpur) enabling superior weapons and tools; (iii) Control over Ganga trade routes generating enormous revenue; (iv) Dynamic rulers — Bimbisara (matrimonial alliances), Ajatashatru (military expansion), and later the Nanda and Maurya dynasties; (v) War elephants from regional forests — decisive military asset; (vi) Strategic capitals: Rajgir (fortified by hills) and Pataliputra (Ganga-Son-Gandak confluence); (vii) Patronage of Buddhism and Jainism gave moral legitimacy beyond Brahmanical hierarchies.</p><p><strong>(c) Akbar\'s Attitude Towards Women:</strong> Relatively progressive by medieval standards: (i) Opposed child marriage and made sati conditional on widow\'s free consent — opposing forced immolation; (ii) Encouraged widow remarriage, removing social stigmas; (iii) Organised Meena Bazar — special women\'s markets where noble ladies could trade; (iv) Zenankhana housed 5,000+ women supervised by senior matrons; women received education in music, arts, and literature; (v) Respected wives\' religious practices (Rajput, Persian, Afghan); (vi) Limits — retained polygamous practice; women confined largely to domestic spheres with limited formal power. Akbar\'s approach was cautious reform within Mughal patriarchy, not revolution.</p><p><strong>(d) INC Formation — Was It Inevitable?</strong> Yes — conditions made it near-inevitable regardless of Hume\'s role: (i) English-educated middle class versed in liberal thought (Macaulay\'s education policy, 1835) was ready for organised political action; (ii) Pre-existing bodies — British Indian Association (1851), Bombay Association (1852), Poona Sarvajanik Sabha (1870), Indian Association (Surendranath Banerjea, 1876) were already demanding all-India coordination; (iii) Dadabhai Naoroji\'s Drain of Wealth theory (1876) provided intellectual basis for mobilisation; (iv) Ilbert Bill controversy (1883) sharpened Indian consciousness of racial discrimination. Hume\'s specific contribution: his official connections ensured colonial tolerance — without him, an Indian-led body might have faced immediate suppression. Hume gave it a moderate, constitutionalist character; a purely Indian organisation may have been more radical.</p><p><strong>(e) Rowlatt Satyagraha Significance:</strong> March–April 1919 marks a watershed: (i) First nationwide agitation by Gandhi transcending regional and class boundaries — uniting peasants, workers, and middle class; (ii) Validated non-violent civil disobedience as a potent political weapon — template for Non-Cooperation (1920), Civil Disobedience (1930), Quit India (1942); (iii) Rowlatt Act made wartime detention-without-trial permanent, outraging all political opinion; (iv) Jallianwala Bagh massacre (April 13, 1919) — Dyer killed 1,000+ civilians, permanently shattering Indian faith in British justice and radicalising moderates; (v) Demonstrated Hindu-Muslim unity, foreshadowing the Khilafat–Non-Cooperation alliance; (vi) Established Gandhi\'s mass political career and all-India leadership.</p>',
+   tips:'For (b) — examiners expect you to go beyond just listing factors — show how they reinforced each other (iron + rivers + dynamic rulers = cumulative advantage). For (d) — avoid a binary yes/no; show the interplay between structural conditions and individual agency. Always cite Surendranath Banerjea\'s Indian Association as a precursor — it signals depth. For (e) — link Rowlatt Satyagraha directly to Jallianwala Bagh — the examiner expects both to appear together. Note: the Satyagraha was suspended by Gandhi himself after violence at Chauri Chaura-like incidents — mentioning this shows nuance.'},
+
+  {id:2,num:'Q2',title:'Geography, Environment & Agriculture (5×5=25)',marks:25,marksNote:'5×5=25',wordLimit:200,
+   parts:[
+    {label:'a',text:'What are the severe weather events and climate extremes associated with El-Niño?',marks:5},
+    {label:'b',text:"Which factors justify India's significant potential for solar energy?",marks:5},
+    {label:'c',text:'Why is the distribution of industries in India highly uneven? Explain with relevant examples.',marks:5},
+    {label:'d',text:'"Agriculture is an environment-dependent activity." Discuss.',marks:5},
+    {label:'e',text:"Examine the beneficial outcomes stemming from India's National River Linking Project.",marks:5}
+   ],
+   concepts:['El-Niño ENSO','Walker Circulation','Solar Energy India','National Solar Mission','Industrial Location Theory','Agglomeration Economies','Monsoon Agriculture','NRLP River Linking'],
+   modelAnswer:'<p><strong>(a) El-Niño & Climate Extremes:</strong> El-Niño = anomalous warming of central/eastern equatorial Pacific (every 2–7 years). Global teleconnections: (i) <em>Droughts</em> in India, Australia, Southeast Asia, Southern Africa — Indian droughts of 1987 and 2002 linked to strong El-Niños; (ii) <em>Floods</em> in western South America (Peru, Ecuador), southern USA, East Africa; (iii) <em>Weakened Indian monsoon</em> — El-Niño suppresses Walker Circulation, reducing moisture-laden winds; (iv) <em>Cyclone shifts</em> — less Atlantic hurricanes (increased wind shear), more Pacific typhoons; (v) <em>Marine ecosystem collapse</em> — warm waters suppress cold-water upwelling, devastating Peru anchovy fisheries; (vi) <em>Wildfires</em> — 2019–20 Australian bushfires linked to El-Niño; (vii) <em>Global food price spikes</em>. Monitored via Oceanic Niño Index (ONI) and Southern Oscillation Index (SOI). Climate change is projected to intensify ENSO variability.</p><p><strong>(b) India\'s Solar Energy Potential:</strong> (i) High solar insolation: 4–7 kWh/m²/day, 250–300 sunny days/year nationally; (ii) Thar Desert, Rajasthan, Gujarat, peninsular India are exceptionally solar-rich; (iii) Tropical location (8°N–37°N) ensures near-perpendicular irradiation; (iv) Peak demand coincidence — solar output peaks during afternoons matching peak electricity demand; (v) Government policy: National Solar Mission targets 280 GW by 2030; India leads International Solar Alliance (ISA); (vi) Falling costs: solar PV tariff below ₹2/kWh in recent auctions — cheapest new electricity source; (vii) Rural electrification: decentralised solar microgrids serve remote areas. Installed capacity exceeded 80 GW by 2024.</p><p><strong>(c) Uneven Industrial Distribution:</strong> (i) <em>Colonial legacy</em> — British policy concentrated industries in port cities: cotton textiles in Mumbai, jute in Kolkata, coal-steel in Jharkhand–West Bengal — these concentrations persist; (ii) <em>Resource proximity</em> — steel plants cluster in mineral-rich Chota Nagpur (Bokaro, Jamshedpur, Rourkela) due to iron ore and coking coal; (iii) <em>Infrastructure</em> — better ports, roads, power in Maharashtra, Gujarat, Tamil Nadu attract investment, creating self-reinforcing cycles; (iv) <em>Agglomeration economies</em> — Pune–Mumbai–Nashik automotive corridor and Bengaluru IT cluster demonstrate clustering benefits (shared suppliers, skilled labour pools); (v) <em>State policy disparities</em> — Gujarat and Tamil Nadu\'s investor-friendly environments vs. historically lagging BIMARU states; (vi) <em>Market access</em> — consumer goods industries prefer population-dense markets (NCR, Mumbai, Chennai).</p><p><strong>(d) Agriculture as Environment-Dependent:</strong> (i) <em>Climate dependence</em>: Indian Summer Monsoon irrigates 50%+ net sown area; 10% rainfall deficit can cause 2–5% agricultural GDP contraction; (ii) <em>Soil quality</em>: alluvial Indo-Gangetic plains support intensive cultivation; laterite Deccan soils limit yields; (iii) <em>Water availability</em>: groundwater depletion in Punjab–Haryana (Green Revolution over-irrigation) threatens sustainability; (iv) <em>Biodiversity & pollinators</em>: crop pollination dependent on bees threatened by pesticide overuse; (v) <em>Natural disasters</em>: floods (Assam, Bihar), droughts (Vidarbha, Bundelkhand), cyclones (coastal Odisha) cause annual losses of thousands of crores; (vi) <em>Pest ecology</em>: warming expands pest ranges (2020 locust invasion, Rajasthan–Punjab); (vii) <em>Topography</em>: terrain determines mechanisation feasibility. Climate change intensifies this dependency through erratic monsoons and extreme heat events.</p><p><strong>(e) National River Linking Project Benefits:</strong> NRLP proposes transferring surplus Himalayan river water to water-deficit Peninsular India: (i) Irrigation expansion — 34 million additional hectares; reduces rainfall dependence in drought-prone MP, Rajasthan, Gujarat, Andhra; (ii) Flood control — diverting excess Himalayan flows mitigates floods in Bihar, Assam, UP; (iii) Drought mitigation — regular inter-basin transfers reduce Peninsular India drought frequency; (iv) Hydropower — ~34,000 MW generation contributing to renewable targets; (v) Inland navigation — enhanced river levels support waterway freight; (vi) Drinking water security — addresses chronic scarcity in Rajasthan, Bundelkhand, Deccan; (vii) Agricultural GDP growth — projected 12–15% increase, reducing agrarian distress. Caveats: ecological disruption, community displacement, Bangladesh objections to Brahmaputra diversion, and estimated ₹5.5 lakh crore cost.</p>',
+   tips:'For (a) — Always mention both drought AND flood consequences — examiners expect you to demonstrate that El-Niño has geographically opposite effects simultaneously. Cite the ONI/SOI monitoring indices. For (b) — The ISA (International Solar Alliance) headquartered in India is a high-value addition. For (c) — Use named industrial clusters as examples, not just general statements. For (e) — The NRLP question is balanced — always include both benefits AND limitations (ecological, financial, international). Bangladesh\'s objection to Brahmaputra diversion is a key geopolitical point examiners look for.'},
+
+  {id:3,num:'Q3',title:'Economy, Demographics & Social Policy (5×5=25)',marks:25,marksNote:'5×5=25',wordLimit:200,
+   parts:[
+    {label:'a',text:'Do you think that realization of the benefits of the potential demographic dividend that India is expected to experience roughly after 2025, is automatic? Give reasons in support of your answer.',marks:5},
+    {label:'b',text:'The major objective of our national planning is to reduce regional inequality and to ensure balanced growth. Why does India fail to achieve this goal?',marks:5},
+    {label:'c',text:'What are the factors influencing the declining trend in female workforce participation in India?',marks:5},
+    {label:'d',text:'What are the major objectives of Ayushman Bharat – National Health Protection Mission which was launched in September 2018 by the Government of India?',marks:5},
+    {label:'e',text:'What are the emerging issues raised by some states in the context of fiscal federalism? Express your view in this context.',marks:5}
+   ],
+   concepts:['Demographic Dividend','FLFPR Female Workforce','Regional Inequality India','BIMARU States','Ayushman Bharat PM-JAY','Fiscal Federalism','Finance Commission','GST Compensation','CSS Schemes'],
+   modelAnswer:'<p><strong>(a) Demographic Dividend — Not Automatic:</strong> A large working-age population creates potential, not guaranteed outcomes. Arguments: (i) <em>Human capital quality</em> — East Asian economies succeeded through massive education and health investment; India\'s ASER learning deficits and healthcare gaps must be urgently addressed; (ii) <em>Employment generation</em> — working-age population grows ~10 million/year, requiring 8–10 million quality jobs/year; current formal job creation falls far short, pushing workers into low-productivity informal employment; (iii) <em>Gender exclusion</em> — India\'s female LFPR (~25%) among world\'s lowest; realising the dividend requires removing barriers to women\'s participation; (iv) <em>Geographic disparities</em> — high-fertility states (UP, Bihar, MP) have youngest populations but worst human development indicators — a dangerous combination; (v) <em>Skill mismatch</em> — industries cannot find skilled workers despite graduate unemployment. Without urgent action on education, vocational training, MSME development, and women\'s empowerment, India risks a demographic disaster rather than dividend.</p><p><strong>(b) Failure of Balanced Regional Growth:</strong> (i) <em>Colonial legacy</em> — British infrastructure concentrated in port cities (Mumbai, Kolkata, Chennai), creating initial advantages compounded over time by agglomeration economies; (ii) <em>Governance quality differentials</em> — Gujarat, Tamil Nadu, Maharashtra have strong institutions; UP and Bihar face governance deficits deterring investment; (iii) <em>Infrastructure deficit</em> — investment flows to better-connected states, reinforcing existing advantages; (iv) <em>Geographic constraints</em> — Jharkhand, despite mineral wealth, faces forest rights disputes and infrastructure gaps; (v) <em>Inadequate central transfers</em> — Finance Commission devolutions insufficient to compensate for developed-state advantages; (vi) <em>Failure of area development schemes</em> — Drought Prone Area, Desert Development programmes achieved limited impact due to poor implementation and leakages; (vii) <em>Human capital trap</em> — low-literacy states cannot attract knowledge-intensive industries even with financial incentives.</p><p><strong>(c) Declining Female Workforce Participation:</strong> India\'s FLFPR fell from ~35% (1994) to ~23% (2017–18) — paradoxical decline amid economic growth: (i) <em>Income effect</em> — rising household incomes lead middle-income families to withdraw women from labour markets (social prestige of non-working wives); (ii) <em>Education enrollment</em> — rising female school/college enrollment temporarily withdraws young women from workforce; (iii) <em>Structural transformation gap</em> — decline in agricultural employment not offset by sufficient manufacturing/services growth suitable for women; (iv) <em>Safety & mobility constraints</em> — fear of harassment and poor public transport restrict women\'s workplace access, especially in North India; (v) <em>Care economy burden</em> — absence of formal childcare and elderly care, combined with societal norms, creates a double burden; (vi) <em>Gender pay gap</em> — women earn 20–25% less than men for equivalent work, reducing incentive for formal employment. Government initiatives: Beti Bachao Beti Padhao, maternity benefit extensions, MGNREGS (55% women workers).</p><p><strong>(d) Ayushman Bharat PM-JAY Objectives:</strong> Launched September 23, 2018 from Ranchi — world\'s largest government-funded health insurance scheme: (i) ₹5 lakh per family per year for secondary/tertiary hospitalisation to ~50 crore beneficiaries (bottom 40%, SECC 2011 data); (ii) Eliminate catastrophic out-of-pocket health expenditure — India\'s ~60% OOP spend pushes 55–60 million into poverty annually; covers 1,929 treatment procedures; (iii) Cashless & paperless treatment at any empanelled public/private hospital nationwide via Aadhaar-based e-cards; (iv) Portability across all hospitals — addresses needs of migrant workers; (v) Health & Wellness Centres (second pillar) — converting 1.5 lakh Sub-Centres for comprehensive primary healthcare; (vi) Equity focus — specifically targets SC/ST, construction workers, agricultural labourers. As of 2024: 6+ crore hospitalisations authorised worth ₹80,000+ crore.</p><p><strong>(e) Fiscal Federalism — Emerging Issues:</strong> (i) <em>Devolution formula dispute</em> — Southern states (Tamil Nadu, Kerala, Karnataka) argue the 15th FC formula penalises them for better demographic performance and economic growth; (ii) <em>Centrally Sponsored Schemes (CSS)</em> — 130+ CSS impose conditions on state spending, reducing fiscal autonomy; states co-finance schemes not aligned with their priorities; (iii) <em>GST compensation dispute</em> — Centre used borrowed funds post-COVID; compensation mechanism ended June 2022, creating fiscal uncertainty; (iv) <em>Shrinking untied transfers</em> — proportion of unconditional grants has declined relative to tied CSS funds; (v) <em>Revenue deficit grants</em> — quantum disputed for high-expenditure, low-capacity states. View: India\'s fiscal federalism needs re-calibration — greater untied devolution, rationalised CSS, transparent formula-based transfers, and a permanent institutional Union-State fiscal dialogue mechanism beyond the Finance Commission alone.</p>',
+   tips:'For (a) — The keyword is "automatic" — make clear your answer is NO and structure arguments accordingly. Cite ASER reports and mention the gender dimension (FLFPR) for extra marks. For (c) — The "income effect" or "withdrawal effect" is a technical economic concept that signals higher-order understanding to the examiner — use it explicitly. For (d) — Always distinguish PM-JAY\'s two pillars: (1) health insurance and (2) Health & Wellness Centres. Many students miss the second pillar. For (e) — Southern states\' grievance about the devolution formula penalising good demographic performance is a contemporary, high-value point. Always express a clear view at the end (the question specifically asks for it).'},
+
+  {id:4,num:'Q4',title:'Indian Polity, Constitution & International Relations (5×5=25)',marks:25,marksNote:'5×5=25',wordLimit:200,
+   parts:[
+    {label:'a',text:'"Prime Minister is the nucleus of the Indian Political System." Discuss.',marks:5},
+    {label:'b',text:'Critically examine the idea of "One Nation, One Election" in India.',marks:5},
+    {label:'c',text:'Explain the discretionary powers of the President of India.',marks:5},
+    {label:'d',text:'Describe the constitutional provisions regarding the Finance Commission of India and explain its functions.',marks:5},
+    {label:'e',text:"Give justification for India's claim for permanent membership of the United Nations Security Council.",marks:5}
+   ],
+   concepts:['Prime Minister Powers India','Article 74 75','One Nation One Election','President Discretionary Powers','Finance Commission Article 280','15th Finance Commission','UNSC Permanent Membership','G4 Nations','India UN Peacekeeping'],
+   modelAnswer:'<p><strong>(a) PM as Nucleus of Indian Political System:</strong> Despite the President being the formal constitutional head, the PM is the real executive under India\'s parliamentary system: (i) <em>Article 74</em> — President "shall act in accordance with" Cabinet advice (44th Amendment, 1978), making the President a constitutional figurehead; (ii) <em>Article 75</em> — PM recommends ministers; government stands or falls with the PM; (iii) <em>Parliamentary leadership</em> — all money bills, legislation, and policy originate under PM\'s direction; loss of Lok Sabha confidence ends the government; (iv) <em>Cabinet Committee on Security (CCS)</em> — PM chairs this apex body for defence, nuclear policy, and foreign affairs; (v) <em>Appointments</em> — PM advises on Governors, CAG, Election Commissioners, and constitutional functionaries; (vi) <em>Coalition constraints</em> — in 1989–2014 coalition governments, PMs exercised constrained authority, demonstrating political limits of the office. PM\'s dominance reinforced by Nehru\'s convention-setting, Indira Gandhi\'s centralisation, and modern direct-election mandates giving independent mass legitimacy.</p><p><strong>(b) One Nation, One Election — Critical Examination:</strong> ONOE proposes synchronising Lok Sabha, State Assembly, and local body elections; recommended by the Ram Nath Kovind Committee (2024). <em>Arguments for:</em> (i) Cost reduction — 2019 Lok Sabha election cost ~₹60,000 crore; simultaneous elections would substantially reduce this; (ii) Administrative efficiency — reduces security deployments, bureaucratic diversion, and Model Code of Conduct-induced policy freezes; (iii) Reduces "permanent campaign" culture distracting from governance. <em>Arguments against:</em> (i) Constitutional complexity — requires amendments to Articles 83, 85, 172, 174, 356, necessitating ratification by at least half the state legislatures; (ii) Federal concerns — may undermine states\' constitutional right to their own electoral timelines; (iii) Voter psychology — 1967–71 research shows simultaneous elections may disadvantage regional parties and weaken democratic pluralism. A phased approach — synchronising in 2–3 tranches — is a more constitutionally feasible middle path.</p><p><strong>(c) President\'s Discretionary Powers:</strong> Though bound by Article 74, limited discretionary powers exist: (i) <em>PM appointment in hung parliament (Art. 75)</em> — when no party commands clear Lok Sabha majority, President exercises real discretion in inviting the leader most likely to form a stable government (exercised in 1979, 1989, 1996, 1999); (ii) <em>Dismissal of government (Art. 75(2))</em> — if PM refuses to resign after losing confidence vote, President can dismiss the ministry; (iii) <em>Dissolution of Lok Sabha (Art. 85)</em> — President may decline dissolution if an alternative government is demonstrably possible (Sarkaria Commission position); (iv) <em>Withholding assent (Art. 111)</em> — President may return a non-money bill for reconsideration; genuine discretion over state bills under Article 200; (v) <em>Pardon powers (Art. 72)</em> — granting clemency/commuting sentences is technically discretionary, though typically exercised on ministerial advice. Controversially exercised in Bihar Assembly dissolution (2005) and Goa government formation (2017).</p><p><strong>(d) Finance Commission — Constitutional Provisions & Functions:</strong> Established under <em>Article 280</em>. Constituted by President within 2 years of Constitution\'s commencement and every 5th year thereafter. Chairman and 4 members. Qualifications: Chairman — public affairs experience; members — expertise in High Court law, government finance, financial/administrative matters, or economics. Functions: (i) Tax devolution — recommends vertical share (currently 41%) and horizontal distribution among states (based on population, income distance, forest cover, demographic performance, tax effort); (ii) Grants-in-Aid (Arts. 280(3)(b) & 275) — recommends principles and amounts for state assistance; (iii) Fiscal consolidation — recommendations on fiscal deficit management, state debt, and macro-fiscal sustainability; (iv) Local body grants — post-73rd/74th Amendments; (v) Advisory functions — President may refer "any matter in the interest of sound finance." 15th FC (Chairman: N.K. Singh, 2021–26) introduced performance grants linked to governance indicators. Recommendations are advisory but historically accepted.</p><p><strong>(e) India\'s UNSC Permanent Membership — Justification:</strong> (i) <em>Population & democracy</em> — world\'s most populous nation (~1.44 billion, 18% of humanity) and largest democracy; (ii) <em>Economic weight</em> — 5th largest economy (nominal GDP), 3rd by PPP; projected 3rd largest by 2027–30; (iii) <em>UN peacekeeping</em> — 200,000+ Indian personnel in 49 of 71 UN missions — no P5 member matches this record; (iv) <em>Regional & global influence</em> — strategic location between Indian Ocean, Central Asia, and SE Asia; SAARC, SCO, BRICS, G20 (India\'s 2023 Presidency); unique Global South–North bridging role; (v) <em>Responsible nuclear state</em> — credible minimum deterrence with No-First-Use doctrine, adherent to export control norms; (vi) <em>Founding UN member</em> — original signatory of UN Charter (1945); (vii) <em>Global South representation</em> — Africa, Latin America, and South Asia have no permanent seats. India\'s G4 candidacy (with Brazil, Germany, Japan). Key obstacle: Chinese opposition and veto power disagreements.</p>',
+   tips:'For (a) — The examiner expects you to discuss both constitutional provisions AND political reality (coalition constraints). Citing specific constitutional articles (74, 75) signals exam-readiness. For (b) — The Kovind Committee (2024) recommended ONOE — mention this as a recent development. Structure your answer as "for/against" before giving a balanced conclusion. For (c) — The key is to distinguish constitutional provisions (Art. 74 binds the President) from real discretionary moments (hung parliaments). Always cite specific examples — 1996 (Deve Gowda), 1999 (Vajpayee). For (e) — The UN peacekeeping contribution argument is India\'s strongest — "no P5 member matches India\'s peacekeeping record" is a memorable line. Always mention the G4 grouping and Chinese opposition as the key geopolitical obstacle.'}
+];
+
+const STORAGE_KEY='ies_prep_2024_gs';
+let _lsAvailable=false;
+try{localStorage.setItem('__t__','1');localStorage.removeItem('__t__');_lsAvailable=true;}catch(e){}
+function loadState(){if(_lsAvailable){try{const r=localStorage.getItem(STORAGE_KEY);if(r)return JSON.parse(r);}catch(e){}}return{ratings:{},answers:{}};}
+function saveState(){if(_lsAvailable){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}}
+const state=loadState();if(!state.ratings)state.ratings={};if(!state.answers)state.answers={};
+let currentQIndex=0,timerSeconds=10800,timerRunning=false,timerInterval=null;
+function G(id){return document.getElementById(id);}
+function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));G('screen-'+name).classList.add('active');document.querySelector('.nav-btn[data-screen="'+name+'"]').classList.add('active');if(name==='home')renderHome();if(name==='practice')renderQuestion();if(name==='mock')renderMock();if(name==='analytics')renderAnalytics();}
+function renderHome(){G('home-qs').innerHTML=QUESTIONS.map(q=>{const idx=QUESTIONS.indexOf(q),r=state.ratings[q.id];const dc=r==='good'?'dot-good':r==='ok'?'dot-ok':r==='poor'?'dot-poor':'';return'<div class="q-row" data-idx="'+idx+'"><span class="q-num">'+q.num+'</span><div style="flex:1"><div class="q-text">'+q.title+'</div><div class="q-marks">'+q.marksNote+'</div></div><div class="status-dot '+dc+'"></div></div>';}).join('');const done=Object.keys(state.ratings).length;G('stat-done').textContent=done;const rs=Object.values(state.ratings);if(rs.length>0){const avg=rs.reduce((s,r)=>s+({good:3,ok:2,poor:1}[r]),0)/rs.length;G('stat-score').textContent=avg>=2.5?'Good':avg>=1.5?'Partial':'Weak';}else G('stat-score').textContent='—';document.querySelectorAll('.q-row').forEach(el=>el.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));}
+function renderQuestion(){const q=QUESTIONS[currentQIndex];G('prac-progress').textContent=q.num+' ('+(currentQIndex+1)+' of '+QUESTIONS.length+')';G('prog-fill').style.width=Math.round(((currentQIndex+1)/QUESTIONS.length)*100)+'%';G('user-answer').value=state.answers[q.id]||'';G('model-answer-box').style.display='none';G('word-limit-hint').textContent='~200 words per part — 5 parts total';const ph=q.parts.map(p=>'<div class="q-part"><div class="q-part-label">('+p.label+') — '+p.marks+' marks</div>'+p.text+'</div>').join('');G('q-display').innerHTML='<span class="section-chip">All Compulsory · 5 parts × 5 marks</span><div class="q-card"><div class="marks-tag">✦ '+q.marksNote+'</div>'+ph+'</div>';document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));if(state.ratings[q.id])document.querySelector('.eval-btn[data-rating="'+state.ratings[q.id]+'"]').classList.add('sel');}
+function showModelAnswer(){const q=QUESTIONS[currentQIndex];state.answers[q.id]=G('user-answer').value;saveState();const box=G('model-answer-box');box.style.display='block';G('model-answer-content').innerHTML='<div class="model-section"><div class="model-section-title" style="color:var(--blue)">Key Concepts</div><div class="concept-pills">'+q.concepts.map(c=>'<span class="pill">'+c+'</span>').join('')+'</div></div>'+'<div class="model-section"><div class="model-section-title" style="color:var(--green)">✓ Model Answers</div><div class="model-text">'+q.modelAnswer+'</div></div>'+'<div class="model-section"><div class="model-section-title" style="color:var(--red)">! Examiner Tips</div><div class="tip-box">'+q.tips+'</div></div>';document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));if(state.ratings[q.id])document.querySelector('.eval-btn[data-rating="'+state.ratings[q.id]+'"]').classList.add('sel');setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'start'}),100);}
+function goNext(){if(currentQIndex<QUESTIONS.length-1){currentQIndex++;renderQuestion();G('screen-practice').scrollTop=0;}}
+function goPrev(){if(currentQIndex>0){currentQIndex--;renderQuestion();G('screen-practice').scrollTop=0;}}
+function renderMock(){G('mock-q-grid').innerHTML=QUESTIONS.map((q,i)=>{const r=state.ratings[q.id];const bg=r==='good'?'var(--green-bg)':r==='ok'?'#fff3cd':r==='poor'?'var(--red-bg)':'#fff';const co=r==='good'?'var(--green)':r==='ok'?'#6b4c00':r==='poor'?'var(--red)':'var(--blue)';return'<button class="mock-q-btn" data-idx="'+i+'" style="background:'+bg+';color:'+co+'">'+q.num+'</button>';}).join('');document.querySelectorAll('.mock-q-btn').forEach(btn=>btn.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));updateTimerDisplay();}
+function updateTimerDisplay(){const h=Math.floor(timerSeconds/3600),m=Math.floor((timerSeconds%3600)/60),s=timerSeconds%60;G('timer-display').textContent=h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+function renderAnalytics(){const rs=state.ratings;G('a-attempted').textContent=Object.keys(rs).length;G('a-good').textContent=Object.values(rs).filter(r=>r==='good').length;G('a-poor').textContent=Object.values(rs).filter(r=>r==='poor').length;const aqs=QUESTIONS.filter(q=>rs[q.id]);G('history-list').innerHTML=aqs.length===0?'<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No questions attempted yet.</div>':aqs.map(q=>{const r=rs[q.id];const cls={good:'hs-good',ok:'hs-ok',poor:'hs-poor'}[r];const lbl={good:'Good ✓',ok:'Partial ~',poor:'Needs Work ✗'}[r];return'<div class="history-row" data-idx="'+QUESTIONS.indexOf(q)+'"><div class="history-q">'+q.num+': '+q.title+'</div><span class="history-status '+cls+'">'+lbl+'</span></div>';}).join('');document.querySelectorAll('.history-row').forEach(el=>el.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));}
+document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',function(){showScreen(this.dataset.screen);}));
+G('btn-back').addEventListener('click',()=>showScreen('home'));G('btn-prev').addEventListener('click',goPrev);G('btn-next').addEventListener('click',goNext);G('btn-next2').addEventListener('click',goNext);G('btn-show-answer').addEventListener('click',showModelAnswer);
+document.querySelectorAll('.eval-btn').forEach(btn=>btn.addEventListener('click',function(){const q=QUESTIONS[currentQIndex];state.ratings[q.id]=this.dataset.rating;saveState();document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));this.classList.add('sel');}));
+G('mode-timed').addEventListener('click',()=>{G('mode-timed').classList.add('active');G('mode-free').classList.remove('active');G('timer-bar').style.opacity='1';});
+G('mode-free').addEventListener('click',()=>{G('mode-free').classList.add('active');G('mode-timed').classList.remove('active');G('timer-bar').style.opacity='0.4';clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Start';G('timer-start-btn').classList.remove('running');});
+G('timer-start-btn').addEventListener('click',()=>{if(G('mode-free').classList.contains('active'))return;if(timerRunning){clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Resume';G('timer-start-btn').classList.remove('running');}else{timerRunning=true;G('timer-start-btn').textContent='Pause';G('timer-start-btn').classList.add('running');timerInterval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;updateTimerDisplay();}else{clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Done';G('timer-start-btn').classList.remove('running');}},1000);}});
+G('timer-reset-btn').addEventListener('click',()=>{clearInterval(timerInterval);timerRunning=false;timerSeconds=10800;updateTimerDisplay();G('timer-start-btn').textContent='Start';G('timer-start-btn').classList.remove('running');});
+G('btn-start-mock').addEventListener('click',()=>{currentQIndex=0;showScreen('practice');});
+G('btn-reset').addEventListener('click',()=>{if(confirm('Reset all progress?')){Object.keys(state.ratings).forEach(k=>delete state.ratings[k]);Object.keys(state.answers).forEach(k=>delete state.answers[k]);saveState();renderAnalytics();renderHome();}});
+renderHome();renderMock();
+</script>
+</body>
+</html>
