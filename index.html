@@ -281,6 +281,9 @@ body::before {
 .badge-ie     { background: var(--green-bg);   color: var(--green); }
 .badge-eng    { background: var(--purple-bg);  color: var(--purple); }
 .badge-gs     { background: var(--orange-bg);  color: var(--orange); }
+.badge-stat   { background: var(--blue-bg);    color: var(--blue); }
+.badge-iss    { background: rgba(91,155,213,0.18); color: var(--blue); }
+.icon-stat    { background: var(--blue-bg); }
 
 .card-progress {
   font-size: 10px;
@@ -518,7 +521,7 @@ body::before {
 <header class="site-header">
   <div class="header-eyebrow">IES / ISS Examination Prep</div>
   <h1 class="header-title">Question Paper<br/><em>Library</em></h1>
-  <p class="header-sub">Your complete prep companion for the UPSC Indian Economic Service examination. Practice 2025 papers with model answers, examiner tips, and performance tracking — all offline, all free.</p>
+  <p class="header-sub">Your complete prep companion for the UPSC <strong style="color:var(--gold2)">Indian Economic Service (IES)</strong> &amp; <strong style="color:var(--gold2)">Indian Statistical Service (ISS)</strong> examinations. Practice 2025 papers with model answers, examiner tips, and performance tracking — all offline, all free.</p>
   <div class="header-divider"></div>
 </header>
 
@@ -546,19 +549,22 @@ body::before {
   <!-- FILTER -->
   <div class="filter-bar">
     <button class="filter-btn active" data-filter="all">All Papers</button>
+    <button class="filter-btn" data-filter="ies">IES</button>
+    <button class="filter-btn" data-filter="iss">ISS</button>
     <button class="filter-btn" data-filter="ge">General Economics</button>
     <button class="filter-btn" data-filter="ie">Indian Economics</button>
     <button class="filter-btn" data-filter="eng">English</button>
     <button class="filter-btn" data-filter="gs">Gen. Studies</button>
+    <button class="filter-btn" data-filter="stat">Statistics</button>
   </div>
 
   <!-- ── 2025 ── -->
   <div class="year-group" data-year="2025">
-    <div class="year-heading">2025 — All papers ready ✓</div>
+    <div class="year-heading">2025 — IES Papers ready ✓</div>
 
-    <div class="subject-label" data-cat="ge">General Economics</div>
+    <div class="subject-label" data-cat="ge" data-exam="ies">General Economics (IES)</div>
 
-    <a class="paper-card" href="ies-2025-general-economics-paper1.html" data-cat="ge" data-questions="13" data-storage="ies_prep_2025">
+    <a class="paper-card" href="ies-2025-general-economics-paper1.html" data-cat="ge" data-exam="ies" data-questions="13" data-storage="ies_prep_2025">
       <div class="card-icon icon-ge">📘</div>
       <div class="card-body">
         <div class="card-title">General Economics — Paper I</div>
@@ -576,7 +582,7 @@ body::before {
       </div>
     </a>
 
-    <a class="paper-card" href="ies-2025-general-economics-paper2.html" data-cat="ge" data-questions="16" data-storage="ies_prep_2025_ge2">
+    <a class="paper-card" href="ies-2025-general-economics-paper2.html" data-cat="ge" data-exam="ies" data-questions="16" data-storage="ies_prep_2025_ge2">
       <div class="card-icon icon-ge">📗</div>
       <div class="card-body">
         <div class="card-title">General Economics — Paper II</div>
@@ -594,7 +600,7 @@ body::before {
       </div>
     </a>
 
-    <a class="paper-card" href="ies-2025-general-economics-paper3.html" data-cat="ge" data-questions="16" data-storage="ies_prep_2025_ge3">
+    <a class="paper-card" href="ies-2025-general-economics-paper3.html" data-cat="ge" data-exam="ies" data-questions="16" data-storage="ies_prep_2025_ge3">
       <div class="card-icon icon-ge">📙</div>
       <div class="card-body">
         <div class="card-title">General Economics — Paper III</div>
@@ -612,9 +618,9 @@ body::before {
       </div>
     </a>
 
-    <div class="subject-label" data-cat="ie">Indian Economics</div>
+    <div class="subject-label" data-cat="ie" data-exam="ies">Indian Economics (IES)</div>
 
-    <a class="paper-card" href="ies-2025-indian-economics.html" data-cat="ie" data-questions="16" data-storage="ies_prep_2025_indian_eco">
+    <a class="paper-card" href="ies-2025-indian-economics.html" data-cat="ie" data-exam="ies" data-questions="16" data-storage="ies_prep_2025_indian_eco">
       <div class="card-icon icon-ie">🇮🇳</div>
       <div class="card-body">
         <div class="card-title">Indian Economics</div>
@@ -632,9 +638,9 @@ body::before {
       </div>
     </a>
 
-    <div class="subject-label" data-cat="eng">General English</div>
+    <div class="subject-label" data-cat="eng" data-exam="ies">General English (IES)</div>
 
-    <a class="paper-card" href="ies-2025-general-english.html" data-cat="eng" data-questions="6" data-storage="ies_prep_2025_english">
+    <a class="paper-card" href="ies-2025-general-english.html" data-cat="eng" data-exam="ies" data-questions="6" data-storage="ies_prep_2025_english">
       <div class="card-icon icon-eng">✍️</div>
       <div class="card-body">
         <div class="card-title">General English</div>
@@ -652,9 +658,9 @@ body::before {
       </div>
     </a>
 
-    <div class="subject-label" data-cat="gs">General Studies</div>
+    <div class="subject-label" data-cat="gs" data-exam="ies">General Studies (IES)</div>
 
-    <a class="paper-card" href="ies-2025-general-studies.html" data-cat="gs" data-questions="4" data-storage="ies_prep_2025_gs">
+    <a class="paper-card" href="ies-2025-general-studies.html" data-cat="gs" data-exam="ies" data-questions="4" data-storage="ies_prep_2025_gs">
       <div class="card-icon icon-gs">🏛️</div>
       <div class="card-body">
         <div class="card-title">General Studies</div>
@@ -673,6 +679,114 @@ body::before {
     </a>
 
   </div><!-- /year-group 2025 -->
+
+  <!-- ── ISS 2025 ── -->
+  <div class="year-group" data-year="2025-iss">
+    <div class="year-heading">2025 — ISS Papers <span style="color:var(--muted);font-size:9px;">(Coming Soon)</span></div>
+
+    <div class="subject-label" data-cat="stat" data-exam="iss">Statistics (ISS)</div>
+
+    <a class="paper-card" href="#" data-cat="stat" data-exam="iss" data-questions="0" data-storage="" style="opacity:0.55;pointer-events:none;">
+      <div class="card-icon icon-stat">📊</div>
+      <div class="card-body">
+        <div class="card-title">Statistics — Paper I</div>
+        <div class="card-meta">
+          <span>200 marks</span><span class="card-meta-sep"></span>
+          <span>3 hrs</span><span class="card-meta-sep"></span>
+          <span>Probability · Distributions · Sampling Theory</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-iss">ISS</span>
+        <span class="card-badge" style="background:var(--bg3);color:var(--muted);border:1px solid var(--border);">Soon</span>
+      </div>
+    </a>
+
+    <a class="paper-card" href="#" data-cat="stat" data-exam="iss" data-questions="0" data-storage="" style="opacity:0.55;pointer-events:none;">
+      <div class="card-icon icon-stat">📉</div>
+      <div class="card-body">
+        <div class="card-title">Statistics — Paper II</div>
+        <div class="card-meta">
+          <span>200 marks</span><span class="card-meta-sep"></span>
+          <span>3 hrs</span><span class="card-meta-sep"></span>
+          <span>Statistical Inference · Linear Models · Design</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-iss">ISS</span>
+        <span class="card-badge" style="background:var(--bg3);color:var(--muted);border:1px solid var(--border);">Soon</span>
+      </div>
+    </a>
+
+    <a class="paper-card" href="#" data-cat="stat" data-exam="iss" data-questions="0" data-storage="" style="opacity:0.55;pointer-events:none;">
+      <div class="card-icon icon-stat">📈</div>
+      <div class="card-body">
+        <div class="card-title">Statistics — Paper III</div>
+        <div class="card-meta">
+          <span>200 marks</span><span class="card-meta-sep"></span>
+          <span>3 hrs</span><span class="card-meta-sep"></span>
+          <span>Econometrics · Time Series · Survey Sampling</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-iss">ISS</span>
+        <span class="card-badge" style="background:var(--bg3);color:var(--muted);border:1px solid var(--border);">Soon</span>
+      </div>
+    </a>
+
+    <a class="paper-card" href="#" data-cat="stat" data-exam="iss" data-questions="0" data-storage="" style="opacity:0.55;pointer-events:none;">
+      <div class="card-icon icon-stat">🗂️</div>
+      <div class="card-body">
+        <div class="card-title">Statistics — Paper IV</div>
+        <div class="card-meta">
+          <span>200 marks</span><span class="card-meta-sep"></span>
+          <span>3 hrs</span><span class="card-meta-sep"></span>
+          <span>Operations Research · SQC · Demography · Vital Stats</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-iss">ISS</span>
+        <span class="card-badge" style="background:var(--bg3);color:var(--muted);border:1px solid var(--border);">Soon</span>
+      </div>
+    </a>
+
+    <div class="subject-label" data-cat="eng" data-exam="iss">General English (ISS)</div>
+
+    <a class="paper-card" href="#" data-cat="eng" data-exam="iss" data-questions="0" data-storage="" style="opacity:0.55;pointer-events:none;">
+      <div class="card-icon icon-eng">✍️</div>
+      <div class="card-body">
+        <div class="card-title">General English</div>
+        <div class="card-meta">
+          <span>100 marks</span><span class="card-meta-sep"></span>
+          <span>3 hrs</span><span class="card-meta-sep"></span>
+          <span>Essay · Précis · Vocabulary · Grammar</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-iss">ISS</span>
+        <span class="card-badge" style="background:var(--bg3);color:var(--muted);border:1px solid var(--border);">Soon</span>
+      </div>
+    </a>
+
+    <div class="subject-label" data-cat="gs" data-exam="iss">General Studies (ISS)</div>
+
+    <a class="paper-card" href="#" data-cat="gs" data-exam="iss" data-questions="0" data-storage="" style="opacity:0.55;pointer-events:none;">
+      <div class="card-icon icon-gs">🏛️</div>
+      <div class="card-body">
+        <div class="card-title">General Studies</div>
+        <div class="card-meta">
+          <span>100 marks</span><span class="card-meta-sep"></span>
+          <span>3 hrs</span><span class="card-meta-sep"></span>
+          <span>History · Geography · Economy · Polity</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-iss">ISS</span>
+        <span class="card-badge" style="background:var(--bg3);color:var(--muted);border:1px solid var(--border);">Soon</span>
+      </div>
+    </a>
+
+  </div><!-- /year-group 2025-iss -->
 
   <!-- ABOUT THE EXAM -->
   <div class="about-section">
@@ -711,10 +825,30 @@ body::before {
       </div>
 
       <div class="about-card">
+        <div class="about-card-icon">📋</div>
+        <div class="about-card-title">Exam Pattern (ISS)</div>
+        <div class="about-card-body">
+          <div class="vacancy-row"><span>Written (6 papers)</span><span class="vacancy-num">1000</span></div>
+          <div class="vacancy-row"><span>Viva voce / Interview</span><span class="vacancy-num">200</span></div>
+          <div class="vacancy-total">Grand Total: 1200 marks</div>
+        </div>
+      </div>
+
+      <div class="about-card">
         <div class="about-card-icon">🎓</div>
         <div class="about-card-title">Eligibility (IES)</div>
         <div class="about-card-body about-list">
           <div>Post-Graduate degree in Economics / Applied Economics / Business Economics / Econometrics</div>
+          <div>Age: 21–30 years as on 1 Aug 2026</div>
+          <div>Relaxation: SC/ST +5 yrs · OBC +3 yrs · PwBD +10 yrs</div>
+        </div>
+      </div>
+
+      <div class="about-card">
+        <div class="about-card-icon">🎓</div>
+        <div class="about-card-title">Eligibility (ISS)</div>
+        <div class="about-card-body about-list">
+          <div>Bachelor's degree with Statistics / Mathematical Statistics / Applied Statistics as a subject <em>or</em> Post-Graduate degree in Statistics / Mathematical Statistics / Applied Statistics</div>
           <div>Age: 21–30 years as on 1 Aug 2026</div>
           <div>Relaxation: SC/ST +5 yrs · OBC +3 yrs · PwBD +10 yrs</div>
         </div>
@@ -730,15 +864,28 @@ body::before {
           <div>Indian Economics — 200 marks · 3 hrs</div>
         </div>
       </div>
+
+      <div class="about-card">
+        <div class="about-card-icon">📚</div>
+        <div class="about-card-title">Papers (ISS)</div>
+        <div class="about-card-body about-list">
+          <div>General English — 100 marks · 3 hrs</div>
+          <div>General Studies — 100 marks · 3 hrs</div>
+          <div>Statistics I — 200 marks · 3 hrs</div>
+          <div>Statistics II — 200 marks · 3 hrs</div>
+          <div>Statistics III — 200 marks · 3 hrs</div>
+          <div>Statistics IV — 200 marks · 3 hrs</div>
+        </div>
+      </div>
     </div>
 
     <div class="motivation-box">
-      <div class="motivation-quote">"The IES is one of India's most prestigious Group A central services — officers shape economic policy, work with the Finance Ministry, Planning Commission and international bodies like the IMF and World Bank."</div>
-      <div class="motivation-sub">Only ~16 economists are selected nationwide each year. That makes every mark count — and every question you practise here an investment in your future.</div>
+      <div class="motivation-quote">"The IES and ISS are among India's most prestigious Group A central services — officers shape economic policy and national statistics, working with Finance Ministry, MoSPI, Planning bodies and international organisations like the IMF, World Bank, and UN."</div>
+      <div class="motivation-sub">Only ~16 economists (IES) and ~28 statisticians (ISS) are selected nationwide each year. That makes every mark count — and every question you practise here an investment in your future.</div>
       <div class="motivation-stats">
         <div class="mstat"><div class="mstat-num">1200</div><div class="mstat-lbl">Total marks</div></div>
         <div class="mstat"><div class="mstat-num">16</div><div class="mstat-lbl">IES seats (2026)</div></div>
-        <div class="mstat"><div class="mstat-num">6</div><div class="mstat-lbl">Papers to master</div></div>
+        <div class="mstat"><div class="mstat-num">28</div><div class="mstat-lbl">ISS seats (2026)</div></div>
         <div class="mstat"><div class="mstat-num">200</div><div class="mstat-lbl">Interview marks</div></div>
       </div>
     </div>
@@ -805,11 +952,30 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     this.classList.add('active');
     const f = this.dataset.filter;
     document.querySelectorAll('.paper-card').forEach(card => {
-      card.style.display = (f === 'all' || card.dataset.cat === f) ? 'flex' : 'none';
+      const cat  = card.dataset.cat;
+      const exam = card.dataset.exam;
+      let show = false;
+      if (f === 'all')        show = true;
+      else if (f === 'ies')   show = exam === 'ies';
+      else if (f === 'iss')   show = exam === 'iss';
+      else                    show = cat === f;
+      card.style.display = show ? 'flex' : 'none';
     });
     document.querySelectorAll('.subject-label').forEach(lbl => {
-      const cat = lbl.dataset.cat;
-      lbl.style.display = (f === 'all' || !cat || cat === f) ? 'block' : 'none';
+      const cat  = lbl.dataset.cat;
+      const exam = lbl.dataset.exam;
+      let show = false;
+      if (f === 'all')        show = true;
+      else if (f === 'ies')   show = exam === 'ies';
+      else if (f === 'iss')   show = exam === 'iss';
+      else                    show = !cat || cat === f;
+      lbl.style.display = show ? 'block' : 'none';
+    });
+    // hide year-group headings that have no visible cards
+    document.querySelectorAll('.year-group').forEach(grp => {
+      const visible = grp.querySelectorAll('.paper-card[style*="flex"]').length ||
+                      [...grp.querySelectorAll('.paper-card')].some(c => c.style.display !== 'none');
+      grp.style.display = visible ? 'block' : 'none';
     });
   });
 });
