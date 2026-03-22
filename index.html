@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<title>IES/ISS Prep — Question Paper Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:       #0e0f14;
+  --bg2:      #161820;
+  --bg3:      #1e2028;
+  --gold:     #d4a843;
+  --gold2:    #e8c97a;
+  --gold-dim: rgba(212,168,67,0.12);
+  --gold-glow:rgba(212,168,67,0.25);
+  --cream:    #f5f0e8;
+  --muted:    #6b6d7a;
+  --muted2:   #8e909e;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(212,168,67,0.3);
+  --green:    #4caf82;
+  --green-bg: rgba(76,175,130,0.12);
+  --blue:     #5b9bd5;
+  --blue-bg:  rgba(91,155,213,0.12);
+  --purple:   #9b7fd4;
+  --purple-bg:rgba(155,127,212,0.12);
+  --orange:   #d47a3f;
+  --orange-bg:rgba(212,122,63,0.12);
+  --radius:   12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── GRAIN OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── HEADER ── */
+.site-header {
+  position: relative;
+  z-index: 1;
+  padding: 48px 24px 0;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.header-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.header-eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--gold);
+}
+.header-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 8vw, 54px);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--cream);
+  letter-spacing: -0.5px;
+}
+.header-title em {
+  font-style: italic;
+  color: var(--gold2);
+}
+.header-sub {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--muted2);
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 480px;
+}
+.header-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: 32px 0 0;
+}
+
+/* ── STATS ROW ── */
+.stats-row {
+  display: flex;
+  gap: 0;
+  margin: 0 auto;
+  max-width: 680px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.stat-item {
+  flex: 1;
+  padding: 18px 0;
+  border-right: 1px solid var(--border);
+  padding-right: 24px;
+  margin-right: 24px;
+}
+.stat-item:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+.stat-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--gold2);
+  line-height: 1;
+}
+.stat-lbl {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+}
+
+/* ── MAIN CONTENT ── */
+.main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 7px 16px;
+  border-radius: 40px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+.filter-btn:hover { border-color: var(--gold-glow); color: var(--cream); }
+.filter-btn.active { background: var(--gold-dim); border-color: var(--border2); color: var(--gold2); }
+
+/* ── YEAR GROUP ── */
+.year-group { margin-bottom: 36px; }
+.year-heading {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.year-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── SUBJECT GROUP LABEL ── */
+.subject-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 18px 0 8px 4px;
+}
+.subject-label:first-of-type { margin-top: 0; }
+
+/* ── PAPER CARD ── */
+.paper-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.22s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.paper-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: transparent;
+  transition: background 0.2s;
+}
+.paper-card:hover {
+  border-color: rgba(212,168,67,0.3);
+  background: var(--bg3);
+  transform: translateX(3px);
+}
+.paper-card:hover::before { background: var(--gold); }
+
+.card-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.icon-ge     { background: var(--gold-dim); }
+.icon-ie     { background: var(--green-bg); }
+.icon-eng    { background: var(--purple-bg); }
+.icon-gs     { background: var(--orange-bg); }
+
+.card-body { flex: 1; min-width: 0; }
+.card-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cream);
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-meta {
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.card-meta-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--muted); }
+
+.card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+.card-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+.badge-ready  { background: var(--green-bg);  color: var(--green); }
+.badge-ge     { background: var(--gold-dim);   color: var(--gold2); }
+.badge-ie     { background: var(--green-bg);   color: var(--green); }
+.badge-eng    { background: var(--purple-bg);  color: var(--purple); }
+.badge-gs     { background: var(--orange-bg);  color: var(--orange); }
+
+.card-progress {
+  font-size: 10px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+}
+.progress-mini {
+  width: 60px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-mini-fill {
+  height: 3px;
+  background: var(--gold);
+  border-radius: 2px;
+  transition: width 0.4s;
+}
+
+/* ── HOW TO USE ── */
+.howto {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-top: 32px;
+}
+.howto-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.howto-steps { display: grid; gap: 10px; }
+.howto-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted2);
+  line-height: 1.5;
+}
+.step-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--gold);
+  background: var(--gold-dim);
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── FOOTER ── */
+.footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 0 24px 40px;
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.5px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.site-header { animation: fadeUp 0.5s ease both; }
+.stats-row   { animation: fadeUp 0.5s 0.1s ease both; }
+.main        { animation: fadeUp 0.5s 0.15s ease both; }
+
+@media (max-width: 480px) {
+  .site-header { padding: 32px 16px 0; }
+  .stats-row   { padding: 0 16px; }
+  .main        { padding: 24px 16px 60px; }
+  .stat-item   { padding-right: 16px; margin-right: 16px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-eyebrow">IES / ISS Examination Prep</div>
+  <h1 class="header-title">Question Paper<br/><em>Library</em></h1>
+  <p class="header-sub">All 2025 papers — General Economics, Indian Economics, General English and General Studies — with model answers, examiner tips, and performance tracking.</p>
+  <div class="header-divider"></div>
+</header>
+
+<div class="stats-row">
+  <div class="stat-item">
+    <div class="stat-num" id="total-papers">6</div>
+    <div class="stat-lbl">Papers ready</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="total-questions">71</div>
+    <div class="stat-lbl">Questions</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="total-attempted">0</div>
+    <div class="stat-lbl">Attempted</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="total-years">1</div>
+    <div class="stat-lbl">Years covered</div>
+  </div>
+</div>
+
+<main class="main">
+
+  <!-- FILTER -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All Papers</button>
+    <button class="filter-btn" data-filter="ge">General Economics</button>
+    <button class="filter-btn" data-filter="ie">Indian Economics</button>
+    <button class="filter-btn" data-filter="eng">English</button>
+    <button class="filter-btn" data-filter="gs">Gen. Studies</button>
+  </div>
+
+  <!-- ── 2025 ── -->
+  <div class="year-group" data-year="2025">
+    <div class="year-heading">2025 — All papers ready ✓</div>
+
+    <div class="subject-label" data-cat="ge">General Economics</div>
+
+    <a class="paper-card" href="ies-2025-general-economics-paper1.html" data-cat="ge" data-questions="13" data-storage="ies_prep_2025">
+      <div class="card-icon icon-ge">📘</div>
+      <div class="card-body">
+        <div class="card-title">General Economics — Paper I</div>
+        <div class="card-meta">
+          <span>13 questions</span><span class="card-meta-sep"></span>
+          <span>200 marks</span><span class="card-meta-sep"></span>
+          <span>Micro · Game Theory · Stats</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-ready">Ready</span>
+        <span class="card-badge badge-ge">Gen. Eco</span>
+        <div class="card-progress" id="prog-ge1">0 / 13</div>
+        <div class="progress-mini"><div class="progress-mini-fill" id="bar-ge1" style="width:0%"></div></div>
+      </div>
+    </a>
+
+    <a class="paper-card" href="ies-2025-general-economics-paper2.html" data-cat="ge" data-questions="16" data-storage="ies_prep_2025_ge2">
+      <div class="card-icon icon-ge">📗</div>
+      <div class="card-body">
+        <div class="card-title">General Economics — Paper II</div>
+        <div class="card-meta">
+          <span>16 questions</span><span class="card-meta-sep"></span>
+          <span>200 marks</span><span class="card-meta-sep"></span>
+          <span>Macro · IS-LM · Trade · Finance</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-ready">Ready</span>
+        <span class="card-badge badge-ge">Gen. Eco</span>
+        <div class="card-progress" id="prog-ge2">0 / 16</div>
+        <div class="progress-mini"><div class="progress-mini-fill" id="bar-ge2" style="width:0%"></div></div>
+      </div>
+    </a>
+
+    <a class="paper-card" href="ies-2025-general-economics-paper3.html" data-cat="ge" data-questions="16" data-storage="ies_prep_2025_ge3">
+      <div class="card-icon icon-ge">📙</div>
+      <div class="card-body">
+        <div class="card-title">General Economics — Paper III</div>
+        <div class="card-meta">
+          <span>16 questions</span><span class="card-meta-sep"></span>
+          <span>200 marks</span><span class="card-meta-sep"></span>
+          <span>Public Finance · Environment · Planning</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-ready">Ready</span>
+        <span class="card-badge badge-ge">Gen. Eco</span>
+        <div class="card-progress" id="prog-ge3">0 / 16</div>
+        <div class="progress-mini"><div class="progress-mini-fill" id="bar-ge3" style="width:0%"></div></div>
+      </div>
+    </a>
+
+    <div class="subject-label" data-cat="ie">Indian Economics</div>
+
+    <a class="paper-card" href="ies-2025-indian-economics.html" data-cat="ie" data-questions="16" data-storage="ies_prep_2025_indian_eco">
+      <div class="card-icon icon-ie">🇮🇳</div>
+      <div class="card-body">
+        <div class="card-title">Indian Economics</div>
+        <div class="card-meta">
+          <span>16 questions</span><span class="card-meta-sep"></span>
+          <span>200 marks</span><span class="card-meta-sep"></span>
+          <span>Agriculture · Fiscal · Trade · Social</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-ready">Ready</span>
+        <span class="card-badge badge-ie">Indian Eco</span>
+        <div class="card-progress" id="prog-ie">0 / 16</div>
+        <div class="progress-mini"><div class="progress-mini-fill" id="bar-ie" style="width:0%"></div></div>
+      </div>
+    </a>
+
+    <div class="subject-label" data-cat="eng">General English</div>
+
+    <a class="paper-card" href="ies-2025-general-english.html" data-cat="eng" data-questions="6" data-storage="ies_prep_2025_english">
+      <div class="card-icon icon-eng">✍️</div>
+      <div class="card-body">
+        <div class="card-title">General English</div>
+        <div class="card-meta">
+          <span>6 questions</span><span class="card-meta-sep"></span>
+          <span>100 marks</span><span class="card-meta-sep"></span>
+          <span>Essay · Précis · Vocabulary · Grammar</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-ready">Ready</span>
+        <span class="card-badge badge-eng">English</span>
+        <div class="card-progress" id="prog-eng">0 / 6</div>
+        <div class="progress-mini"><div class="progress-mini-fill" id="bar-eng" style="width:0%"></div></div>
+      </div>
+    </a>
+
+    <div class="subject-label" data-cat="gs">General Studies</div>
+
+    <a class="paper-card" href="ies-2025-general-studies.html" data-cat="gs" data-questions="4" data-storage="ies_prep_2025_gs">
+      <div class="card-icon icon-gs">🏛️</div>
+      <div class="card-body">
+        <div class="card-title">General Studies</div>
+        <div class="card-meta">
+          <span>4 questions · 20 parts</span><span class="card-meta-sep"></span>
+          <span>100 marks</span><span class="card-meta-sep"></span>
+          <span>History · Geography · Economy · Polity</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="card-badge badge-ready">Ready</span>
+        <span class="card-badge badge-gs">Gen. Studies</span>
+        <div class="card-progress" id="prog-gs">0 / 4</div>
+        <div class="progress-mini"><div class="progress-mini-fill" id="bar-gs" style="width:0%"></div></div>
+      </div>
+    </a>
+
+  </div><!-- /year-group 2025 -->
+
+  <!-- HOW TO USE -->
+  <div class="howto">
+    <div class="howto-title">How to use this library</div>
+    <div class="howto-steps">
+      <div class="howto-step"><div class="step-num">1</div><span>Keep all HTML files in the <strong style="color:var(--cream)">same folder</strong> on your device — this index links to them by filename.</span></div>
+      <div class="howto-step"><div class="step-num">2</div><span>Open any paper and go to the <strong style="color:var(--cream)">Practice</strong> tab. Write your answer, then reveal the model answer and rate yourself.</span></div>
+      <div class="howto-step"><div class="step-num">3</div><span>Use the <strong style="color:var(--cream)">Mock</strong> tab for a timed 3-hour full-paper simulation with a question jump grid.</span></div>
+      <div class="howto-step"><div class="step-num">4</div><span>Progress for each paper is saved separately in your browser — it won't mix across subjects.</span></div>
+      <div class="howto-step"><div class="step-num">5</div><span>Open <strong style="color:var(--cream)">index.html</strong> in Safari (iPad) or Chrome (Android) and tap <em>Add to Home Screen</em> for instant access offline.</span></div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  IES / ISS Prep Library &nbsp;·&nbsp; 2025 Edition · Keep all files in the same folder
+</footer>
+
+<script>
+// ── PAPERS REGISTRY ──────────────────────────────────────────────────────────
+const PAPERS = [
+  { storageKey:'ies_prep_2025',             questions:13, barId:'bar-ge1',  progId:'prog-ge1'  },
+  { storageKey:'ies_prep_2025_ge2',         questions:16, barId:'bar-ge2',  progId:'prog-ge2'  },
+  { storageKey:'ies_prep_2025_ge3',         questions:16, barId:'bar-ge3',  progId:'prog-ge3'  },
+  { storageKey:'ies_prep_2025_indian_eco',  questions:16, barId:'bar-ie',   progId:'prog-ie'   },
+  { storageKey:'ies_prep_2025_english',     questions:6,  barId:'bar-eng',  progId:'prog-eng'  },
+  { storageKey:'ies_prep_2025_gs',          questions:4,  barId:'bar-gs',   progId:'prog-gs'   },
+];
+
+function getProgress(storageKey, total) {
+  try {
+    const raw = localStorage.getItem(storageKey);
+    if (!raw) return { attempted: 0, total };
+    const s = JSON.parse(raw);
+    return { attempted: s.ratings ? Object.keys(s.ratings).length : 0, total };
+  } catch(e) { return { attempted: 0, total }; }
+}
+
+function updateAll() {
+  let totalAttempted = 0, totalQs = 0;
+  PAPERS.forEach(p => {
+    const { attempted, total } = getProgress(p.storageKey, p.questions);
+    totalAttempted += attempted;
+    totalQs += total;
+    const pct = total > 0 ? Math.round((attempted / total) * 100) : 0;
+    const bar  = document.getElementById(p.barId);
+    const prog = document.getElementById(p.progId);
+    if (bar)  bar.style.width  = pct + '%';
+    if (prog) prog.textContent = attempted + ' / ' + total;
+  });
+  document.getElementById('total-attempted').textContent = totalAttempted;
+}
+
+// ── FILTER LOGIC ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    const f = this.dataset.filter;
+    document.querySelectorAll('.paper-card').forEach(card => {
+      card.style.display = (f === 'all' || card.dataset.cat === f) ? 'flex' : 'none';
+    });
+    document.querySelectorAll('.subject-label').forEach(lbl => {
+      const cat = lbl.dataset.cat;
+      lbl.style.display = (f === 'all' || !cat || cat === f) ? 'block' : 'none';
+    });
+  });
+});
+
+updateAll();
+</script>
+</body>
+</html>

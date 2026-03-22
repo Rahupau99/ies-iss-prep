@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>IES 2025 — General Economics Paper II</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#1a1a2e;--ink2:#2d2d4e;--gold:#c9a84c;--gold-dim:rgba(201,168,76,0.15);--cream:#faf8f3;--cream2:#f2efe6;--muted:#7a7a8a;--green:#2d6a4f;--green-bg:#d8f3dc;--red:#9b2335;--red-bg:#fde8ea;--blue:#1a3a5c;--blue-bg:#dbeafe;--border:rgba(26,26,46,0.12);--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px}
+#app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;background:var(--cream);overflow:hidden}
+.header{background:var(--ink);color:var(--cream);padding:14px 18px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.header-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700}
+.header-sub{font-size:11px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-top:1px}
+.header-badge{background:var(--gold);color:var(--ink);font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px}
+.nav{display:flex;background:var(--ink2);flex-shrink:0}
+.nav-btn{flex:1;padding:10px 4px 9px;font-size:11px;color:rgba(250,248,243,0.5);border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color 0.2s}
+.nav-btn.active{color:var(--gold);border-bottom:2px solid var(--gold)}
+.scroll{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.screen{display:none}.screen.active{display:block}
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px}
+.card-accent{border-left:3px solid var(--gold)}
+.hero{background:var(--ink);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.hero-label{font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.hero-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--cream);font-weight:700;line-height:1.25}
+.hero-meta{font-size:12px;color:rgba(250,248,243,0.55);margin-top:8px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.stat{background:#fff;border-radius:10px;padding:12px 10px;text-align:center;border:1px solid var(--border)}
+.stat-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--ink)}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+.section-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:10px}
+.q-row{background:#fff;border-radius:10px;border:1px solid var(--border);padding:13px 14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:border-color 0.2s}
+.q-row:hover{border-color:var(--gold)}
+.q-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);background:var(--gold-dim);padding:3px 7px;border-radius:6px;flex-shrink:0;margin-top:1px}
+.q-text{font-size:13px;color:var(--ink);line-height:1.5;flex:1}
+.q-marks{font-size:11px;color:var(--muted);margin-top:3px}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;background:var(--border)}
+.dot-good{background:var(--green)}.dot-ok{background:var(--gold)}.dot-poor{background:var(--red)}
+.prac-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.prac-progress{font-size:12px;color:var(--muted)}
+.prog-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:16px}
+.prog-bar-fill{height:4px;background:var(--gold);border-radius:2px;transition:width 0.4s}
+.section-chip{display:inline-block;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:500;letter-spacing:0.5px;margin-bottom:10px}
+.chip-a{background:#fff3cd;color:#6b4c00}.chip-b{background:#dbeafe;color:#1a3a5c}.chip-c{background:#f3e8ff;color:#5b21b6}
+.q-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:18px;margin-bottom:14px}
+.q-main{font-family:'Playfair Display',serif;font-size:16px;line-height:1.65;color:var(--ink);font-weight:500}
+.q-part{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:14px;color:var(--ink2);line-height:1.6}
+.q-part-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);margin-bottom:4px}
+.marks-tag{display:inline-flex;align-items:center;gap:4px;background:var(--gold-dim);color:#6b4c00;font-size:11px;padding:3px 9px;border-radius:20px;margin-bottom:10px;font-weight:500}
+.answer-area{background:#fff;border-radius:var(--radius);border:1.5px solid var(--border);padding:14px;margin-bottom:14px;transition:border-color 0.2s}
+.answer-area:focus-within{border-color:var(--gold)}
+.answer-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.answer-textarea{width:100%;min-height:140px;border:none;outline:none;resize:vertical;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);line-height:1.7;background:transparent}
+.answer-textarea::placeholder{color:var(--muted);font-style:italic}
+.word-limit{font-size:10px;color:var(--muted);text-align:right;margin-top:4px}
+.btn-row{display:flex;gap:8px;margin-bottom:12px}
+.btn{padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.18s;font-family:'DM Sans',sans-serif}
+.btn-primary{background:var(--ink);color:var(--cream);flex:2}
+.btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--border);flex:1}
+.btn-gold{background:var(--gold);color:var(--ink);font-weight:500;width:100%;display:block;padding:12px;border-radius:10px;font-size:13px;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
+.model-answer-box{display:none;margin-bottom:8px}
+.model-section{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:10px}
+.model-section-title{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;font-weight:500;margin-bottom:10px}
+.concept-pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font-size:12px;background:var(--blue-bg);color:var(--blue);padding:4px 10px;border-radius:20px}
+.model-text{font-size:13px;color:var(--ink2);line-height:1.75}
+.model-text p{margin-bottom:8px}
+.model-text strong{color:var(--ink);font-weight:500}
+.tip-box{background:var(--red-bg);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--red);line-height:1.6}
+.self-eval{background:var(--cream2);border-radius:10px;padding:14px;margin-bottom:12px}
+.self-eval-title{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:10px}
+.eval-btns{display:flex;gap:8px}
+.eval-btn{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:all 0.18s;font-family:'DM Sans',sans-serif}
+.eval-good{background:var(--green-bg);color:var(--green)}.eval-good.sel{background:var(--green);color:#fff}
+.eval-ok{background:#fff3cd;color:#6b4c00}.eval-ok.sel{background:#f0b429;color:var(--ink)}
+.eval-poor{background:var(--red-bg);color:var(--red)}.eval-poor.sel{background:var(--red);color:#fff}
+.timer-bar{background:var(--ink);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.timer-display{font-family:'DM Mono',monospace;font-size:26px;color:var(--gold);letter-spacing:2px}
+.timer-lbl{font-size:10px;color:rgba(250,248,243,0.5);text-transform:uppercase;letter-spacing:1px}
+.timer-btns{display:flex;gap:6px}
+.timer-btn{background:rgba(250,248,243,0.1);color:var(--cream);border:none;border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.timer-btn.running{background:var(--gold);color:var(--ink)}
+.mode-toggle{display:flex;background:var(--cream2);border-radius:10px;padding:3px;margin-bottom:16px}
+.mode-btn{flex:1;padding:8px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.mode-btn.active{background:var(--ink);color:var(--cream)}
+.topic-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.topic-row:last-child{border-bottom:none}
+.topic-name{font-size:13px;color:var(--ink);flex:1}
+.topic-bar-wrap{width:90px;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.topic-bar{height:6px;border-radius:3px;background:var(--gold)}
+.topic-pct{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);width:34px;text-align:right}
+.history-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.history-row:last-child{border-bottom:none}
+.history-q{font-size:12px;color:var(--ink2);flex:1}
+.history-status{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
+.hs-good{background:var(--green-bg);color:var(--green)}.hs-ok{background:#fff3cd;color:#6b4c00}.hs-poor{background:var(--red-bg);color:var(--red)}
+.mock-q-btn{background:#fff;color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif}
+.back-link{display:inline-block;font-size:12px;color:var(--muted);text-decoration:none;margin-bottom:12px;padding:6px 0}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div><div class="header-title">IES/ISS 2025</div><div class="header-sub">General Economics · Paper II</div></div>
+    <div class="header-badge">200 Marks</div>
+  </div>
+  <div class="nav">
+    <button class="nav-btn active" data-screen="home"><span style="font-size:16px">⊞</span>Home</button>
+    <button class="nav-btn" data-screen="practice"><span style="font-size:16px">✍</span>Practice</button>
+    <button class="nav-btn" data-screen="mock"><span style="font-size:16px">⏱</span>Mock</button>
+    <button class="nav-btn" data-screen="analytics"><span style="font-size:16px">◈</span>Analytics</button>
+  </div>
+
+  <div id="screen-home" class="screen active scroll">
+    <div class="hero">
+      <div class="hero-label">IES/ISS Examination 2025</div>
+      <div class="hero-title">General Economics<br/>Paper – II</div>
+      <div class="hero-meta">3 Sections · 16 Questions · 200 Marks · 3 Hours</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-val" id="stat-done">0</div><div class="stat-lbl">Attempted</div></div>
+      <div class="stat"><div class="stat-val" id="stat-score">—</div><div class="stat-lbl">Avg Rating</div></div>
+      <div class="stat"><div class="stat-val">16</div><div class="stat-lbl">Total Qs</div></div>
+    </div>
+    <div class="section-label">Section A — Compulsory (30 Marks)</div>
+    <div id="home-sec-a"></div>
+    <div class="section-label">Section B — Attempt 6 of 9 (90 Marks)</div>
+    <div id="home-sec-b"></div>
+    <div class="section-label">Section C — Attempt 4 of 6 (80 Marks)</div>
+    <div id="home-sec-c"></div>
+  </div>
+
+  <div id="screen-practice" class="screen scroll">
+    <div class="prac-top">
+      <button class="btn btn-secondary" id="btn-back" style="padding:7px 12px;font-size:12px;flex:none">← Back</button>
+      <div class="prac-progress" id="prac-progress">Q 1 of 16</div>
+    </div>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-fill" style="width:6%"></div></div>
+    <div id="q-display"></div>
+    <div class="answer-area">
+      <div class="answer-label">Your Answer</div>
+      <textarea class="answer-textarea" id="user-answer" placeholder="Write your answer here…"></textarea>
+      <div class="word-limit" id="word-limit-hint"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btn-prev">← Prev</button>
+      <button class="btn btn-primary" id="btn-show-answer">Show Model Answer</button>
+      <button class="btn btn-secondary" id="btn-next">Next →</button>
+    </div>
+    <div class="model-answer-box" id="model-answer-box">
+      <div id="model-answer-content"></div>
+      <div class="self-eval">
+        <div class="self-eval-title">How well did you answer this?</div>
+        <div class="eval-btns">
+          <button class="eval-btn eval-good" data-rating="good">Good ✓</button>
+          <button class="eval-btn eval-ok" data-rating="ok">Partial ~</button>
+          <button class="eval-btn eval-poor" data-rating="poor">Needs Work ✗</button>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" id="btn-next2" style="flex:1">Next Question →</button></div>
+    </div>
+  </div>
+
+  <div id="screen-mock" class="screen scroll">
+    <div class="section-label">Test Mode</div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-timed">⏱ Timed (3 hrs)</button>
+      <button class="mode-btn" id="mode-free">∞ Free Practice</button>
+    </div>
+    <div class="timer-bar" id="timer-bar">
+      <div><div class="timer-lbl">Time Remaining</div><div class="timer-display" id="timer-display">3:00:00</div></div>
+      <div class="timer-btns">
+        <button class="timer-btn" id="timer-start-btn">Start</button>
+        <button class="timer-btn" id="timer-reset-btn">Reset</button>
+      </div>
+    </div>
+    <div class="card card-accent" style="margin-bottom:14px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Instructions</div>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.7">
+        • Section A: Q1 — <strong>Compulsory</strong> (30 marks) · ~100 words each<br/>
+        • Section B: Attempt <strong>6 of 9</strong> — Q2–Q10 (90 marks) · ~200 words each<br/>
+        • Section C: Attempt <strong>4 of 6</strong> — Q11–Q16 (80 marks) · ~300 words each
+      </div>
+    </div>
+    <div class="section-label">Jump to Question</div>
+    <div id="mock-q-grid" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px"></div>
+    <button class="btn-gold" id="btn-start-mock">Start Full Paper →</button>
+  </div>
+
+  <div id="screen-analytics" class="screen scroll">
+    <div class="section-label">Your Progress</div>
+    <div class="stats-grid" style="margin-bottom:16px">
+      <div class="stat"><div class="stat-val" id="a-attempted">0</div><div class="stat-lbl">Attempted</div></div>
+      <div class="stat"><div class="stat-val" id="a-good">0</div><div class="stat-lbl">Good</div></div>
+      <div class="stat"><div class="stat-val" id="a-poor">0</div><div class="stat-lbl">Needs Work</div></div>
+    </div>
+    <div class="section-label">Topic Coverage</div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="topic-row"><span class="topic-name">Macroeconomics</span><div class="topic-bar-wrap"><div class="topic-bar" id="tb-macro" style="width:0%"></div></div><span class="topic-pct" id="tp-macro">0%</span></div>
+      <div class="topic-row"><span class="topic-name">Money & Banking</span><div class="topic-bar-wrap"><div class="topic-bar" id="tb-money" style="width:0%"></div></div><span class="topic-pct" id="tp-money">0%</span></div>
+      <div class="topic-row"><span class="topic-name">International Economics</span><div class="topic-bar-wrap"><div class="topic-bar" id="tb-intl" style="width:0%"></div></div><span class="topic-pct" id="tp-intl">0%</span></div>
+      <div class="topic-row"><span class="topic-name">Development Economics</span><div class="topic-bar-wrap"><div class="topic-bar" id="tb-dev" style="width:0%"></div></div><span class="topic-pct" id="tp-dev">0%</span></div>
+      <div class="topic-row"><span class="topic-name">Finance & Welfare</span><div class="topic-bar-wrap"><div class="topic-bar" id="tb-fin" style="width:0%"></div></div><span class="topic-pct" id="tp-fin">0%</span></div>
+    </div>
+    <div class="section-label">Question History</div>
+    <div class="card" id="history-list"><div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No questions attempted yet.</div></div>
+    <button class="btn btn-secondary" id="btn-reset" style="width:100%;margin-top:8px">Reset All Progress</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {id:1,section:'A',num:'Q1',title:'Answer all six parts (~100 words each)',marks:30,marksNote:'5×6=30',wordLimit:100,topic:['macro','intl','dev'],
+   parts:[
+    {label:'a',text:'Trace the role of Quesnay in the formulation of intersectoral flows in an economy as it stands today.',marks:5},
+    {label:'b',text:'"Inflation is always and everywhere a monetary phenomenon." Explain briefly the arguments of Friedman.',marks:5},
+    {label:'c',text:'Briefly explain Rosenstein-Rodan\'s Big Push theory.',marks:5},
+    {label:'d',text:'Specify the sources of gains from trade when production is characterised by increasing cost conditions.',marks:5},
+    {label:'e',text:'Differentiate among fixed, freely floating and managed floating exchange rates.',marks:5},
+    {label:'f',text:'Trace the major developments in the various rounds of negotiations from GATT to WTO.',marks:5}
+   ],
+   concepts:['Quesnay Tableau Economique','Input-Output Analysis','Quantity Theory of Money','Monetarism','Big Push Theory','Gains from Trade','Comparative Advantage','Exchange Rate Regimes','GATT/WTO Rounds'],
+   modelAnswer:'<p><strong>(a) Quesnay:</strong> Quesnay\'s Tableau Économique (1758) was the first systematic representation of intersectoral flows — showing how output circulates among landowners, farmers and artisans. It directly inspired Leontief\'s input-output analysis and modern national income accounting frameworks, which map intersectoral transactions across the entire economy.</p><p><strong>(b) Friedman on Inflation:</strong> Friedman argued that inflation is caused solely by excess money supply growth relative to real output growth (MV = PQ). In the long run, monetary expansion only raises prices, not output (long-run Phillips curve is vertical). Policy implication: central banks should follow a fixed money growth rule rather than discretionary policy.</p><p><strong>(c) Big Push Theory:</strong> Rosenstein-Rodan argued that underdeveloped economies suffer from market failures and coordination failures — no single firm invests because others won\'t. A coordinated "big push" of simultaneous large-scale investment across sectors creates demand externalities, making all investments profitable. Justifies state-led industrialisation.</p><p><strong>(d) Gains from Trade (Increasing Costs):</strong> Under increasing costs (upward-sloping PPF), trade leads to partial specialisation where comparative advantage holds. Gains arise from: (i) consumption gains — trading at a price ratio different from domestic; (ii) production gains — reallocating resources toward the comparative advantage good. Both countries can consume outside their PPF.</p><p><strong>(e) Exchange Rate Regimes:</strong> Fixed: central bank maintains a set rate by intervention. Freely floating: rate determined purely by market supply and demand; no intervention. Managed float (dirty float): market-determined with occasional central bank intervention to smooth volatility. Most economies use managed float in practice.</p><p><strong>(f) GATT to WTO:</strong> GATT (1947) established MFN and tariff reduction principles. Key rounds: Kennedy (1964-67) cut tariffs; Tokyo (1973-79) addressed NTBs; Uruguay (1986-94) created WTO (1995), extended rules to services (GATS), IP (TRIPS), agriculture. Doha Round (2001-present) remains unresolved — focus on development and agricultural subsidies.</p>',
+   tips:'Each part = 5 marks in ~100 words. Be precise and structured. For (a) link Quesnay directly to modern I-O analysis. For (b) state the equation MV=PQ and the long-run vertical Phillips curve — these earn marks. For (f) name at least 3 rounds with their key outcomes.'},
+
+  {id:2,section:'B',num:'Q2',title:'National Income Measurement',marks:15,marksNote:'15',wordLimit:200,topic:['macro'],
+   parts:[{label:'',text:'Bring out the equivalence between national income measured by value-added method and final expenditure method.',marks:15}],
+   concepts:['Value-Added Method','Final Expenditure Method','GDP','Double Counting','Intermediate Goods','Circular Flow','National Income Identity'],
+   modelAnswer:'<p><strong>Equivalence of Methods:</strong> National income (GDP) can be measured equivalently by three approaches — value-added (production), expenditure, and income — because they represent different aspects of the same circular flow.</p><p><strong>Value-Added Method:</strong> GDP = Σ(Value of Output − Value of Intermediate Inputs) across all industries. This avoids double counting by counting only value added at each stage of production.</p><p><strong>Final Expenditure Method:</strong> GDP = C + I + G + (X − M), where only final goods and services are counted. Intermediate goods are excluded because their value is already embedded in the final product price.</p><p><strong>Equivalence:</strong> The two methods are identical because: Value Added = Final Output − Intermediate Inputs. When summed across all stages, intermediate inputs cancel out (each intermediate output is another firm\'s input). What remains is exactly the value of final goods and services = Final Expenditure. Algebraically: ΣVA = Σ(Output − Intermediate) = Total Final Output = C + I + G + NX. Both measure the economy\'s net production in a given period, just from different angles — supply-side vs. demand-side.</p>',
+   tips:'The examiner wants you to show the algebraic equivalence, not just describe both methods separately. Draw the circular flow diagram and show how intermediate transactions cancel. State explicitly: "each intermediate good appears as an input cost that cancels the corresponding output value." ~200 words is strict — be concise.'},
+
+  {id:3,section:'B',num:'Q3',title:'Loanable Funds & IS-LM',marks:15,marksNote:'15',wordLimit:200,topic:['macro','money'],
+   parts:[{label:'',text:'Analyse how the supply and demand for loanable funds and equilibrium in the financial market is related to equilibrium in the goods market in a closed economy.',marks:15}],
+   concepts:['Loanable Funds Theory','IS Curve','Savings-Investment Identity','Financial Market','Goods Market Equilibrium','Interest Rate','Crowding Out'],
+   modelAnswer:'<p><strong>Loanable Funds Market:</strong> Supply of loanable funds = national saving (S = Y − C − G). Demand for loanable funds = investment (I). Equilibrium: S = I, determined by the real interest rate r. Higher r → more saving, less investment; equilibrium r where S(r) = I(r).</p><p><strong>Connection to Goods Market:</strong> In a closed economy, the national income identity is Y = C + I + G. Rearranging: Y − C − G = I → S = I. This is simultaneously the goods market equilibrium condition and the loanable funds market equilibrium. They are the same equation viewed differently.</p><p><strong>IS Curve:</strong> The IS curve plots combinations of Y and r where the goods market clears (S = I). A higher r reduces investment → lower Y. As Y changes, saving changes, shifting the financial market equilibrium. The two markets are therefore jointly determined — a fiscal expansion (↑G) reduces national saving, raises r, and crowds out private investment (crowding out effect).</p><p><strong>Conclusion:</strong> Goods market equilibrium (S = I) and financial market equilibrium (loanable funds supply = demand) are mathematically identical in a closed economy — the interest rate is the price that simultaneously clears both markets.</p>',
+   tips:'The key insight examiners look for is that S = I is both the goods market clearing condition AND the loanable funds equilibrium — they are the same equation. Draw a simple loanable funds diagram (supply upward sloping, demand downward sloping, r on y-axis) and link it to the IS curve explicitly.'},
+
+  {id:4,section:'B',num:'Q4',title:'US Subprime Crisis 2007-2010',marks:15,marksNote:'15',wordLimit:200,topic:['money','fin'],
+   parts:[{label:'',text:'Briefly explain the US subprime crisis (2007–2010). Explain whether the subprime crisis was a "plain vanilla" financial crisis.',marks:15}],
+   concepts:['Subprime Mortgage','Securitisation','CDO','MBS','Moral Hazard','Systemic Risk','Plain Vanilla Crisis','Minsky Moment','Financial Contagion'],
+   modelAnswer:'<p><strong>Subprime Crisis:</strong> US banks extended mortgage loans to subprime borrowers (low creditworthiness) during 2000-2006, fuelled by low interest rates and lax regulation. These mortgages were securitised into MBS and CDOs, spreading risk globally. When US house prices fell in 2006-07, defaults surged, MBS values collapsed, and major financial institutions (Bear Stearns, Lehman Brothers) failed. Credit markets froze, triggering the 2008 global financial crisis and recession.</p><p><strong>Was it a "plain vanilla" crisis?</strong> A plain vanilla financial crisis follows a standard pattern: credit boom → asset price bubble → bust → bank failures → recession. The subprime crisis did follow this pattern broadly. However, it was significantly more complex due to: (i) unprecedented securitisation and financial engineering (CDOs, CDOs-squared, credit default swaps); (ii) opacity — investors didn\'t understand the underlying risks; (iii) global interconnectedness via shadow banking; (iv) regulatory arbitrage across jurisdictions. Reinhart and Rogoff argue it was a classic "this time is different" crisis — the same boom-bust pattern repeated. However, the transmission mechanism via derivatives was novel. Conclusion: the underlying dynamic was plain vanilla (Minsky cycle), but the amplification mechanism was distinctly modern.</p>',
+   tips:'Examiners want two things: a factual narrative of the crisis AND an analytical assessment of whether it fits the "plain vanilla" template. Define plain vanilla crisis clearly (standard boom-bust), acknowledge both sides, then reach a nuanced conclusion. Mention Reinhart-Rogoff or Minsky to show depth.'},
+
+  {id:5,section:'B',num:'Q5',title:'Endogenous Growth & Knowledge',marks:15,marksNote:'15',wordLimit:200,topic:['dev','macro'],
+   parts:[{label:'',text:'Explain the basic endogenous growth model which emphasises the role of knowledge in economic growth.',marks:15}],
+   concepts:['Endogenous Growth','AK Model','Romer Model','Knowledge Spillovers','Human Capital','R&D','Non-rivalry of Knowledge','Lucas Model','Solow Limitations'],
+   modelAnswer:'<p><strong>Limitations of Solow:</strong> The Solow model treats technology as exogenous — growth in the long run depends on an unexplained "manna from heaven." Endogenous growth theory makes technological progress endogenous.</p><p><strong>AK Model (Rebelo 1991):</strong> Y = AK, where K includes both physical and human capital. If returns to broad capital are constant (not diminishing), the economy grows indefinitely without exogenous technical change. The savings rate permanently affects the growth rate — unlike Solow.</p><p><strong>Romer Model (1990):</strong> Growth is driven by intentional R&D. Firms invest in knowledge creation (ideas) for profit. Key insight: knowledge is non-rival (can be used by many simultaneously) and partially non-excludable → creates spillovers. These positive externalities mean private returns to R&D are below social returns → market under-invests in R&D → justifies R&D subsidies.</p><p><strong>Lucas Model:</strong> Human capital accumulation drives growth. Workers allocate time between production and learning. Higher human capital raises productivity across the economy (external effect of human capital).</p><p><strong>Policy implication:</strong> Unlike Solow (where policy only affects levels, not growth rates), endogenous growth models imply policy can permanently raise growth rates through education, R&D subsidies, and IP protection.</p>',
+   tips:'Structure your answer as: Solow limitation → AK model → Romer model → Lucas → Policy implications. Examiners specifically want to see "non-rivalry of knowledge" mentioned and the contrast with Solow\'s exogenous technology. The statement "policy can permanently affect growth rate" is the key insight that earns marks.'},
+
+  {id:6,section:'B',num:'Q6',title:'Human Development Index Evolution',marks:15,marksNote:'15',wordLimit:200,topic:['dev'],
+   parts:[{label:'',text:'Discuss the evolution of the concept of human development since 1990 to its present state.',marks:15}],
+   concepts:['HDI','UNDP','Sen Capabilities','Human Development Report','GDI','HPI','MPI','Beyond GDP','SDGs','Human Security'],
+   modelAnswer:'<p><strong>Origins (1990):</strong> The UNDP Human Development Report 1990, inspired by Amartya Sen\'s capabilities approach, introduced the HDI as an alternative to GDP. HDI combined life expectancy, education (literacy + enrolment), and per capita income — measuring "the enlargement of people\'s choices."</p><p><strong>1990s Expansions:</strong> HDR introduced complementary indices: Human Development Index for women (GDI, 1995), Gender Empowerment Measure (GEM), and Human Poverty Index (HPI) for developed and developing nations separately.</p><p><strong>2000s Refinements:</strong> Increased focus on human security, freedom, and participation. The Millennium Development Goals (2000) aligned with HD framework. HDI methodology revised in 2010 — geometric mean replaced arithmetic mean (penalising unequal development), and GNI per capita replaced GDP.</p><p><strong>2010 Onwards:</strong> Inequality-adjusted HDI (IHDI) introduced to account for distribution within countries. Gender Inequality Index (GII) replaced GDI/GEM. Multidimensional Poverty Index (MPI) by OPHI/UNDP replaced HPI — measuring deprivations across health, education and living standards simultaneously.</p><p><strong>Present State:</strong> HDR 2023-24 focuses on planetary boundaries and development — recognising that human development must be compatible with ecological sustainability. SDG framework (2015) operationalised HD across 17 goals. The concept has evolved from income-alternative to a comprehensive framework integrating inequality, gender, sustainability and capabilities.</p>',
+   tips:'This is a timeline question — structure your answer chronologically. Examiners specifically want to see the methodological changes in HDI (2010 revision: geometric mean, GNI) and the newer indices (IHDI, MPI, GII). Link the evolution to Sen\'s capabilities throughout.'},
+
+  {id:7,section:'B',num:'Q7',title:'Regional Trade Agreements',marks:15,marksNote:'15',wordLimit:200,topic:['intl'],
+   parts:[{label:'',text:'Critically analyse the role of Regional Trade Agreements in the creation and diversion of trade.',marks:15}],
+   concepts:['RTA','FTA','Customs Union','Trade Creation','Trade Diversion','Viner Analysis','Welfare Effects','Spaghetti Bowl','WTO Article XXIV','Preferential Trade'],
+   modelAnswer:'<p><strong>RTAs Defined:</strong> Regional Trade Agreements (FTAs, Customs Unions) involve preferential tariff reduction among member countries while maintaining external tariffs against non-members. Over 350 RTAs are in force (WTO, 2024).</p><p><strong>Trade Creation (Viner, 1950):</strong> When an RTA causes a country to shift from high-cost domestic production to lower-cost imports from a partner country → welfare gain. Resources move to more efficient uses; consumers benefit from lower prices.</p><p><strong>Trade Diversion:</strong> When an RTA causes a country to shift from the lowest-cost world supplier (non-member) to a higher-cost partner (because partner enjoys preferential access) → welfare loss. The country pays more for imports while tariff revenue is lost.</p><p><strong>Net Welfare Effect:</strong> Ambiguous — depends on: (i) cost difference between partner and world supplier; (ii) volume of trade affected; (iii) elasticities. An RTA improves welfare only if trade creation > trade diversion.</p><p><strong>Critical Assessment:</strong> RTAs can undermine multilateral liberalisation (WTO Doha Round stalled partly due to proliferation of RTAs). The "spaghetti bowl" of overlapping agreements raises compliance costs for businesses. However, RTAs can also be "building blocks" if they incorporate deeper integration (services, investment, IP) beyond WTO commitments.</p><p><strong>Conclusion:</strong> RTAs are second-best instruments — superior to no liberalisation, inferior to global MFN liberalisation.</p>',
+   tips:'The Viner (1950) trade creation/diversion framework is essential — name him explicitly. Draw a simple diagram showing trade creation (domestic → partner) and trade diversion (world → partner) for full marks. Conclude with the "building block vs stumbling block" debate.'},
+
+  {id:8,section:'B',num:'Q8',title:'Import Tariff & Fixed Exchange Rate',marks:15,marksNote:'15',wordLimit:200,topic:['intl','macro'],
+   parts:[{label:'',text:'Examine the effect of an import tariff on equilibrium output and balance of trade under a fixed exchange rate using a short-run macroeconomic framework.',marks:15}],
+   concepts:['Import Tariff','Fixed Exchange Rate','Mundell-Fleming','IS-LM-BP','Aggregate Demand','Balance of Trade','Expenditure Switching','Open Economy Macroeconomics'],
+   modelAnswer:'<p><strong>Framework:</strong> Use the Mundell-Fleming IS-LM-BP model under fixed exchange rates. In a small open economy with fixed exchange rate, monetary policy is ineffective but fiscal policy works fully.</p><p><strong>Effect of Import Tariff:</strong> A tariff on imports: (i) directly reduces imports → improves trade balance → IS curve shifts right (higher autonomous demand at each interest rate); (ii) acts as expenditure-switching — domestic consumers switch from imports to domestic goods.</p><p><strong>IS-LM Adjustment:</strong> IS shifts right → upward pressure on income and interest rate. Under fixed exchange rate: if capital is mobile, higher r attracts capital inflows → central bank must sell domestic currency to maintain the peg → money supply expands → LM shifts right until BP is satisfied again. Equilibrium output rises.</p><p><strong>Balance of Trade Effect:</strong> Ambiguous in the final equilibrium. The direct improvement (reduced imports) is partially offset by: (i) higher income increasing import demand (Y↑ → M↑); (ii) if the Marshall-Lerner condition is considered, tariff equivalently appreciates the real exchange rate, offsetting competitiveness gains. In the short run, the tariff improves the trade balance; in general equilibrium, it may not persist.</p>',
+   tips:'The key is to use IS-LM-BP framework explicitly. Under fixed exchange rate: show IS shifts right, then the monetary accommodation (LM adjusts) to maintain the peg. The "ambiguous effect on trade balance" conclusion is what separates a good answer from an average one — income rises, which increases imports, partially offsetting the tariff effect.'},
+
+  {id:9,section:'B',num:'Q9',title:'UN Agencies & Environmental Concerns',marks:15,marksNote:'15',wordLimit:200,topic:['dev'],
+   parts:[{label:'',text:'Discuss the role of the United Nations and its agencies in addressing global environmental concerns.',marks:15}],
+   concepts:['UNEP','UNFCCC','Paris Agreement','Rio Earth Summit','Kyoto Protocol','CBD','SDGs','Stockholm Conference','Global Commons','Environmental Governance'],
+   modelAnswer:'<p><strong>UN Environmental Architecture:</strong> The UN addresses global environmental challenges through a network of agencies, conferences and treaties recognising that environmental problems are global public goods requiring collective action.</p><p><strong>Key Institutions:</strong> UNEP (1972) — coordinates environmental policies, provides scientific assessments, houses secretariats of key MEAs. UNFCCC — governs climate negotiations. CBD — biodiversity conservation. UNCCD — desertification. Each operates as a multilateral environmental agreement (MEA).</p><p><strong>Major Milestones:</strong> Stockholm Conference (1972) — first global environmental summit, established UNEP. Rio Earth Summit (1992) — produced UNFCCC, CBD, Agenda 21, and Forest Principles. Kyoto Protocol (1997) — legally binding emission targets for developed nations (Annex I). Paris Agreement (2015) — nationally determined contributions (NDCs), 1.5°C target, universal participation. SDG 13 (Climate Action), SDG 14 (Life Below Water), SDG 15 (Life on Land).</p><p><strong>Limitations:</strong> Enforcement is weak — voluntary commitments (NDCs) are not legally binding; developed vs. developing country tensions persist (CBDR principle); insufficient climate finance ($100bn/year pledge largely unmet). Despite limitations, the UN framework has established global norms, monitoring mechanisms, and technology transfer pathways.</p>',
+   tips:'Organise as: Institutions → Key conferences/agreements → Assessment of effectiveness. Examiners want specific names: UNEP, UNFCCC, Paris Agreement, NDCs, CBDR principle. The "Common But Differentiated Responsibilities" (CBDR) principle is a high-value concept that distinguishes strong answers.'},
+
+  {id:10,section:'B',num:'Q10',title:'Moral Hazard & Adverse Selection in Insurance',marks:15,marksNote:'15',wordLimit:200,topic:['fin'],
+   parts:[{label:'',text:'Discuss the concepts of moral hazard and adverse selection in the context of the insurance sector.',marks:15}],
+   concepts:['Moral Hazard','Adverse Selection','Information Asymmetry','Screening','Signalling','Pooling Equilibrium','Separating Equilibrium','Deductibles','Co-payments','Akerlof'],
+   modelAnswer:'<p><strong>Information Asymmetry in Insurance:</strong> Insurance markets suffer from information asymmetry — the insured knows their risk type better than the insurer. This creates two fundamental problems.</p><p><strong>Adverse Selection (Ex-Ante):</strong> Occurs before the contract is signed. High-risk individuals are more likely to buy insurance at any given premium. If the insurer cannot distinguish risk types and charges an average premium, low-risk individuals find insurance expensive and exit the market → insurer faces a riskier pool → raises premiums → more low-risk exit (death spiral). Solution: screening (medical tests, credit history), risk-based pricing, mandatory insurance (breaks adverse selection by forcing low-risk to participate).</p><p><strong>Moral Hazard (Ex-Post):</strong> Occurs after the contract is signed. Once insured, individuals take more risk (e.g., less careful driving, unhealthy behaviour) because the cost of risk-taking falls on the insurer. Solution: deductibles (insured bears first loss), co-payments, no-claims bonuses (reward careful behaviour), monitoring.</p><p><strong>Market Implications:</strong> Rothschild-Stiglitz (1976) showed that under adverse selection, only separating equilibria may exist — different contracts for different risk types — but this leads to cross-subsidisation problems. In health insurance, adverse selection justifies mandates (ACA in the US). Both problems reflect the fundamental tension between risk-sharing (insurance purpose) and incentive preservation.</p>',
+   tips:'Distinguish ex-ante (adverse selection — before contract) from ex-post (moral hazard — after contract) clearly. Cite Akerlof for adverse selection and Rothschild-Stiglitz for the insurance equilibrium model. Give concrete insurance examples: health, motor, life. Mention specific solutions: deductibles, co-pays, screening, mandatory insurance.'},
+
+  {id:11,section:'C',num:'Q11',title:'IS-LM Model: Closed Economy',marks:20,marksNote:'4+3+5+3+5=20',wordLimit:300,topic:['macro','money'],
+   parts:[
+    {label:'a',text:'Derive the IS equation from: C=700+0.7Y_D, Y_D=Y−T, T=150, I=600−20r, G=500.',marks:4},
+    {label:'b',text:'Derive the LM equation from: L=0.2Y−50r, M/P=400.',marks:3},
+    {label:'c',text:'Find the equilibrium output and interest rate.',marks:5},
+    {label:'d',text:'Present your results in a diagram.',marks:3},
+    {label:'e',text:'Identify the crowding out effect of an increase in G to 1000.',marks:5}
+   ],
+   concepts:['IS Curve','LM Curve','IS-LM Model','Equilibrium Output','Interest Rate','Crowding Out','Fiscal Multiplier','Monetary Policy','ISLM Diagram'],
+   modelAnswer:'<p><strong>(a) IS Equation:</strong><br/>Y = C + I + G = [700 + 0.7(Y−150)] + (600−20r) + 500<br/>Y = 700 + 0.7Y − 105 + 600 − 20r + 500<br/>Y − 0.7Y = 1695 − 20r<br/>0.3Y = 1695 − 20r<br/><strong>IS: Y = 5650 − 66.67r</strong></p><p><strong>(b) LM Equation:</strong><br/>L = M/P → 0.2Y − 50r = 400<br/>0.2Y = 400 + 50r<br/><strong>LM: Y = 2000 + 250r</strong></p><p><strong>(c) Equilibrium:</strong><br/>Set IS = LM:<br/>5650 − 66.67r = 2000 + 250r<br/>3650 = 316.67r<br/><strong>r* = 11.52% ≈ 11.5%</strong><br/>Y* = 2000 + 250(11.52) = 2000 + 2880 = <strong>Y* = 4880</strong></p><p><strong>(d) Diagram:</strong> Draw IS (downward sloping in Y-r space) and LM (upward sloping). Mark intersection at (Y*=4880, r*=11.5%). Label axes Y (horizontal) and r (vertical).</p><p><strong>(e) Crowding Out — G rises to 1000 (ΔG=500):</strong><br/>New IS: Y = [700+0.7(Y−150)] + (600−20r) + 1000<br/>0.3Y = 2195 − 20r → Y = 7317 − 66.67r<br/>New equilibrium: 7317 − 66.67r = 2000 + 250r → r** = 16.68%, Y** = 6170<br/>Simple multiplier (no crowding out): ΔY = ΔG/0.3 = 1667. Actual ΔY = 6170−4880 = 1290.<br/><strong>Crowding out = 1667 − 1290 = 377 units of output.</strong> Higher G raises r from 11.5% to 16.7%, reducing private investment and partially offsetting the fiscal expansion.</p>',
+   tips:'This is a fully numerical question — do not skip any algebra. Show every step clearly. The crowding out in part (e) = simple Keynesian multiplier effect MINUS actual IS-LM effect. Many candidates forget to compare with the no-crowding-out benchmark. Draw the diagram with both IS curves (original and shifted) and mark both equilibria.'},
+
+  {id:12,section:'C',num:'Q12',title:'Phillips Curve & Aggregate Supply',marks:20,marksNote:'10+10=20',wordLimit:300,topic:['macro'],
+   parts:[
+    {label:'a',text:'Analyse the trade-off between unemployment and inflation with reference to the Phillips curve under adaptive expectations.',marks:10},
+    {label:'b',text:'Derive the aggregate supply curve from the Phillips curve.',marks:10}
+   ],
+   concepts:['Phillips Curve','Adaptive Expectations','Friedman-Phelps','NAIRU','Natural Rate of Unemployment','Short-run Phillips Curve','Long-run Phillips Curve','Aggregate Supply','Stagflation'],
+   modelAnswer:'<p><strong>(a) Phillips Curve & Adaptive Expectations:</strong> The original Phillips curve (1958) showed a stable inverse relationship between unemployment (u) and inflation (π). Policymakers could exploit this trade-off — lower unemployment by accepting higher inflation.</p><p>Friedman (1968) and Phelps challenged this using the natural rate hypothesis. Workers have adaptive expectations: π_e(t) = π(t−1). In the short run, unexpected inflation reduces real wages → firms hire more → u falls below natural rate (u*). But workers eventually revise expectations upward → demand higher wages → costs rise → u returns to u*. The short-run Phillips curve shifts up by the amount of the expectation revision.</p><p>In the long run: u always returns to u* (NAIRU) regardless of inflation. The long-run Phillips curve is vertical at u*. Attempts to permanently lower u below u* cause accelerating inflation (Accelerationist hypothesis). Stagflation of 1970s (high inflation + high unemployment) confirmed the breakdown of the original stable trade-off.</p><p>Equation: π = π_e − α(u − u*). Under adaptive expectations: π_e = π(−1). So: π = π(−1) − α(u − u*).</p><p><strong>(b) Deriving Aggregate Supply from Phillips Curve:</strong> The AS curve relates the price level (P) to output (Y). From Okun\'s Law: (u − u*) = −β(Y − Y*), where Y* = potential output. Substituting into the Phillips curve: π = π_e + αβ(Y − Y*). Since π = (P − P_e)/P_e: P = P_e[1 + αβ(Y − Y*)]. This is the SRAS curve — upward sloping in P-Y space. When Y > Y* → P > P_e → SRAS slopes upward. The LRAS is vertical at Y* (analogous to vertical long-run Phillips curve at u*). A positive demand shock moves the economy along SRAS in the short run; in the long run, expectations adjust and LRAS is restored.</p>',
+   tips:'For (a) draw both the short-run (downward sloping) and long-run (vertical) Phillips curves clearly — this is worth several marks. Show the expectation-adjustment mechanism: unexpected inflation → employment ↑ → over time expectations adjust → SRPC shifts up. For (b), explicitly use Okun\'s Law to convert the unemployment-inflation relationship to output-price relationship.'},
+
+  {id:13,section:'C',num:'Q13',title:'Utilitarian-Welfarist vs Sen\'s Approach',marks:20,marksNote:'20',wordLimit:300,topic:['dev','fin'],
+   parts:[{label:'',text:'Compare and contrast the utilitarian-welfarist approach with Sen\'s approach to socioeconomic and gender issues.',marks:20}],
+   concepts:['Utilitarianism','Welfarism','Pareto Optimality','Sen Capabilities','Functionings','Agency','Gender','Rawls','Social Welfare Function','HDI'],
+   modelAnswer:'<p><strong>Utilitarian-Welfarist Approach:</strong> Utilitarianism (Bentham, Mill) measures social welfare as the sum (or average) of individual utilities. Welfarism operationalises this through social welfare functions (W = ΣU_i). Key features: (i) only mental states (utility/happiness) matter; (ii) strict consequentialism — judge outcomes by aggregate welfare; (iii) distribution neutral (a rupee of utility to any person counts equally); (iv) information basis: utility alone.</p><p><strong>Gender in Welfarism:</strong> Welfarism is gender-blind by design — individuals are treated symmetrically. However, it fails gender analysis because: adapted preferences — women who have internalised deprivation may report high utility despite objectively poor conditions (Sen\'s "happy slave" problem); it ignores power asymmetries, care work, and structural discrimination.</p><p><strong>Sen\'s Capabilities Approach:</strong> Sen argues welfare should be measured by what people can do and be (functionings) and their freedom to achieve valued functionings (capabilities). Key departures: (i) rejects utility as the sole basis — focuses on objective functioning achievements; (ii) embraces plural values — health, education, political freedom, dignity are irreducible; (iii) agency matters — people are active agents, not passive utility containers; (iv) addresses adaptive preferences explicitly.</p><p><strong>Gender Analysis:</strong> Sen\'s approach is particularly powerful for gender — it reveals hidden deprivations (e.g., women reporting well-being despite malnutrition), focuses on capability gaps (education, health, political participation), and underpins the GDI, GII, and MPI. "Missing women" (Sen 1990) — excess female mortality in South Asia — is only visible through functioning analysis, not utility.</p><p><strong>Conclusion:</strong> Welfarism is tractable and mathematically elegant but information-poor and biased toward status quo preferences. Sen\'s approach is richer but harder to operationalise. HDI and MPI are practical compromises drawing on capabilities thinking.</p>',
+   tips:'The examiner wants a genuine comparison, not two separate descriptions. Structure as: basis of evaluation → information used → gender implications → limitations of each. The "adaptive preferences / happy slave" problem is the critical point that distinguishes Sen from welfarism — always mention it. Name the "missing women" concept for gender analysis.'},
+
+  {id:14,section:'C',num:'Q14',title:'Options: American vs European + Profit/Loss',marks:20,marksNote:'5+3+12=20',wordLimit:300,topic:['fin'],
+   parts:[
+    {label:'a',text:'Define "options". Differentiate between American and European options.',marks:5},
+    {label:'b',text:'Differentiate between call and put options briefly.',marks:3},
+    {label:'c',text:'An investor buys a European call on a share for ₹4. Strike price Kt=₹96, stock price St=₹115, expiration 4 months. Find whether the investor makes a profit or loss. Draw a diagram.',marks:12}
+   ],
+   concepts:['Options','Call Option','Put Option','American Option','European Option','Strike Price','Option Premium','In-the-Money','Profit/Loss Payoff','Break-even'],
+   modelAnswer:'<p><strong>(a) Options & American vs European:</strong> An option is a financial derivative giving the buyer the right (not obligation) to buy (call) or sell (put) an underlying asset at a predetermined strike price on or before a specified date. The seller (writer) receives a premium.<br/><em>American option:</em> Can be exercised at any time up to and including the expiration date — more flexible, generally more valuable.<br/><em>European option:</em> Can only be exercised on the expiration date itself — less flexible. Most index options and many stock options traded on exchanges are European.</p><p><strong>(b) Call vs Put:</strong> Call option: right to BUY the asset at the strike price — profitable when market price rises above strike. Put option: right to SELL the asset at the strike price — profitable when market price falls below strike.</p><p><strong>(c) Profit/Loss Calculation:</strong><br/>Premium paid = ₹4 (this is the cost of the option)<br/>Strike price Kt = ₹96<br/>Current stock price St = ₹115<br/><br/>Since St (₹115) > Kt (₹96), the call is IN-THE-MONEY → exercise the option.<br/>Intrinsic value = St − Kt = 115 − 96 = ₹19<br/>Net profit = Intrinsic value − Premium = 19 − 4 = <strong>₹15 profit per share</strong><br/><br/>Break-even price = Strike + Premium = 96 + 4 = ₹100<br/>Since St = ₹115 > ₹100, the investor is profitable.<br/><br/><em>Payoff diagram:</em> Draw horizontal axis (stock price at expiry), vertical axis (profit/loss). Below ₹96: option not exercised, loss = ₹4 (premium). Between ₹96-₹100: option exercised but partial loss. At ₹100: break-even. Above ₹100: profit rises linearly. At ₹115: profit = ₹15.</p>',
+   tips:'Part (c) is 12 marks — show every calculation step. The break-even price = Strike + Premium = ₹100 is the key concept. The payoff diagram is worth 4-5 marks alone — draw it clearly with the kink at ₹96 (where option starts to be exercised) and the break-even at ₹100. Label "Loss zone," "Break-even," and "Profit zone."'},
+
+  {id:15,section:'C',num:'Q15',title:'IS-LM-BP Model: Monetary & Fiscal Policy',marks:20,marksNote:'10+10=20',wordLimit:300,topic:['macro','intl'],
+   parts:[
+    {label:'a',text:'Analyse the efficacy of monetary and fiscal policy with high but not perfect capital mobility in the IS-LM-BP model under fixed exchange rate.',marks:10},
+    {label:'b',text:'Analyse the efficacy of monetary and fiscal policy with high but not perfect capital mobility in the IS-LM-BP model under flexible exchange rate.',marks:10}
+   ],
+   concepts:['Mundell-Fleming','IS-LM-BP','Capital Mobility','Fixed Exchange Rate','Flexible Exchange Rate','Monetary Policy','Fiscal Policy','Balance of Payments','Sterilisation'],
+   modelAnswer:'<p><strong>Framework:</strong> With high (imperfect) capital mobility, the BP curve is relatively flat (but not horizontal). Capital flows respond strongly to interest rate differentials but not infinitely.</p><p><strong>(a) Fixed Exchange Rate:</strong><br/><em>Fiscal Policy (G↑):</em> IS shifts right → Y and r rise → capital inflows (r > world r) → BoP surplus → central bank buys foreign exchange → money supply expands → LM shifts right. Final equilibrium: Y rises substantially. Fiscal policy is highly effective under fixed exchange rate with capital mobility.<br/><em>Monetary Policy (M↑):</em> LM shifts right → r falls → Y rises initially but capital outflows (r < world r) → BoP deficit → central bank sells reserves → money supply contracts → LM shifts back. Monetary policy is ineffective under fixed exchange rates — money supply is endogenous.</p><p><strong>(b) Flexible Exchange Rate:</strong><br/><em>Monetary Policy (M↑):</em> LM shifts right → r falls → capital outflows → exchange rate depreciates → exports ↑, imports ↓ → IS shifts right → Y rises significantly. Monetary policy is highly effective under flexible exchange rate.<br/><em>Fiscal Policy (G↑):</em> IS shifts right → r rises → capital inflows → exchange rate appreciates → exports ↓, imports ↑ → IS shifts back (crowding out via exchange rate). Fiscal policy is largely ineffective under flexible exchange rate with capital mobility — the exchange rate crowds out net exports (Mundell\'s policy assignment).</p><p><strong>Mundell\'s Assignment:</strong> Fixed rate → use fiscal policy; Flexible rate → use monetary policy. With imperfect (not perfect) capital mobility, both policies have partial effectiveness — the outcomes are less extreme than the perfect mobility case.</p>',
+   tips:'This is the classic Mundell-Fleming question. The key conclusion table: Fixed rate + fiscal = effective; Fixed rate + monetary = ineffective; Flexible + monetary = effective; Flexible + fiscal = ineffective (crowded out via exchange rate). With imperfect capital mobility, these are softened but the direction holds. Draw the IS-LM-BP diagrams for each case — the examiner expects graphical analysis.'},
+
+  {id:16,section:'C',num:'Q16',title:'World Bank & Development',marks:20,marksNote:'20',wordLimit:300,topic:['dev','intl'],
+   parts:[{label:'',text:'Discuss the role of the World Bank and its affiliates in facilitating economic development of developing countries.',marks:20}],
+   concepts:['World Bank Group','IBRD','IDA','IFC','MIGA','ICSID','Structural Adjustment','Washington Consensus','Post-Washington Consensus','Poverty Reduction','SDGs'],
+   modelAnswer:'<p><strong>World Bank Group Structure:</strong> The World Bank Group comprises five institutions: IBRD (middle-income countries), IDA (poorest countries, concessional loans/grants), IFC (private sector financing), MIGA (investment guarantees), ICSID (investment dispute settlement).</p><p><strong>Role in Development:</strong><br/><em>Financial Role:</em> IBRD provides long-term loans at near-market rates for infrastructure, education, health. IDA provides zero or near-zero interest loans (credits) and grants to countries with per capita income below ~$1,255. Combined lending: $100+ billion per year.</p><p><strong>Policy Evolution:</strong> 1980s-90s: Structural Adjustment Programmes (SAPs) — conditionality requiring fiscal austerity, privatisation, trade liberalisation (Washington Consensus). Mixed results — growth in some countries, social hardship in others. Post-2000: Shift to Post-Washington Consensus — poverty reduction strategy papers (PRSPs), country ownership, social protection, institutional development. Millennium Development Goals → SDGs alignment.</p><p><strong>Key Functions:</strong> Technical assistance and knowledge (World Development Report). Capacity building in governance, tax administration, financial regulation. Climate finance — $26 billion in 2023 for climate-related projects. Health and education lending (post-COVID recovery). Gender and inclusion mainstreaming.</p><p><strong>Criticisms:</strong> Conditionality undermines sovereignty; SAPs caused social hardship; governance dominated by G7 (voting shares proportional to capital contributions — US has largest share and effective veto); slow disbursement relative to needs. Challenges from China-led AIIB and NDB.</p><p><strong>Conclusion:</strong> The World Bank remains the single largest source of development finance for low-income countries, but its effectiveness depends on country ownership, quality of conditionality, and adaptation to new challenges (climate, pandemics, debt distress).</p>',
+   tips:'Structure: WB Group structure (name all 5 affiliates — IBRD, IDA, IFC, MIGA, ICSID) → financial role → policy evolution (SAPs → Post-Washington Consensus) → current priorities → critical assessment. Many candidates only discuss IBRD and IDA, missing IFC, MIGA and ICSID. The evolution from Washington to Post-Washington Consensus is a key analytical point.'}
+];
+
+const STORAGE_KEY = 'ies_prep_2025_ge2';
+let _lsAvailable = false;
+try{localStorage.setItem('__t__','1');localStorage.removeItem('__t__');_lsAvailable=true;}catch(e){}
+function loadState(){if(_lsAvailable){try{const r=localStorage.getItem(STORAGE_KEY);if(r)return JSON.parse(r);}catch(e){}}return{ratings:{},answers:{}};}
+function saveState(){if(_lsAvailable){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}}
+const state=loadState();
+if(!state.ratings)state.ratings={};
+if(!state.answers)state.answers={};
+let currentQIndex=0,timerSeconds=10800,timerRunning=false,timerInterval=null;
+function G(id){return document.getElementById(id);}
+
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  G('screen-'+name).classList.add('active');
+  document.querySelector('.nav-btn[data-screen="'+name+'"]').classList.add('active');
+  if(name==='home')renderHome();
+  if(name==='practice')renderQuestion();
+  if(name==='mock')renderMock();
+  if(name==='analytics')renderAnalytics();
+}
+
+function renderHome(){
+  ['a','b','c'].forEach(s=>{
+    const qs=QUESTIONS.filter(q=>q.section===s.toUpperCase());
+    G('home-sec-'+s).innerHTML=qs.map(q=>{
+      const idx=QUESTIONS.indexOf(q),r=state.ratings[q.id];
+      const dc=r==='good'?'dot-good':r==='ok'?'dot-ok':r==='poor'?'dot-poor':'';
+      return'<div class="q-row" data-idx="'+idx+'"><span class="q-num">'+q.num+'</span><div style="flex:1"><div class="q-text">'+q.title+'</div><div class="q-marks">'+q.marksNote+' marks</div></div><div class="status-dot '+dc+'"></div></div>';
+    }).join('');
+  });
+  const done=Object.keys(state.ratings).length;
+  G('stat-done').textContent=done;
+  const rs=Object.values(state.ratings);
+  if(rs.length>0){const avg=rs.reduce((s,r)=>s+({good:3,ok:2,poor:1}[r]),0)/rs.length;G('stat-score').textContent=avg>=2.5?'Good':avg>=1.5?'Partial':'Weak';}
+  else G('stat-score').textContent='—';
+  document.querySelectorAll('.q-row').forEach(el=>el.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));
+}
+
+function renderQuestion(){
+  const q=QUESTIONS[currentQIndex];
+  G('prac-progress').textContent=q.num+' ('+( currentQIndex+1)+' of '+QUESTIONS.length+')';
+  G('prog-fill').style.width=Math.round(((currentQIndex+1)/QUESTIONS.length)*100)+'%';
+  G('user-answer').value=state.answers[q.id]||'';
+  G('model-answer-box').style.display='none';
+  if(q.wordLimit)G('word-limit-hint').textContent='Suggested: ~'+q.wordLimit+' words';
+  else G('word-limit-hint').textContent='';
+  const cc={A:'chip-a',B:'chip-b',C:'chip-c'}[q.section];
+  const cl={A:'Section A — Compulsory',B:'Section B — Attempt 6 of 9',C:'Section C — Attempt 4 of 6'}[q.section];
+  const ph=q.parts.length===1&&q.parts[0].label===''?'<div class="q-main">'+q.parts[0].text+'</div>':q.parts.map(p=>'<div class="q-part"><div class="q-part-label">'+(p.label?'('+p.label+') — '+p.marks+' marks':'')+' </div>'+p.text+'</div>').join('');
+  G('q-display').innerHTML='<span class="section-chip '+cc+'">'+cl+'</span><div class="q-card"><div class="marks-tag">\u2726 '+q.marksNote+' marks</div>'+ph+'</div>';
+  document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));
+  if(state.ratings[q.id])document.querySelector('.eval-btn[data-rating="'+state.ratings[q.id]+'"]').classList.add('sel');
+}
+
+function showModelAnswer(){
+  const q=QUESTIONS[currentQIndex];
+  state.answers[q.id]=G('user-answer').value;saveState();
+  const box=G('model-answer-box');box.style.display='block';
+  G('model-answer-content').innerHTML=
+    '<div class="model-section"><div class="model-section-title" style="color:var(--blue)">\u25c8 Key Concepts</div><div class="concept-pills">'+q.concepts.map(c=>'<span class="pill">'+c+'</span>').join('')+'</div></div>'+
+    '<div class="model-section"><div class="model-section-title" style="color:var(--green)">\u2713 Model Answer</div><div class="model-text">'+q.modelAnswer+'</div></div>'+
+    '<div class="model-section"><div class="model-section-title" style="color:var(--red)">! Examiner Tips</div><div class="tip-box">'+q.tips+'</div></div>';
+  document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));
+  if(state.ratings[q.id])document.querySelector('.eval-btn[data-rating="'+state.ratings[q.id]+'"]').classList.add('sel');
+  setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function goNext(){if(currentQIndex<QUESTIONS.length-1){currentQIndex++;renderQuestion();G('screen-practice').scrollTop=0;}}
+function goPrev(){if(currentQIndex>0){currentQIndex--;renderQuestion();G('screen-practice').scrollTop=0;}}
+
+function renderMock(){
+  G('mock-q-grid').innerHTML=QUESTIONS.map((q,i)=>{
+    const r=state.ratings[q.id];
+    const bg=r==='good'?'var(--green-bg)':r==='ok'?'#fff3cd':r==='poor'?'var(--red-bg)':'#fff';
+    const co=r==='good'?'var(--green)':r==='ok'?'#6b4c00':r==='poor'?'var(--red)':'var(--ink)';
+    return'<button class="mock-q-btn" data-idx="'+i+'" style="background:'+bg+';color:'+co+'">'+q.num+'</button>';
+  }).join('');
+  document.querySelectorAll('.mock-q-btn').forEach(btn=>btn.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay(){const h=Math.floor(timerSeconds/3600),m=Math.floor((timerSeconds%3600)/60),s=timerSeconds%60;G('timer-display').textContent=h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+
+function renderAnalytics(){
+  const rs=state.ratings;
+  G('a-attempted').textContent=Object.keys(rs).length;
+  G('a-good').textContent=Object.values(rs).filter(r=>r==='good').length;
+  G('a-poor').textContent=Object.values(rs).filter(r=>r==='poor').length;
+  const topicMap={macro:'macro',money:'money',intl:'intl',dev:'dev',fin:'fin'};
+  Object.keys(topicMap).forEach(tk=>{
+    const tqs=QUESTIONS.filter(q=>q.topic.includes(tk));
+    const pct=tqs.length?Math.round((tqs.filter(q=>rs[q.id]).length/tqs.length)*100):0;
+    G('tb-'+tk).style.width=pct+'%';G('tp-'+tk).textContent=pct+'%';
+  });
+  const aqs=QUESTIONS.filter(q=>rs[q.id]);
+  G('history-list').innerHTML=aqs.length===0?'<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No questions attempted yet.</div>':aqs.map(q=>{const r=rs[q.id];const cls={good:'hs-good',ok:'hs-ok',poor:'hs-poor'}[r];const lbl={good:'Good \u2713',ok:'Partial ~',poor:'Needs Work \u2717'}[r];return'<div class="history-row" data-idx="'+QUESTIONS.indexOf(q)+'"><div class="history-q">'+q.num+': '+q.title+'</div><span class="history-status '+cls+'">'+lbl+'</span></div>';}).join('');
+  document.querySelectorAll('.history-row').forEach(el=>el.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',function(){showScreen(this.dataset.screen);}));
+G('btn-back').addEventListener('click',()=>showScreen('home'));
+G('btn-prev').addEventListener('click',goPrev);
+G('btn-next').addEventListener('click',goNext);
+G('btn-next2').addEventListener('click',goNext);
+G('btn-show-answer').addEventListener('click',showModelAnswer);
+document.querySelectorAll('.eval-btn').forEach(btn=>btn.addEventListener('click',function(){const q=QUESTIONS[currentQIndex];state.ratings[q.id]=this.dataset.rating;saveState();document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));this.classList.add('sel');}));
+G('mode-timed').addEventListener('click',()=>{G('mode-timed').classList.add('active');G('mode-free').classList.remove('active');G('timer-bar').style.opacity='1';});
+G('mode-free').addEventListener('click',()=>{G('mode-free').classList.add('active');G('mode-timed').classList.remove('active');G('timer-bar').style.opacity='0.4';clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Start';G('timer-start-btn').classList.remove('running');});
+G('timer-start-btn').addEventListener('click',()=>{if(G('mode-free').classList.contains('active'))return;if(timerRunning){clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Resume';G('timer-start-btn').classList.remove('running');}else{timerRunning=true;G('timer-start-btn').textContent='Pause';G('timer-start-btn').classList.add('running');timerInterval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;updateTimerDisplay();}else{clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Done';G('timer-start-btn').classList.remove('running');}},1000);}});
+G('timer-reset-btn').addEventListener('click',()=>{clearInterval(timerInterval);timerRunning=false;timerSeconds=10800;updateTimerDisplay();G('timer-start-btn').textContent='Start';G('timer-start-btn').classList.remove('running');});
+G('btn-start-mock').addEventListener('click',()=>{currentQIndex=0;showScreen('practice');});
+G('btn-reset').addEventListener('click',()=>{if(confirm('Reset all progress?')){Object.keys(state.ratings).forEach(k=>delete state.ratings[k]);Object.keys(state.answers).forEach(k=>delete state.answers[k]);saveState();renderAnalytics();renderHome();}});
+renderHome();renderMock();
+</script>
+</body>
+</html>

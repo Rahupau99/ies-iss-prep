@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>IES 2025 — General English</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#1e1a2e;--ink2:#2e2a4e;--gold:#7c5cbf;--gold-dim:rgba(124,92,191,0.13);--cream:#faf9ff;--cream2:#f0eeff;--muted:#7a6a9a;--green:#2d6a4f;--green-bg:#d8f3dc;--red:#9b2335;--red-bg:#fde8ea;--blue:#1a3a5c;--blue-bg:#dbeafe;--border:rgba(30,26,46,0.12);--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px}
+#app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;background:var(--cream);overflow:hidden}
+.header{background:var(--ink);color:var(--cream);padding:14px 18px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.header-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700}
+.header-sub{font-size:11px;color:#b8a8e0;letter-spacing:1px;text-transform:uppercase;margin-top:1px}
+.header-badge{background:var(--gold);color:#fff;font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px}
+.nav{display:flex;background:var(--ink2);flex-shrink:0}
+.nav-btn{flex:1;padding:10px 4px 9px;font-size:11px;color:rgba(250,249,255,0.5);border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color 0.2s}
+.nav-btn.active{color:#b8a8e0;border-bottom:2px solid #b8a8e0}
+.scroll{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.screen{display:none}.screen.active{display:block}
+.hero{background:var(--ink);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.hero-label{font-size:10px;color:#b8a8e0;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.hero-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--cream);font-weight:700;line-height:1.25}
+.hero-meta{font-size:12px;color:rgba(250,249,255,0.55);margin-top:8px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.stat{background:#fff;border-radius:10px;padding:12px 10px;text-align:center;border:1px solid var(--border)}
+.stat-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--ink)}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+.section-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:10px}
+.q-row{background:#fff;border-radius:10px;border:1px solid var(--border);padding:13px 14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:border-color 0.2s}
+.q-row:hover{border-color:var(--gold)}
+.q-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);background:var(--gold-dim);padding:3px 7px;border-radius:6px;flex-shrink:0;margin-top:1px}
+.q-text{font-size:13px;color:var(--ink);line-height:1.5;flex:1}
+.q-marks{font-size:11px;color:var(--muted);margin-top:3px}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;background:var(--border)}
+.dot-good{background:var(--green)}.dot-ok{background:var(--gold)}.dot-poor{background:var(--red)}
+.prac-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.prac-progress{font-size:12px;color:var(--muted)}
+.prog-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:16px}
+.prog-bar-fill{height:4px;background:var(--gold);border-radius:2px;transition:width 0.4s}
+.section-chip{display:inline-block;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:500;letter-spacing:0.5px;margin-bottom:10px;background:var(--gold-dim);color:var(--gold)}
+.q-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:18px;margin-bottom:14px}
+.q-main{font-family:'Playfair Display',serif;font-size:16px;line-height:1.65;color:var(--ink);font-weight:500}
+.q-part{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:14px;color:var(--ink2);line-height:1.6}
+.q-part-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);margin-bottom:4px}
+.marks-tag{display:inline-flex;align-items:center;gap:4px;background:var(--gold-dim);color:#4a2e9e;font-size:11px;padding:3px 9px;border-radius:20px;margin-bottom:10px;font-weight:500}
+.answer-area{background:#fff;border-radius:var(--radius);border:1.5px solid var(--border);padding:14px;margin-bottom:14px;transition:border-color 0.2s}
+.answer-area:focus-within{border-color:var(--gold)}
+.answer-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.answer-textarea{width:100%;min-height:180px;border:none;outline:none;resize:vertical;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);line-height:1.7;background:transparent}
+.answer-textarea::placeholder{color:var(--muted);font-style:italic}
+.word-limit{font-size:10px;color:var(--muted);text-align:right;margin-top:4px}
+.btn-row{display:flex;gap:8px;margin-bottom:12px}
+.btn{padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.18s;font-family:'DM Sans',sans-serif}
+.btn-primary{background:var(--ink);color:var(--cream);flex:2}
+.btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--border);flex:1}
+.btn-gold{background:var(--gold);color:#fff;font-weight:500;width:100%;display:block;padding:12px;border-radius:10px;font-size:13px;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
+.model-answer-box{display:none;margin-bottom:8px}
+.model-section{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:10px}
+.model-section-title{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;font-weight:500;margin-bottom:10px}
+.concept-pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font-size:12px;background:var(--gold-dim);color:var(--gold);padding:4px 10px;border-radius:20px}
+.model-text{font-size:13px;color:var(--ink2);line-height:1.75}
+.model-text p{margin-bottom:8px}
+.model-text strong{color:var(--ink);font-weight:500}
+.tip-box{background:var(--red-bg);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--red);line-height:1.6}
+.self-eval{background:var(--cream2);border-radius:10px;padding:14px;margin-bottom:12px}
+.self-eval-title{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:10px}
+.eval-btns{display:flex;gap:8px}
+.eval-btn{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:all 0.18s;font-family:'DM Sans',sans-serif}
+.eval-good{background:var(--green-bg);color:var(--green)}.eval-good.sel{background:var(--green);color:#fff}
+.eval-ok{background:#fff3cd;color:#6b4c00}.eval-ok.sel{background:#f0b429;color:var(--ink)}
+.eval-poor{background:var(--red-bg);color:var(--red)}.eval-poor.sel{background:var(--red);color:#fff}
+.timer-bar{background:var(--ink);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.timer-display{font-family:'DM Mono',monospace;font-size:26px;color:#b8a8e0;letter-spacing:2px}
+.timer-lbl{font-size:10px;color:rgba(250,249,255,0.5);text-transform:uppercase;letter-spacing:1px}
+.timer-btns{display:flex;gap:6px}
+.timer-btn{background:rgba(250,249,255,0.1);color:var(--cream);border:none;border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.timer-btn.running{background:var(--gold);color:#fff}
+.mode-toggle{display:flex;background:var(--cream2);border-radius:10px;padding:3px;margin-bottom:16px}
+.mode-btn{flex:1;padding:8px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.mode-btn.active{background:var(--ink);color:var(--cream)}
+.history-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.history-row:last-child{border-bottom:none}
+.history-q{font-size:12px;color:var(--ink2);flex:1}
+.history-status{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
+.hs-good{background:var(--green-bg);color:var(--green)}.hs-ok{background:#fff3cd;color:#6b4c00}.hs-poor{background:var(--red-bg);color:var(--red)}
+.mock-q-btn{background:#fff;color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif}
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px}
+.card-accent{border-left:3px solid var(--gold)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div><div class="header-title">IES/ISS 2025</div><div class="header-sub">General English</div></div>
+    <div class="header-badge">100 Marks</div>
+  </div>
+  <div class="nav">
+    <button class="nav-btn active" data-screen="home"><span style="font-size:16px">⊞</span>Home</button>
+    <button class="nav-btn" data-screen="practice"><span style="font-size:16px">✍</span>Practice</button>
+    <button class="nav-btn" data-screen="mock"><span style="font-size:16px">⏱</span>Mock</button>
+    <button class="nav-btn" data-screen="analytics"><span style="font-size:16px">◈</span>Progress</button>
+  </div>
+
+  <div id="screen-home" class="screen active scroll">
+    <div class="hero">
+      <div class="hero-label">IES/ISS Examination 2025</div>
+      <div class="hero-title">General<br/>English</div>
+      <div class="hero-meta">6 Questions · 100 Marks · 3 Hours · All Compulsory</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-val" id="stat-done">0</div><div class="stat-lbl">Attempted</div></div>
+      <div class="stat"><div class="stat-val" id="stat-score">—</div><div class="stat-lbl">Avg Rating</div></div>
+      <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">Total Qs</div></div>
+    </div>
+    <div class="card card-accent" style="margin-bottom:16px">
+      <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:6px">Important Note</div>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.7">All 6 questions are compulsory. This paper tests essay writing, précis, paragraph writing, vocabulary and grammar. Use this app to practice each question type and review guidance notes.</div>
+    </div>
+    <div class="section-label">All Questions</div>
+    <div id="home-qs"></div>
+  </div>
+
+  <div id="screen-practice" class="screen scroll">
+    <div class="prac-top"><button class="btn btn-secondary" id="btn-back" style="padding:7px 12px;font-size:12px;flex:none">← Back</button><div class="prac-progress" id="prac-progress">Q 1 of 6</div></div>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-fill" style="width:16%"></div></div>
+    <div id="q-display"></div>
+    <div class="answer-area"><div class="answer-label">Your Draft / Notes</div><textarea class="answer-textarea" id="user-answer" placeholder="Write your answer, outline, or key points here…"></textarea><div class="word-limit" id="word-limit-hint"></div></div>
+    <div class="btn-row"><button class="btn btn-secondary" id="btn-prev">← Prev</button><button class="btn btn-primary" id="btn-show-answer">Show Guidance</button><button class="btn btn-secondary" id="btn-next">Next →</button></div>
+    <div class="model-answer-box" id="model-answer-box">
+      <div id="model-answer-content"></div>
+      <div class="self-eval"><div class="self-eval-title">How well did you do?</div><div class="eval-btns"><button class="eval-btn eval-good" data-rating="good">Good ✓</button><button class="eval-btn eval-ok" data-rating="ok">Partial ~</button><button class="eval-btn eval-poor" data-rating="poor">Needs Work ✗</button></div></div>
+      <div class="btn-row"><button class="btn btn-primary" id="btn-next2" style="flex:1">Next Question →</button></div>
+    </div>
+  </div>
+
+  <div id="screen-mock" class="screen scroll">
+    <div class="section-label">Mock Test</div>
+    <div class="mode-toggle"><button class="mode-btn active" id="mode-timed">⏱ Timed (3 hrs)</button><button class="mode-btn" id="mode-free">∞ Free Practice</button></div>
+    <div class="timer-bar" id="timer-bar"><div><div class="timer-lbl">Time Remaining</div><div class="timer-display" id="timer-display">3:00:00</div></div><div class="timer-btns"><button class="timer-btn" id="timer-start-btn">Start</button><button class="timer-btn" id="timer-reset-btn">Reset</button></div></div>
+    <div class="card card-accent" style="margin-bottom:14px"><div style="font-size:12px;color:var(--muted);margin-bottom:6px">Time Budget</div><div style="font-size:13px;color:var(--ink2);line-height:1.8">• Q1 Essay (800 words): <strong>50-55 min</strong><br/>• Q2 Précis (290 words): <strong>35-40 min</strong><br/>• Q3 Paragraph (200 words): <strong>20 min</strong><br/>• Q4 Vocabulary (5 sentences): <strong>15 min</strong><br/>• Q5 Idioms (5 sentences): <strong>15 min</strong><br/>• Q6 Grammar correction (10 sentences): <strong>20 min</strong></div></div>
+    <div class="section-label">Jump to Question</div>
+    <div id="mock-q-grid" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px"></div>
+    <button class="btn-gold" id="btn-start-mock">Start Full Paper →</button>
+  </div>
+
+  <div id="screen-analytics" class="screen scroll">
+    <div class="section-label">Your Progress</div>
+    <div class="stats-grid" style="margin-bottom:16px"><div class="stat"><div class="stat-val" id="a-attempted">0</div><div class="stat-lbl">Attempted</div></div><div class="stat"><div class="stat-val" id="a-good">0</div><div class="stat-lbl">Good</div></div><div class="stat"><div class="stat-val" id="a-poor">0</div><div class="stat-lbl">Needs Work</div></div></div>
+    <div class="section-label">Question History</div>
+    <div class="card" id="history-list"><div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No questions attempted yet.</div></div>
+    <button class="btn btn-secondary" id="btn-reset" style="width:100%;margin-top:8px">Reset All Progress</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {id:1,num:'Q1',title:'Essay Writing (choose ONE topic)',marks:30,marksNote:'30',wordLimit:800,
+   parts:[
+    {label:'a',text:'Economics is as much about human behaviour as about using finite resources'},
+    {label:'b',text:'Who wishes to fight must first count the cost'},
+    {label:'c',text:'Needs are imposed by nature, wants are sold by society'},
+    {label:'d',text:'Consumption of plant-based diet'},
+    {label:'e',text:'Control anger before it controls you'}
+   ],
+   concepts:['Essay Structure','Introduction-Body-Conclusion','Thesis Statement','Argumentation','Examples & Evidence','Vocabulary Range','Coherence & Cohesion'],
+   modelAnswer:'<p><strong>General Essay Strategy:</strong> A top-scoring IES essay needs a clear argument, not just a description. The examiner awards marks for: (i) clarity of thought and originality; (ii) logical structure; (iii) range of vocabulary; (iv) relevant examples; (v) balanced perspective; (vi) proper conclusion that follows from arguments.</p><p><strong>Recommended Structure (800 words ≈ 5-6 paragraphs):</strong><br/>Para 1 (80-100 words): Hook + Context + Thesis statement — state your central argument clearly.<br/>Paras 2-4 (150-180 words each): Main arguments with evidence, examples, and counterpoints. Each paragraph = one main idea.<br/>Para 5 (80-100 words): Counterargument and rebuttal — shows intellectual balance.<br/>Para 6 (60-80 words): Conclusion — synthesise, restate thesis, end with a memorable thought.</p><p><strong>Topic-Specific Guidance:</strong></p><p><em>(a) Economics & Human Behaviour:</em> Central argument — economics is fundamentally a social science. Bring in behavioural economics (Kahneman, Thaler), bounded rationality, nudge theory. Contrast with classical rational choice theory. Example: COVID-19 hoarding behaviour defied classical economic predictions.</p><p><em>(b) Counting the Cost of Conflict:</em> Economic costs of war (GDP destruction, opportunity cost, reconstruction), human capital loss, institutional damage. Can bring in historical examples (WWII, Gulf War, Russia-Ukraine) or even corporate/personal conflict. Argument: cost-benefit analysis should precede all conflict decisions.</p><p><em>(c) Needs vs Wants:</em> Maslow\'s hierarchy of needs. Manufactured wants through advertising, social media, peer pressure (Veblen goods). Sustainability angle — overconsumption of manufactured wants threatens the planet. Sen\'s capabilities approach distinguishes genuine needs from manufactured wants.</p><p><em>(d) Plant-Based Diet:</em> Health benefits, environmental sustainability (carbon footprint — 1 kg beef = 60 kg CO2 vs 1 kg lentils = 0.9 kg CO2), food security, ethical dimensions. India angle — traditional plant-based diets, shift to protein-rich foods, food processing industry.',
+   tips:'Most candidates lose marks by: (i) not having a clear central thesis; (ii) listing points rather than developing arguments; (iii) poor paragraph transitions; (iv) weak conclusion that repeats introduction. Write your thesis in the first paragraph and ensure every subsequent paragraph connects back to it. Aim for 7-10 sentences per paragraph. Use connective phrases: "Furthermore," "In contrast," "This suggests that," "Paradoxically."'},
+
+  {id:2,num:'Q2',title:'Précis Writing — Environmental Issues Passage',marks:30,marksNote:'30',wordLimit:290,
+   parts:[{label:'',text:'Write a précis of the given passage (869 words) in about one-third of the original length (~290 words) in your own words.',marks:30}],
+   concepts:['Précis Writing','Summarisation','Paraphrasing','Core Argument','Selectivity','Conciseness','Own Words'],
+   modelAnswer:'<p><strong>The Passage Theme:</strong> The passage traces the evolution of international environmental concern from the 19th century to the 1960s — covering early resource management treaties, the formation of key organisations (IMO, FAO), the shift from economic exploitation to conservation, and the emergence of the modern environmental movement.</p><p><strong>How to Write a Précis:</strong></p><p>Step 1 — Read the full passage and identify the main idea of each paragraph.<br/>Step 2 — Note key facts, organisations, dates, and turning points.<br/>Step 3 — Write in your own words — do NOT copy sentences.<br/>Step 4 — One-third of 869 words = ~290 words. Be disciplined.</p><p><strong>Model Précis (approach — do not copy):</strong> By the early 21st century, environmental protection had become a global priority, driven by growing awareness since the late 1960s. Damage is now pervasive: overfished oceans, degraded soil, destruction of tropical rainforests (reduced by 50% since 1950), extinction of species, ocean pollution from hazardous waste, and atmospheric problems including acid rain and climate change. While environmental damage is not new — human societies have long exploited natural resources — industrialisation and population growth transformed local problems into global crises by the late 20th century. International environmental governance began in the 19th century, initially for economic resource management: river commissions (Rhine, Danube), the IMO (1948), plant disease treaties, and the 1911 Fur Seal Convention. After 1945, the FAO (1945) and 1946 Whaling Convention formalised resource management. By the 1960s, growing scientific awareness — Rachel Carson\'s Silent Spring, radioactive fallout concerns, oil tanker spills — accelerated environmental politics. Public pressure and transboundary pollution disputes (acid rain in Scandinavia) pushed environmental issues firmly onto the international agenda.</p><p><strong>Key Omissions (what NOT to include):</strong> Specific names of treaties unless essential; detailed examples that illustrate a general point; quotations; lists of countries.</p>',
+   tips:'Précis is tested on: (i) completeness — have you captured all main ideas?; (ii) conciseness — no padding; (iii) own words — you will lose marks for copied sentences; (iv) language quality — the précis itself should be grammatically correct. The word limit is strict. Time yourself: 35-40 minutes for this question. Read passage twice before writing.'},
+
+  {id:3,num:'Q3',title:'Paragraph Writing (choose ONE topic)',marks:10,marksNote:'10',wordLimit:200,
+   parts:[
+    {label:'a',text:'Good fences make good neighbours'},
+    {label:'b',text:'Diversity and inclusion at the workplace'},
+    {label:'c',text:'Rights of persons with disabilities'},
+    {label:'d',text:'The grass is always greener on the other side of the fence'},
+    {label:'e',text:'A little learning is a dangerous thing'}
+   ],
+   concepts:['Paragraph Unity','Topic Sentence','Supporting Sentences','Concluding Sentence','Coherence','200 Words'],
+   modelAnswer:'<p><strong>Paragraph Structure (200 words):</strong> A perfect paragraph has 3 elements: (i) Topic sentence — states the central idea clearly (first or second sentence); (ii) Supporting sentences — develop the idea with examples, evidence, explanation; (iii) Concluding sentence — wraps up or provides perspective.</p><p><strong>Topic-Specific Guidance:</strong></p><p><em>(a) Good fences make good neighbours:</em> Robert Frost\'s poem "Mending Wall." Interpret both literally (property boundaries reduce disputes) and metaphorically (clearly defined national boundaries, personal space, professional limits prevent conflict). Balance: "walls" can also prevent cooperation and understanding. Good paragraph: explore both dimensions, conclude with a nuanced view.</p><p><em>(b) Diversity and inclusion:</em> Define D&I. Business case: McKinsey research shows diverse companies outperform. Social justice case. India-specific: gender diversity, SC/ST representation, disability inclusion. Challenge: tokenism vs genuine inclusion. End with the distinction between diversity (having differences) and inclusion (making differences work).</p><p><em>(e) A little learning is a dangerous thing:</em> Alexander Pope. Half-knowledge creates overconfidence — the Dunning-Kruger effect. Examples: medical misinformation, amateur investors, social media "experts." Counter: all learning starts small; the solution is to keep learning, not stop. End: the antidote to a little learning is more learning.</p>',
+   tips:'200 words = about 12-15 sentences. Topic sentence must be original — don\'t just restate the topic. Include ONE concrete example or analogy. The concluding sentence should offer a fresh perspective or takeaway, not just summarise. Avoid bullet points — this should be flowing prose. Recommended choice: (b) or (c) for IES candidates — related to development and social issues where you likely have more to say.'},
+
+  {id:4,num:'Q4',title:'Vocabulary — Use words in sentences',marks:10,marksNote:'5×2=10',wordLimit:null,
+   parts:[
+    {label:'a',text:'Abstain — Use in a sentence that brings out its meaning clearly.'},
+    {label:'b',text:'Procrastinate — Use in a sentence that brings out its meaning clearly.'},
+    {label:'c',text:'Redressal — Use in a sentence that brings out its meaning clearly.'},
+    {label:'d',text:'Recluse — Use in a sentence that brings out its meaning clearly.'},
+    {label:'e',text:'Inclusive — Use in a sentence that brings out its meaning clearly.'}
+   ],
+   concepts:['Vocabulary','Word Usage','Contextual Meaning','Sentence Construction','Word Form'],
+   modelAnswer:'<p><strong>Key Meanings & Model Sentences:</strong></p><p><em>(a) Abstain:</em> To deliberately choose not to do something, especially voting or consuming. <br/>Model: "The committee member chose to abstain from voting on the proposal, citing a conflict of interest that might compromise her impartiality."</p><p><em>(b) Procrastinate:</em> To delay or postpone action unnecessarily. <br/>Model: "If you continue to procrastinate on filing your tax returns, you will face heavy penalties and unnecessary last-minute stress."</p><p><em>(c) Redressal:</em> The action of remedying a wrong or grievance. (Note: also spelt "redress" — noun; "redressal" is the Indian English variant commonly used in official contexts.) <br/>Model: "The National Consumer Disputes Redressal Commission provides timely redressal to consumers who have been cheated by unscrupulous businesses."</p><p><em>(d) Recluse:</em> A person who lives alone and avoids social interaction. <br/>Model: "After the tumultuous years of his political career, the former minister became a recluse, retreating to a mountain village far from public life."</p><p><em>(e) Inclusive:</em> Not excluding any particular group; covering a wide range. <br/>Model: "The new National Education Policy adopts an inclusive approach, ensuring that children with disabilities, from marginalised communities, and in remote areas have equal access to quality education."</p><p><strong>Rules:</strong> (i) Do NOT change the form of the word (use exactly as given); (ii) The sentence must make the meaning obvious — a "vague or ambiguous sentence" gets zero; (iii) Each sentence must be substantive (not just "I abstain" — too short).</p>',
+   tips:'2 marks per sentence. You lose marks if: the meaning is not clear from context, you change the word form, or the sentence is too simple/trivial. Write sentences of 20-30 words. Use an economic or governance context where possible — relevant for IES. Always put the target word in context where it is clearly the meaningful element of the sentence.'},
+
+  {id:5,num:'Q5',title:'Idioms/Phrasal Verbs — Use in sentences',marks:10,marksNote:'5×2=10',wordLimit:null,
+   parts:[
+    {label:'a',text:'dispose of'},
+    {label:'b',text:'to cry wolf'},
+    {label:'c',text:'hit upon'},
+    {label:'d',text:'put up with'},
+    {label:'e',text:'bank on'}
+   ],
+   concepts:['Idioms','Phrasal Verbs','Figurative Meaning','Sentence Construction'],
+   modelAnswer:'<p><strong>Meanings & Model Sentences:</strong></p><p><em>(a) dispose of:</em> To get rid of something / to deal with something conclusively. <br/>Model: "The municipality must find an environmentally responsible way to dispose of the increasing quantities of electronic waste generated by urban households."</p><p><em>(b) to cry wolf:</em> To raise a false alarm; to warn of danger that does not exist, causing people not to believe genuine warnings later. (From Aesop\'s fable.)<br/>Model: "The government was accused of crying wolf about an imminent economic crisis that never materialised, causing investors to disregard future warnings from the Finance Ministry."</p><p><em>(c) hit upon:</em> To find or discover something, usually by chance or sudden inspiration. <br/>Model: "After months of failed experiments, the research team finally hit upon a formula that dramatically reduced the cost of producing solar panels."</p><p><em>(d) put up with:</em> To tolerate or accept something unpleasant without complaining. <br/>Model: "Small business owners should not have to put up with delayed payments from large corporations — the MSME development law mandates timely payment within 45 days."</p><p><em>(e) bank on:</em> To rely on or count on something or someone. <br/>Model: "India cannot simply bank on its demographic dividend to drive economic growth — it must invest heavily in education, healthcare, and skill development to harness this potential."</p>',
+   tips:'2 marks per sentence. The crucial rule: the sentence must demonstrate the FIGURATIVE meaning, not the literal meaning. For "bank on" — don\'t write about a bank. For "dispose of" — you can use either literal (waste disposal) or figurative (deal with a problem). Always write sentences of substance — short or trivial sentences score poorly.'},
+
+  {id:6,num:'Q6',title:'Grammar Correction — Correct 10 sentences',marks:10,marksNote:'10×1=10',wordLimit:null,
+   parts:[
+    {label:'a',text:'The plane arrive at 1530 hours.'},
+    {label:'b',text:'You look at though you are distracted.'},
+    {label:'c',text:'He has visited Agra. Has he?'},
+    {label:'d',text:'I have weep a million tears.'},
+    {label:'e',text:'We had more freedom then many kids today.'},
+    {label:'f',text:'He has been living in Delhi for 1990.'},
+    {label:'g',text:'Where is the boy about which you were speaking?'},
+    {label:'h',text:'He rushed on my room, panting for breath.'},
+    {label:'i',text:'Nobody accept you knows the truth.'},
+    {label:'j',text:'The sceneries here is very good.'}
+   ],
+   concepts:['Subject-Verb Agreement','Tense','Relative Pronouns','Prepositions','Countable/Uncountable','Tag Questions','Past Participle'],
+   modelAnswer:'<p><strong>Corrections with Explanations:</strong></p><p><em>(a) "The plane arrives at 1530 hours."</em> — Subject-verb agreement: "plane" is singular, so "arrives" (not "arrive").</p><p><em>(b) "You look as though you are distracted."</em> — Correct phrase is "as though" (not "at though").</p><p><em>(c) "He has visited Agra, hasn\'t he?"</em> — Tag question: with "has visited" (present perfect), tag must be "hasn\'t he?" A tag question cannot be a separate sentence ending in a full stop then question mark.</p><p><em>(d) "I have wept a million tears."</em> — Past participle of "weep" is "wept" (not "weep").</p><p><em>(e) "We had more freedom than many kids today."</em> — "than" (for comparison), not "then" (which means "at that time").</p><p><em>(f) "He has been living in Delhi since 1990."</em> — "since" for a specific point in time; "for" for a duration (e.g., "for 30 years").</p><p><em>(g) "Where is the boy about whom you were speaking?"</em> — "whom" (not "which") for persons; "which" for things.</p><p><em>(h) "He rushed into my room, panting for breath."</em> — "into" (motion entering), not "on."</p><p><em>(i) "Nobody except you knows the truth."</em> — "except" (not "accept"); "accept" means to receive something willingly.</p><p><em>(j) "The scenery here is very good."</em> — "scenery" is an uncountable noun in English — no plural form "sceneries." Verb should be "is."</p>',
+   tips:'1 mark per sentence — do not make unnecessary changes (the instruction explicitly warns against this). For each correction: identify the error type (spelling, grammar, vocabulary, punctuation) and correct only that. The most common errors tested: (i) than/then confusion; (ii) since/for; (iii) who/whom/which; (iv) preposition errors (into/onto); (v) uncountable nouns (scenery, information, advice, furniture); (vi) tag questions; (vii) irregular past participles.'}
+];
+
+const STORAGE_KEY='ies_prep_2025_english';
+let _lsAvailable=false;
+try{localStorage.setItem('__t__','1');localStorage.removeItem('__t__');_lsAvailable=true;}catch(e){}
+function loadState(){if(_lsAvailable){try{const r=localStorage.getItem(STORAGE_KEY);if(r)return JSON.parse(r);}catch(e){}}return{ratings:{},answers:{}};}
+function saveState(){if(_lsAvailable){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}}
+const state=loadState();if(!state.ratings)state.ratings={};if(!state.answers)state.answers={};
+let currentQIndex=0,timerSeconds=10800,timerRunning=false,timerInterval=null;
+function G(id){return document.getElementById(id);}
+function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));G('screen-'+name).classList.add('active');document.querySelector('.nav-btn[data-screen="'+name+'"]').classList.add('active');if(name==='home')renderHome();if(name==='practice')renderQuestion();if(name==='mock')renderMock();if(name==='analytics')renderAnalytics();}
+function renderHome(){G('home-qs').innerHTML=QUESTIONS.map(q=>{const idx=QUESTIONS.indexOf(q),r=state.ratings[q.id];const dc=r==='good'?'dot-good':r==='ok'?'dot-ok':r==='poor'?'dot-poor':'';return'<div class="q-row" data-idx="'+idx+'"><span class="q-num">'+q.num+'</span><div style="flex:1"><div class="q-text">'+q.title+'</div><div class="q-marks">'+q.marksNote+' marks</div></div><div class="status-dot '+dc+'"></div></div>';}).join('');const done=Object.keys(state.ratings).length;G('stat-done').textContent=done;const rs=Object.values(state.ratings);if(rs.length>0){const avg=rs.reduce((s,r)=>s+({good:3,ok:2,poor:1}[r]),0)/rs.length;G('stat-score').textContent=avg>=2.5?'Good':avg>=1.5?'Partial':'Weak';}else G('stat-score').textContent='—';document.querySelectorAll('.q-row').forEach(el=>el.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));}
+function renderQuestion(){const q=QUESTIONS[currentQIndex];G('prac-progress').textContent=q.num+' ('+(currentQIndex+1)+' of '+QUESTIONS.length+')';G('prog-fill').style.width=Math.round(((currentQIndex+1)/QUESTIONS.length)*100)+'%';G('user-answer').value=state.answers[q.id]||'';G('model-answer-box').style.display='none';if(q.wordLimit)G('word-limit-hint').textContent='Word limit: ~'+q.wordLimit+' words';else G('word-limit-hint').textContent='Write complete sentences for each item';const ph=q.parts.length===1&&q.parts[0].label===''?'<div class="q-main">'+q.parts[0].text+'</div>':q.parts.map(p=>'<div class="q-part"><div class="q-part-label">'+(p.label?'('+p.label+')'  :'')+'</div>'+p.text+'</div>').join('');G('q-display').innerHTML='<span class="section-chip">All Compulsory</span><div class="q-card"><div class="marks-tag">✦ '+q.marksNote+' marks</div>'+ph+'</div>';document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));if(state.ratings[q.id])document.querySelector('.eval-btn[data-rating="'+state.ratings[q.id]+'"]').classList.add('sel');}
+function showModelAnswer(){const q=QUESTIONS[currentQIndex];state.answers[q.id]=G('user-answer').value;saveState();const box=G('model-answer-box');box.style.display='block';G('model-answer-content').innerHTML='<div class="model-section"><div class="model-section-title" style="color:var(--gold)">Key Skills</div><div class="concept-pills">'+q.concepts.map(c=>'<span class="pill">'+c+'</span>').join('')+'</div></div>'+'<div class="model-section"><div class="model-section-title" style="color:var(--green)">✓ Guidance & Model</div><div class="model-text">'+q.modelAnswer+'</div></div>'+'<div class="model-section"><div class="model-section-title" style="color:var(--red)">! Examiner Tips</div><div class="tip-box">'+q.tips+'</div></div>';document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));if(state.ratings[q.id])document.querySelector('.eval-btn[data-rating="'+state.ratings[q.id]+'"]').classList.add('sel');setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'start'}),100);}
+function goNext(){if(currentQIndex<QUESTIONS.length-1){currentQIndex++;renderQuestion();G('screen-practice').scrollTop=0;}}
+function goPrev(){if(currentQIndex>0){currentQIndex--;renderQuestion();G('screen-practice').scrollTop=0;}}
+function renderMock(){G('mock-q-grid').innerHTML=QUESTIONS.map((q,i)=>{const r=state.ratings[q.id];const bg=r==='good'?'var(--green-bg)':r==='ok'?'#fff3cd':r==='poor'?'var(--red-bg)':'#fff';const co=r==='good'?'var(--green)':r==='ok'?'#6b4c00':r==='poor'?'var(--red)':'var(--ink)';return'<button class="mock-q-btn" data-idx="'+i+'" style="background:'+bg+';color:'+co+'">'+q.num+'</button>';}).join('');document.querySelectorAll('.mock-q-btn').forEach(btn=>btn.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));updateTimerDisplay();}
+function updateTimerDisplay(){const h=Math.floor(timerSeconds/3600),m=Math.floor((timerSeconds%3600)/60),s=timerSeconds%60;G('timer-display').textContent=h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+function renderAnalytics(){const rs=state.ratings;G('a-attempted').textContent=Object.keys(rs).length;G('a-good').textContent=Object.values(rs).filter(r=>r==='good').length;G('a-poor').textContent=Object.values(rs).filter(r=>r==='poor').length;const aqs=QUESTIONS.filter(q=>rs[q.id]);G('history-list').innerHTML=aqs.length===0?'<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No questions attempted yet.</div>':aqs.map(q=>{const r=rs[q.id];const cls={good:'hs-good',ok:'hs-ok',poor:'hs-poor'}[r];const lbl={good:'Good ✓',ok:'Partial ~',poor:'Needs Work ✗'}[r];return'<div class="history-row" data-idx="'+QUESTIONS.indexOf(q)+'"><div class="history-q">'+q.num+': '+q.title+'</div><span class="history-status '+cls+'">'+lbl+'</span></div>';}).join('');document.querySelectorAll('.history-row').forEach(el=>el.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));}
+document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',function(){showScreen(this.dataset.screen);}));
+G('btn-back').addEventListener('click',()=>showScreen('home'));G('btn-prev').addEventListener('click',goPrev);G('btn-next').addEventListener('click',goNext);G('btn-next2').addEventListener('click',goNext);G('btn-show-answer').addEventListener('click',showModelAnswer);
+document.querySelectorAll('.eval-btn').forEach(btn=>btn.addEventListener('click',function(){const q=QUESTIONS[currentQIndex];state.ratings[q.id]=this.dataset.rating;saveState();document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));this.classList.add('sel');}));
+G('mode-timed').addEventListener('click',()=>{G('mode-timed').classList.add('active');G('mode-free').classList.remove('active');G('timer-bar').style.opacity='1';});
+G('mode-free').addEventListener('click',()=>{G('mode-free').classList.add('active');G('mode-timed').classList.remove('active');G('timer-bar').style.opacity='0.4';clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Start';G('timer-start-btn').classList.remove('running');});
+G('timer-start-btn').addEventListener('click',()=>{if(G('mode-free').classList.contains('active'))return;if(timerRunning){clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Resume';G('timer-start-btn').classList.remove('running');}else{timerRunning=true;G('timer-start-btn').textContent='Pause';G('timer-start-btn').classList.add('running');timerInterval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;updateTimerDisplay();}else{clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Done';G('timer-start-btn').classList.remove('running');}},1000);}});
+G('timer-reset-btn').addEventListener('click',()=>{clearInterval(timerInterval);timerRunning=false;timerSeconds=10800;updateTimerDisplay();G('timer-start-btn').textContent='Start';G('timer-start-btn').classList.remove('running');});
+G('btn-start-mock').addEventListener('click',()=>{currentQIndex=0;showScreen('practice');});
+G('btn-reset').addEventListener('click',()=>{if(confirm('Reset all progress?')){Object.keys(state.ratings).forEach(k=>delete state.ratings[k]);Object.keys(state.answers).forEach(k=>delete state.answers[k]);saveState();renderAnalytics();renderHome();}});
+renderHome();renderMock();
+</script>
+</body>
+</html>

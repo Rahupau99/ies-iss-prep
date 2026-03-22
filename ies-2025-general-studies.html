@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>IES 2025 — General Studies</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#1a1f2e;--ink2:#2a2f4e;--gold:#c45000;--gold-dim:rgba(196,80,0,0.12);--cream:#fff9f5;--cream2:#f5ede4;--muted:#7a6860;--green:#2d6a4f;--green-bg:#d8f3dc;--red:#9b2335;--red-bg:#fde8ea;--blue:#1a3a5c;--blue-bg:#dbeafe;--border:rgba(26,31,46,0.12);--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px}
+#app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;background:var(--cream);overflow:hidden}
+.header{background:var(--ink);color:var(--cream);padding:14px 18px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.header-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700}
+.header-sub{font-size:11px;color:#f0a070;letter-spacing:1px;text-transform:uppercase;margin-top:1px}
+.header-badge{background:var(--gold);color:#fff;font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px}
+.nav{display:flex;background:var(--ink2);flex-shrink:0}
+.nav-btn{flex:1;padding:10px 4px 9px;font-size:11px;color:rgba(255,249,245,0.5);border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color 0.2s}
+.nav-btn.active{color:#f0a070;border-bottom:2px solid #f0a070}
+.scroll{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.screen{display:none}.screen.active{display:block}
+.hero{background:var(--ink);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.hero-label{font-size:10px;color:#f0a070;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.hero-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--cream);font-weight:700;line-height:1.25}
+.hero-meta{font-size:12px;color:rgba(255,249,245,0.55);margin-top:8px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.stat{background:#fff;border-radius:10px;padding:12px 10px;text-align:center;border:1px solid var(--border)}
+.stat-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--ink)}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+.section-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:10px}
+.q-row{background:#fff;border-radius:10px;border:1px solid var(--border);padding:13px 14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:border-color 0.2s}
+.q-row:hover{border-color:var(--gold)}
+.q-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);background:var(--gold-dim);padding:3px 7px;border-radius:6px;flex-shrink:0;margin-top:1px}
+.q-text{font-size:13px;color:var(--ink);line-height:1.5;flex:1}
+.q-marks{font-size:11px;color:var(--muted);margin-top:3px}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;background:var(--border)}
+.dot-good{background:var(--green)}.dot-ok{background:var(--gold)}.dot-poor{background:var(--red)}
+.prac-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.prac-progress{font-size:12px;color:var(--muted)}
+.prog-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:16px}
+.prog-bar-fill{height:4px;background:var(--gold);border-radius:2px;transition:width 0.4s}
+.section-chip{display:inline-block;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:500;letter-spacing:0.5px;margin-bottom:10px;background:var(--gold-dim);color:var(--gold)}
+.q-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:18px;margin-bottom:14px}
+.q-main{font-family:'Playfair Display',serif;font-size:16px;line-height:1.65;color:var(--ink);font-weight:500}
+.q-part{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:14px;color:var(--ink2);line-height:1.6}
+.q-part-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);margin-bottom:4px}
+.marks-tag{display:inline-flex;align-items:center;gap:4px;background:var(--gold-dim);color:#8b2500;font-size:11px;padding:3px 9px;border-radius:20px;margin-bottom:10px;font-weight:500}
+.answer-area{background:#fff;border-radius:var(--radius);border:1.5px solid var(--border);padding:14px;margin-bottom:14px;transition:border-color 0.2s}
+.answer-area:focus-within{border-color:var(--gold)}
+.answer-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.answer-textarea{width:100%;min-height:160px;border:none;outline:none;resize:vertical;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);line-height:1.7;background:transparent}
+.answer-textarea::placeholder{color:var(--muted);font-style:italic}
+.word-limit{font-size:10px;color:var(--muted);text-align:right;margin-top:4px}
+.btn-row{display:flex;gap:8px;margin-bottom:12px}
+.btn{padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.18s;font-family:'DM Sans',sans-serif}
+.btn-primary{background:var(--ink);color:var(--cream);flex:2}
+.btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--border);flex:1}
+.btn-gold{background:var(--gold);color:#fff;font-weight:500;width:100%;display:block;padding:12px;border-radius:10px;font-size:13px;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
+.model-answer-box{display:none;margin-bottom:8px}
+.model-section{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:10px}
+.model-section-title{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;font-weight:500;margin-bottom:10px}
+.concept-pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font-size:12px;background:var(--gold-dim);color:var(--gold);padding:4px 10px;border-radius:20px}
+.model-text{font-size:13px;color:var(--ink2);line-height:1.75}
+.model-text p{margin-bottom:8px}
+.model-text strong{color:var(--ink);font-weight:500}
+.tip-box{background:var(--red-bg);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--red);line-height:1.6}
+.self-eval{background:var(--cream2);border-radius:10px;padding:14px;margin-bottom:12px}
+.self-eval-title{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:10px}
+.eval-btns{display:flex;gap:8px}
+.eval-btn{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:all 0.18s;font-family:'DM Sans',sans-serif}
+.eval-good{background:var(--green-bg);color:var(--green)}.eval-good.sel{background:var(--green);color:#fff}
+.eval-ok{background:#fff3cd;color:#6b4c00}.eval-ok.sel{background:#f0b429;color:var(--ink)}
+.eval-poor{background:var(--red-bg);color:var(--red)}.eval-poor.sel{background:var(--red);color:#fff}
+.timer-bar{background:var(--ink);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.timer-display{font-family:'DM Mono',monospace;font-size:26px;color:#f0a070;letter-spacing:2px}
+.timer-lbl{font-size:10px;color:rgba(255,249,245,0.5);text-transform:uppercase;letter-spacing:1px}
+.timer-btns{display:flex;gap:6px}
+.timer-btn{background:rgba(255,249,245,0.1);color:var(--cream);border:none;border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.timer-btn.running{background:var(--gold);color:#fff}
+.mode-toggle{display:flex;background:var(--cream2);border-radius:10px;padding:3px;margin-bottom:16px}
+.mode-btn{flex:1;padding:8px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.mode-btn.active{background:var(--ink);color:var(--cream)}
+.history-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.history-row:last-child{border-bottom:none}
+.history-q{font-size:12px;color:var(--ink2);flex:1}
+.history-status{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
+.hs-good{background:var(--green-bg);color:var(--green)}.hs-ok{background:#fff3cd;color:#6b4c00}.hs-poor{background:var(--red-bg);color:var(--red)}
+.mock-q-btn{background:#fff;color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif}
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px}
+.card-accent{border-left:3px solid var(--gold)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div><div class="header-title">IES/ISS 2025</div><div class="header-sub">General Studies</div></div>
+    <div class="header-badge">100 Marks</div>
+  </div>
+  <div class="nav">
+    <button class="nav-btn active" data-screen="home"><span style="font-size:16px">⊞</span>Home</button>
+    <button class="nav-btn" data-screen="practice"><span style="font-size:16px">✍</span>Practice</button>
+    <button class="nav-btn" data-screen="mock"><span style="font-size:16px">⏱</span>Mock</button>
+    <button class="nav-btn" data-screen="analytics"><span style="font-size:16px">◈</span>Progress</button>
+  </div>
+
+  <div id="screen-home" class="screen active scroll">
+    <div class="hero">
+      <div class="hero-label">IES/ISS Examination 2025</div>
+      <div class="hero-title">General<br/>Studies</div>
+      <div class="hero-meta">4 Questions × 5 Parts · 100 Marks · 3 Hours · All Compulsory</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-val" id="stat-done">0</div><div class="stat-lbl">Attempted</div></div>
+      <div class="stat"><div class="stat-val" id="stat-score">—</div><div class="stat-lbl">Avg Rating</div></div>
+      <div class="stat"><div class="stat-val">4</div><div class="stat-lbl">Total Qs</div></div>
+    </div>
+    <div class="card card-accent" style="margin-bottom:16px">
+      <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:6px">Coverage</div>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.7">Q1: Indian History · Q2: Geography &amp; Environment · Q3: Current Affairs &amp; Economy · Q4: Polity &amp; Governance</div>
+    </div>
+    <div class="section-label">All Questions</div>
+    <div id="home-qs"></div>
+  </div>
+
+  <div id="screen-practice" class="screen scroll">
+    <div class="prac-top"><button class="btn btn-secondary" id="btn-back" style="padding:7px 12px;font-size:12px;flex:none">← Back</button><div class="prac-progress" id="prac-progress">Q 1 of 4</div></div>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-fill" style="width:25%"></div></div>
+    <div id="q-display"></div>
+    <div class="answer-area"><div class="answer-label">Your Answer (5 parts — use separate sections)</div><textarea class="answer-textarea" id="user-answer" placeholder="Write answers to each part (a)–(e) here…"></textarea><div class="word-limit" id="word-limit-hint"></div></div>
+    <div class="btn-row"><button class="btn btn-secondary" id="btn-prev">← Prev</button><button class="btn btn-primary" id="btn-show-answer">Show Model Answers</button><button class="btn btn-secondary" id="btn-next">Next →</button></div>
+    <div class="model-answer-box" id="model-answer-box">
+      <div id="model-answer-content"></div>
+      <div class="self-eval"><div class="self-eval-title">How well did you do overall?</div><div class="eval-btns"><button class="eval-btn eval-good" data-rating="good">Good ✓</button><button class="eval-btn eval-ok" data-rating="ok">Partial ~</button><button class="eval-btn eval-poor" data-rating="poor">Needs Work ✗</button></div></div>
+      <div class="btn-row"><button class="btn btn-primary" id="btn-next2" style="flex:1">Next Question →</button></div>
+    </div>
+  </div>
+
+  <div id="screen-mock" class="screen scroll">
+    <div class="section-label">Mock Test</div>
+    <div class="mode-toggle"><button class="mode-btn active" id="mode-timed">⏱ Timed (3 hrs)</button><button class="mode-btn" id="mode-free">∞ Free Practice</button></div>
+    <div class="timer-bar" id="timer-bar"><div><div class="timer-lbl">Time Remaining</div><div class="timer-display" id="timer-display">3:00:00</div></div><div class="timer-btns"><button class="timer-btn" id="timer-start-btn">Start</button><button class="timer-btn" id="timer-reset-btn">Reset</button></div></div>
+    <div class="card card-accent" style="margin-bottom:14px"><div style="font-size:12px;color:var(--muted);margin-bottom:6px">Time Budget</div><div style="font-size:13px;color:var(--ink2);line-height:1.8">• 4 questions × 5 parts each = 20 answers<br/>• ~9 minutes per part on average<br/>• Aim for ~180-200 words per part<br/>• All questions are compulsory</div></div>
+    <div class="section-label">Jump to Question</div>
+    <div id="mock-q-grid" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px"></div>
+    <button class="btn-gold" id="btn-start-mock">Start Full Paper →</button>
+  </div>
+
+  <div id="screen-analytics" class="screen scroll">
+    <div class="section-label">Your Progress</div>
+    <div class="stats-grid" style="margin-bottom:16px"><div class="stat"><div class="stat-val" id="a-attempted">0</div><div class="stat-lbl">Attempted</div></div><div class="stat"><div class="stat-val" id="a-good">0</div><div class="stat-lbl">Good</div></div><div class="stat"><div class="stat-val" id="a-poor">0</div><div class="stat-lbl">Needs Work</div></div></div>
+    <div class="section-label">Question History</div>
+    <div class="card" id="history-list"><div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No questions attempted yet.</div></div>
+    <button class="btn btn-secondary" id="btn-reset" style="width:100%;margin-top:8px">Reset All Progress</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {id:1,num:'Q1',title:'Indian History (5×5=25)',marks:25,marksNote:'5×5=25',wordLimit:200,
+   parts:[
+    {label:'a',text:'Discuss the reasons for the phenomenal growth of Buddhism in Ancient Period.',marks:5},
+    {label:'b',text:'Analyze the socio-economic conditions during the Gupta Age.',marks:5},
+    {label:'c',text:'Assess the administrative and the cultural achievements of the Chola Empire.',marks:5},
+    {label:'d',text:'Review how far Aurangzeb was responsible for the disintegration of the Mughal Empire. Give reasons for your answer.',marks:5},
+    {label:'e',text:'What were the differences between moderates and extremists in the Indian National Movement?',marks:5}
+   ],
+   concepts:['Buddhism','Ashoka','Gupta Period','Chola Empire','Mughal Decline','Freedom Movement','Moderates vs Extremists'],
+   modelAnswer:'<p><strong>(a) Growth of Buddhism:</strong> Buddhism grew rapidly due to: (i) Reaction against Brahmanical ritualism, caste hierarchy and Sanskrit exclusivity — Buddha preached in Pali, accessible to all; (ii) Egalitarian message — caste irrelevant to spiritual progress; (iii) Sangha organisation — strong monastic community spread doctrine; (iv) Royal patronage — Ashoka adopted Buddhism post-Kalinga war (261 BCE), sent missionaries to Sri Lanka, Central Asia; (v) Middle Path — moderate, practical ethics attracted middle-class merchants; (vi) Use of relics and stupas created accessible devotional practice.</p><p><strong>(b) Gupta Age Socio-economic Conditions:</strong> The Gupta period (320-550 CE) is called the "Golden Age." Economy: agrarian prosperity, expanding trade (guilds/shrenis active), trade with Rome and Southeast Asia. Social: Brahmanical revival — four varnas reinforced, position of women declined (remarriage prohibited, Sati mentioned). Literature: Kalidasa; Science: Aryabhata (decimal system, Earth\'s rotation), Varahamihira. Religious: Bhakti movement, Hindu temple architecture emerged (Dashavatara temple).</p><p><strong>(c) Chola Empire Achievements:</strong> Administration: village assemblies (ur, sabha, nagaram) — early local self-governance. Naval power — conquered Sri Lanka, Maldives, parts of SE Asia. Cultural: Brihadeeswarar Temple (Thanjavur, 1010 CE), bronze casting (Nataraja), Tamil literature (Kamban). Revenue: efficient land revenue system with regular surveys. Considered peak of South Indian cultural achievement.</p><p><strong>(d) Aurangzeb & Mughal Decline:</strong> Aurangzeb\'s responsibility: (i) Expansionist policy in Deccan drained treasury and army; (ii) Religious intolerance — reimposed jizya, destroyed Hindu temples → alienated Hindu Rajput allies who had been Mughal pillars; (iii) Persecution of Sikhs created a new enemy; (iv) Maratha resistance under Shivaji and successors — long guerrilla war exhausted Mughal resources. However, structural factors also important: nobility factionalism, weak successors, European penetration of trade. Aurangzeb accelerated but did not single-handedly cause the decline.</p><p><strong>(e) Moderates vs Extremists:</strong> Moderates (1885-1905): faith in British goodwill; method — petitions, memorials, press campaigns; goals — constitutional reform, self-governance within empire; leaders: Dadabhai Naoroji, Gopal Krishna Gokhale. Extremists (post-1905): swaraj now; method — passive resistance, swadeshi, boycott; rejected gradualism; leaders: Bal Gangadhar Tilak, Lal Lajpat Rai, Bipin Chandra Pal. Split at Surat (1907). Extremists brought mass mobilisation into the freedom struggle.</p>',
+   tips:'Each part = 5 marks in ~200 words. For history: specific names, dates and events distinguish good answers. For (d) — the examiner\'s phrasing "how far" signals that you must present both sides (Aurangzeb\'s role AND structural factors). Never say one factor alone caused the Mughal decline. For (e) — the Surat split (1907) is the key event to mention.'},
+
+  {id:2,num:'Q2',title:'Geography & Environment (5×5=25)',marks:25,marksNote:'5×5=25',wordLimit:200,
+   parts:[
+    {label:'a',text:'Enumerate the different stages of highway construction in India during the neo-liberal era.',marks:5},
+    {label:'b',text:'"Earthquakes are by far the most unpredictable and highly destructive of all the natural disasters." Examine the statement with reference to seismological zones of India.',marks:5},
+    {label:'c',text:'"Astronomical causes seem to be primarily responsible for climate change." Comment.',marks:5},
+    {label:'d',text:'"Digital Agriculture Mission is an alternative for transformation in agriculture sector." Discuss.',marks:5},
+    {label:'e',text:'Why are frequent fires in semiarid forests beneficial for maintaining community habitats? Explain it in the context of recent fires in California State of the United States.',marks:5}
+   ],
+   concepts:['NHDP','National Highways','Seismic Zones India','Climate Change Causes','Digital Agriculture Mission','Forest Fires California','Chaparral Ecosystem'],
+   modelAnswer:'<p><strong>(a) Highway Construction — Neo-liberal Era:</strong> National Highway Development Programme (NHDP) launched 1998, implemented by NHAI. Phases: Phase I — Golden Quadrilateral (5,846 km connecting Delhi-Mumbai-Chennai-Kolkata); Phase II — North-South East-West corridor + Port connectivity; Phase III — upgradation of existing NHs to 4/6 lane; Phase IV — widening of NHs; Phase V — 6-laning of Golden Quadrilateral; Phase VI — expressways; Phase VII — ring roads/bypasses. Bharatmala Pariyojana (2017) — next generation programme for 34,800 km economic corridors and multimodal connectivity. India now has 2nd largest road network globally.</p><p><strong>(b) Earthquake Zones of India:</strong> The statement is substantially correct — earthquakes have minimal warning time. India has 5 seismic zones: Zone II (least hazard — South India plateau), III (moderate — coastal areas, UP), IV (high — Delhi, J&K, Uttarakhand), V (highest hazard — Northeast India, Himalayan belt, Andaman Islands). Zone V covers ~11% of India\'s area. Major events: Bhuj 2001 (7.7M), Uttarkashi 1991, Latur 1993. Unpredictability: no reliable short-term earthquake prediction technology exists (contrast with cyclones that can be predicted 5+ days ahead). Destructiveness compounded by dense settlements and poor building standards in seismic zones.</p><p><strong>(c) Astronomical vs Anthropogenic Climate Change:</strong> The statement is INCORRECT as a primary explanation. Astronomical factors (Milankovitch cycles — orbital eccentricity, axial tilt, precession) do influence long-term climate cycles (ice ages over 100,000-year cycles) — but: (i) current warming is occurring far faster than any natural cycle can explain; (ii) isotopic analysis of atmospheric CO2 confirms its fossil fuel origin; (iii) solar output has been stable or slightly declining since 1980 while temperatures have risen; (iv) IPCC AR6 (2021): human influence is "unequivocal" cause of warming since pre-industrial times. Astronomical causes are relevant for paleo-climate but NOT for current anthropogenic climate change.</p><p><strong>(d) Digital Agriculture Mission:</strong> Launched 2021, expanded 2023. Objectives: create digital public infrastructure for agriculture — Farmers\' Registry, Crop Sown Registry, AgriStack. Components: Agri Decision Support System (satellite + weather data for advisory); Soil Profile Mapping; Digital Crop Survey; PM-KISAN + Jan Dhan linking for direct benefit transfer. Potential: precision agriculture, crop insurance verification, real-time advisory. Limitations: digital divide in rural areas, data privacy concerns, farmer awareness gaps. India has 150 million smallholder farmers — digital agriculture must be inclusive to transform the sector.</p><p><strong>(e) Forest Fires in Semiarid Ecosystems:</strong> In chaparral (Mediterranean-type shrubland found in California) and semiarid forests, fire is a natural ecological process. Benefits: (i) clears accumulated dead wood (fuel load reduction paradoxically prevents larger catastrophic fires); (ii) releases nutrients locked in biomass back to soil; (iii) promotes regeneration of fire-adapted species (serotinous cones, obligate seeders); (iv) maintains habitat diversity — creates mosaic of burnt/unburnt patches benefiting different species; (v) suppresses invasive species. California 2020-2023 fires: decades of fire suppression allowed massive fuel accumulation → catastrophic fires when suppression failed. Prescribed burns (managed fires) are now advocated by ecologists to mimic natural fire cycles and reduce catastrophic fire risk.</p>',
+   tips:'For (c) — the examiner wants you to critically evaluate the statement — it is WRONG that astronomical causes are PRIMARY. State this clearly and give the IPCC AR6 reference. For (e) — "beneficial fires" is counterintuitive — the key concept is fire-adapted ecosystems where fire is ecologically necessary. The California fires are a case study in what happens when natural fire cycles are suppressed — mention the "fire debt" concept. Always answer both the conceptual and contemporary example parts.'},
+
+  {id:3,num:'Q3',title:'Current Affairs & Economy (5×5=25)',marks:25,marksNote:'5×5=25',wordLimit:200,
+   parts:[
+    {label:'a',text:'Explain the benefits of Pradhan Mantri Ujjwala Yojana (PMUY) undertaken by the Government of India.',marks:5},
+    {label:'b',text:'Examine the impacts of USA\'s decision to enhance tariff on several Indian goods on the Indian economy.',marks:5},
+    {label:'c',text:'Does non-conventional energy have the prospect for sustainable development in India? Explain your answer.',marks:5},
+    {label:'d',text:'"MGNREGA is a successful welfare-oriented Act for the upliftment of rural people in India." Elucidate.',marks:5},
+    {label:'e',text:'Why is concentration of industries very poor in North-Eastern part of India? What steps have been taken by the Government of India to address the issue?',marks:5}
+   ],
+   concepts:['PMUY','LPG Access','US Tariffs India','Renewable Energy India','MGNREGA','North East India Industrialisation','Look East Policy'],
+   modelAnswer:'<p><strong>(a) PMUY Benefits:</strong> Pradhan Mantri Ujjwala Yojana (2016): free LPG connections to Below Poverty Line (BPL) households. Phase I: 5 crore connections; Phase II (Ujjwala 2.0): migrants included, expanded to 9.6 crore connections. Benefits: (i) health — reduces indoor air pollution (cooking on biomass causes ~4 lakh premature deaths/year in India); (ii) gender — women spend less time collecting firewood; (iii) environment — reduces pressure on forests; (iv) education — children study in smoke-free homes; (v) economic — time saved = productive use. Challenge: refill rates — many PMUY beneficiaries struggle to afford LPG refills at market prices.</p><p><strong>(b) US Tariffs on Indian Goods:</strong> Context: US-India trade: India exports ~$83 billion to US. US imposed 26% reciprocal tariff on India (April 2025, though paused 90 days). Key impacts: (i) Pharma — India exports ~$8 billion generics to US; tariffs would raise prices, reducing competitiveness; (ii) IT services — not directly affected (services exempt); (iii) Textiles, gems and jewellery, engineering goods most vulnerable; (iv) Opportunity — US-China tensions redirect some supply chains to India (Apple, Samsung manufacturing shift); (v) Macroeconomic — possible slowdown in export growth; CAD could widen. India is negotiating a Bilateral Trade Agreement (BTA) with the US to seek tariff relief.</p><p><strong>(c) Non-Conventional Energy & Sustainable Development:</strong> India has strong renewable energy potential — solar (5,000 trillion kWh/year irradiance), wind (695 GW potential), hydro, biomass. Targets: 500 GW renewables by 2030 (currently ~200 GW installed). Prospects: (i) energy security — reduces fossil fuel import dependence (India imports 85% oil, 40% gas); (ii) climate commitments — net zero by 2070; (iii) falling costs — solar tariff <₹2/unit in recent auctions; (iv) decentralised access — solar pumps for farmers, rural electrification. Challenges: intermittency (storage technology still developing), grid integration, land acquisition, social opposition, financing ($250 billion needed by 2030). Overall: renewable energy is essential, not optional, for India\'s sustainable development.</p><p><strong>(d) MGNREGA Success:</strong> Mahatma Gandhi NREGS (2005): legal right to 100 days of unskilled manual employment per household per year. Successes: (i) employment guarantee to 8-10 crore households/year in peak years; (ii) wage floor effect — raised agricultural wages in rural areas (Imbert & Papp, 2015); (iii) rural asset creation — roads, ponds, watersheds, afforestation (500 crore person-days of work created); (iv) women empowerment — ~55% of MGNREGA workers are women; (v) COVID-19 safety net — absorbed returned migrants in 2020. Criticisms: corruption in implementation (ghost workers, fund diversion); urban bias in fund allocation; work demand exceeds supply in some states; wages below inflation in some years.</p><p><strong>(e) North East India — Industrial Backwardness:</strong> Reasons: (i) poor connectivity — no rail link to Myanmar, limited road; landlocked despite proximity to SE Asia; (ii) difficult terrain; (iii) political instability and insurgency historically deterred investment; (iv) small domestic markets; (v) absence of industrial tradition and entrepreneurship base; (vi) border trade restrictions. Government measures: Act East Policy (2014) — replaces Look East; Kaladan Multimodal Transit; BCIM Economic Corridor; NE Industrial Development Scheme (NEIDS) — capital subsidy and tax incentives; North East Special Infrastructure Development Scheme (NESIDS); PM DevINE (2022) — ₹6,600 crore for NE infrastructure; development of border haats with Myanmar and Bangladesh.</p>',
+   tips:'For (b) — This is a highly current question about US tariffs in 2025. Be specific about the sectors most affected (pharma, textiles, engineering goods). Always mention both negative impacts AND opportunities (supply chain diversion from China). For (d) — "Elucidate" means explain and illustrate — give data (crore beneficiaries, crore person-days). For (e) — mention Act East Policy (not Look East — it was renamed in 2014) and PM DevINE (2022) as the most recent initiative.'},
+
+  {id:4,num:'Q4',title:'Polity & Governance (5×5=25)',marks:25,marksNote:'5×5=25',wordLimit:200,
+   parts:[
+    {label:'a',text:'"The Directive Principles of State Policy have primacy over the Fundamental Rights in the Constitution of India." Comment.',marks:5},
+    {label:'b',text:'"Federalism in India is the key to efficient administration and autonomy to the States." Critically examine the statement.',marks:5},
+    {label:'c',text:'"Financial committees of the Parliament of India ensure financial propriety of the government." Discuss.',marks:5},
+    {label:'d',text:'Examine the success and failures in the implementation of the 73rd Constitutional Amendment Act.',marks:5},
+    {label:'e',text:'Assess the role of BRICS to build an alternative credible financial institution to serve the present world economic order.',marks:5}
+   ],
+   concepts:['Fundamental Rights','DPSP','Federalism India','Parliamentary Financial Committees','73rd Amendment','Panchayati Raj','BRICS','NDB','Multipolar World Order'],
+   modelAnswer:'<p><strong>(a) DPSP vs Fundamental Rights:</strong> The statement is INCORRECT. The Supreme Court\'s basic structure doctrine (Kesavananda Bharati, 1973) established that Fundamental Rights cannot be abrogated even by Parliament. However, the relationship is nuanced: Article 31C (42nd Amendment, 1976) gave DPSPs related to Articles 39(b) and (c) primacy over FRs under Articles 14 and 19 — but SC in Minerva Mills (1980) struck down the blanket primacy clause. Current position: FRs and DPSPs are complementary — courts harmonise them wherever possible. DPSPs are non-justiciable (no court can enforce) while FRs are justiciable. Neither category has absolute primacy — the Constitution treats them as twin pillars of the social order.</p><p><strong>(b) Indian Federalism — Critical Examination:</strong> India is a "Union of States" — quasi-federal with strong centre. Supporting the statement: States have legislative, executive, financial autonomy over State List subjects; 73rd/74th Amendments devolved power further; GST Council represents cooperative federalism. Against: emergency provisions (Articles 352-360) can suspend state autonomy; Union government can issue directives; Governor\'s discretionary role is controversial; Finance Commission devolution is often insufficient (states bear 60%+ expenditure). Conclusion: Indian federalism is "cooperative and competitive" but remains asymmetric — the Centre retains dominant position, especially on fiscal matters. Fiscal federalism reforms (full implementation of 15th Finance Commission recommendations) remain incomplete.</p><p><strong>(c) Parliamentary Financial Committees:</strong> Three key committees: (i) Public Accounts Committee (PAC) — examines audited accounts post-expenditure; reviews CAG reports; oldest parliamentary committee (1921); (ii) Estimates Committee — examines whether estimates of expenditure are within policy; suggests economies; (iii) Committee on Public Undertakings — examines working of public sector enterprises. These committees ensure: ex-post accountability (PAC); efficiency in expenditure estimation; PSU performance scrutiny. Limitations: recommendations are not binding on government; lack of dedicated staff and time; frequent reconstitution weakens institutional memory. Despite limitations, they remain essential democratic instruments for financial accountability.</p><p><strong>(d) 73rd Constitutional Amendment (1992) — Panchayati Raj:</strong> Successes: (i) constitutional status to Panchayati Raj — 2.5 lakh gram panchayats, 31 lakh elected representatives (50%+ women due to reservations); (ii) mandatory elections every 5 years; (iii) State Finance Commissions for financial devolution; (iv) Gram Sabha as democratic foundation; (v) SC/ST/women reservations expanded political participation. Failures: (i) 29 subjects listed in Schedule 11 not genuinely devolved in most states; (ii) inadequate financial devolution — GPs dependent on grants; (iii) parallel bureaucratic structures undermine GP authority; (iv) elite capture and caste domination in many states; (v) capacity gaps — most GPs lack trained personnel.</p><p><strong>(e) BRICS & Alternative Financial Architecture:</strong> BRICS (Brazil, Russia, India, China, South Africa — expanded 2024 to include Egypt, Ethiopia, Iran, UAE) represents ~40% of global GDP and 45% of world population. New Development Bank (NDB, 2015): $100 billion authorised capital; funds infrastructure and sustainable development. Contingent Reserve Arrangement (CRA): $100 billion — alternative to IMF for balance of payments support. Assessment: NDB has disbursed $33+ billion in loans (2015-2024) across member nations. Potential: provides developing country alternative to World Bank/IMF conditionality. Limitations: NDB still USD-denominated; governance dominated by China (largest shareholder); Russia\'s membership complicated by sanctions; internal political tensions (India-China border disputes). BRICS expansion dilutes cohesion. Overall: promising alternative but far from replacing Bretton Woods institutions.</p>',
+   tips:'For (a) — the examiner\'s phrasing "comment" asks for a nuanced response. The statement is WRONG — FRs are not subordinate to DPSPs — but the relationship is complex. Cite Kesavananda Bharati (1973) and Minerva Mills (1980). For (d) — the standard answer on 73rd Amendment must cover both successes AND failures with specific data (31 lakh elected representatives, 50% women). For (e) — BRICS expanded in 2024 — always mention this. The "conditionality-free" alternative to IMF/World Bank is the key argument for NDB\'s relevance.'}
+];
+
+const STORAGE_KEY='ies_prep_2025_gs';
+let _lsAvailable=false;
+try{localStorage.setItem('__t__','1');localStorage.removeItem('__t__');_lsAvailable=true;}catch(e){}
+function loadState(){if(_lsAvailable){try{const r=localStorage.getItem(STORAGE_KEY);if(r)return JSON.parse(r);}catch(e){}}return{ratings:{},answers:{}};}
+function saveState(){if(_lsAvailable){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}}
+const state=loadState();if(!state.ratings)state.ratings={};if(!state.answers)state.answers={};
+let currentQIndex=0,timerSeconds=10800,timerRunning=false,timerInterval=null;
+function G(id){return document.getElementById(id);}
+function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));G('screen-'+name).classList.add('active');document.querySelector('.nav-btn[data-screen="'+name+'"]').classList.add('active');if(name==='home')renderHome();if(name==='practice')renderQuestion();if(name==='mock')renderMock();if(name==='analytics')renderAnalytics();}
+function renderHome(){G('home-qs').innerHTML=QUESTIONS.map(q=>{const idx=QUESTIONS.indexOf(q),r=state.ratings[q.id];const dc=r==='good'?'dot-good':r==='ok'?'dot-ok':r==='poor'?'dot-poor':'';return'<div class="q-row" data-idx="'+idx+'"><span class="q-num">'+q.num+'</span><div style="flex:1"><div class="q-text">'+q.title+'</div><div class="q-marks">'+q.marksNote+'</div></div><div class="status-dot '+dc+'"></div></div>';}).join('');const done=Object.keys(state.ratings).length;G('stat-done').textContent=done;const rs=Object.values(state.ratings);if(rs.length>0){const avg=rs.reduce((s,r)=>s+({good:3,ok:2,poor:1}[r]),0)/rs.length;G('stat-score').textContent=avg>=2.5?'Good':avg>=1.5?'Partial':'Weak';}else G('stat-score').textContent='—';document.querySelectorAll('.q-row').forEach(el=>el.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));}
+function renderQuestion(){const q=QUESTIONS[currentQIndex];G('prac-progress').textContent=q.num+' ('+(currentQIndex+1)+' of '+QUESTIONS.length+')';G('prog-fill').style.width=Math.round(((currentQIndex+1)/QUESTIONS.length)*100)+'%';G('user-answer').value=state.answers[q.id]||'';G('model-answer-box').style.display='none';G('word-limit-hint').textContent='~200 words per part — 5 parts total';const ph=q.parts.map(p=>'<div class="q-part"><div class="q-part-label">('+p.label+') — '+p.marks+' marks</div>'+p.text+'</div>').join('');G('q-display').innerHTML='<span class="section-chip">All Compulsory · 5 parts × 5 marks</span><div class="q-card"><div class="marks-tag">✦ '+q.marksNote+'</div>'+ph+'</div>';document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));if(state.ratings[q.id])document.querySelector('.eval-btn[data-rating="'+state.ratings[q.id]+'"]').classList.add('sel');}
+function showModelAnswer(){const q=QUESTIONS[currentQIndex];state.answers[q.id]=G('user-answer').value;saveState();const box=G('model-answer-box');box.style.display='block';G('model-answer-content').innerHTML='<div class="model-section"><div class="model-section-title" style="color:#1a3a5c">Key Concepts</div><div class="concept-pills">'+q.concepts.map(c=>'<span class="pill">'+c+'</span>').join('')+'</div></div>'+'<div class="model-section"><div class="model-section-title" style="color:var(--green)">✓ Model Answers</div><div class="model-text">'+q.modelAnswer+'</div></div>'+'<div class="model-section"><div class="model-section-title" style="color:var(--red)">! Examiner Tips</div><div class="tip-box">'+q.tips+'</div></div>';document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));if(state.ratings[q.id])document.querySelector('.eval-btn[data-rating="'+state.ratings[q.id]+'"]').classList.add('sel');setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'start'}),100);}
+function goNext(){if(currentQIndex<QUESTIONS.length-1){currentQIndex++;renderQuestion();G('screen-practice').scrollTop=0;}}
+function goPrev(){if(currentQIndex>0){currentQIndex--;renderQuestion();G('screen-practice').scrollTop=0;}}
+function renderMock(){G('mock-q-grid').innerHTML=QUESTIONS.map((q,i)=>{const r=state.ratings[q.id];const bg=r==='good'?'var(--green-bg)':r==='ok'?'#fff3cd':r==='poor'?'var(--red-bg)':'#fff';const co=r==='good'?'var(--green)':r==='ok'?'#6b4c00':r==='poor'?'var(--red)':'var(--ink)';return'<button class="mock-q-btn" data-idx="'+i+'" style="background:'+bg+';color:'+co+'">'+q.num+'</button>';}).join('');document.querySelectorAll('.mock-q-btn').forEach(btn=>btn.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));updateTimerDisplay();}
+function updateTimerDisplay(){const h=Math.floor(timerSeconds/3600),m=Math.floor((timerSeconds%3600)/60),s=timerSeconds%60;G('timer-display').textContent=h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+function renderAnalytics(){const rs=state.ratings;G('a-attempted').textContent=Object.keys(rs).length;G('a-good').textContent=Object.values(rs).filter(r=>r==='good').length;G('a-poor').textContent=Object.values(rs).filter(r=>r==='poor').length;const aqs=QUESTIONS.filter(q=>rs[q.id]);G('history-list').innerHTML=aqs.length===0?'<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No questions attempted yet.</div>':aqs.map(q=>{const r=rs[q.id];const cls={good:'hs-good',ok:'hs-ok',poor:'hs-poor'}[r];const lbl={good:'Good ✓',ok:'Partial ~',poor:'Needs Work ✗'}[r];return'<div class="history-row" data-idx="'+QUESTIONS.indexOf(q)+'"><div class="history-q">'+q.num+': '+q.title+'</div><span class="history-status '+cls+'">'+lbl+'</span></div>';}).join('');document.querySelectorAll('.history-row').forEach(el=>el.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');}));}
+document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',function(){showScreen(this.dataset.screen);}));
+G('btn-back').addEventListener('click',()=>showScreen('home'));G('btn-prev').addEventListener('click',goPrev);G('btn-next').addEventListener('click',goNext);G('btn-next2').addEventListener('click',goNext);G('btn-show-answer').addEventListener('click',showModelAnswer);
+document.querySelectorAll('.eval-btn').forEach(btn=>btn.addEventListener('click',function(){const q=QUESTIONS[currentQIndex];state.ratings[q.id]=this.dataset.rating;saveState();document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));this.classList.add('sel');}));
+G('mode-timed').addEventListener('click',()=>{G('mode-timed').classList.add('active');G('mode-free').classList.remove('active');G('timer-bar').style.opacity='1';});
+G('mode-free').addEventListener('click',()=>{G('mode-free').classList.add('active');G('mode-timed').classList.remove('active');G('timer-bar').style.opacity='0.4';clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Start';G('timer-start-btn').classList.remove('running');});
+G('timer-start-btn').addEventListener('click',()=>{if(G('mode-free').classList.contains('active'))return;if(timerRunning){clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Resume';G('timer-start-btn').classList.remove('running');}else{timerRunning=true;G('timer-start-btn').textContent='Pause';G('timer-start-btn').classList.add('running');timerInterval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;updateTimerDisplay();}else{clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Done';G('timer-start-btn').classList.remove('running');}},1000);}});
+G('timer-reset-btn').addEventListener('click',()=>{clearInterval(timerInterval);timerRunning=false;timerSeconds=10800;updateTimerDisplay();G('timer-start-btn').textContent='Start';G('timer-start-btn').classList.remove('running');});
+G('btn-start-mock').addEventListener('click',()=>{currentQIndex=0;showScreen('practice');});
+G('btn-reset').addEventListener('click',()=>{if(confirm('Reset all progress?')){Object.keys(state.ratings).forEach(k=>delete state.ratings[k]);Object.keys(state.answers).forEach(k=>delete state.answers[k]);saveState();renderAnalytics();renderHome();}});
+renderHome();renderMock();
+</script>
+</body>
+</html>

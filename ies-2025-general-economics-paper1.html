@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<title>IES Prep — General Economics Paper I</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#1a1a2e;--ink2:#2d2d4e;--gold:#c9a84c;--gold-light:#f0d98a;--gold-dim:rgba(201,168,76,0.15);--cream:#faf8f3;--cream2:#f2efe6;--muted:#7a7a8a;--green:#2d6a4f;--green-bg:#d8f3dc;--red:#9b2335;--red-bg:#fde8ea;--blue:#1a3a5c;--blue-bg:#dbeafe;--border:rgba(26,26,46,0.12);--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px}
+#app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;background:var(--cream);overflow:hidden}
+.header{background:var(--ink);color:var(--cream);padding:14px 18px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.header-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700}
+.header-sub{font-size:11px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-top:1px}
+.header-badge{background:var(--gold);color:var(--ink);font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px}
+.nav{display:flex;background:var(--ink2);flex-shrink:0}
+.nav-btn{flex:1;padding:10px 4px 9px;font-size:11px;color:rgba(250,248,243,0.5);border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color 0.2s}
+.nav-btn.active{color:var(--gold);border-bottom:2px solid var(--gold)}
+.scroll{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.screen{display:none}
+.screen.active{display:block}
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px}
+.card-accent{border-left:3px solid var(--gold)}
+.hero{background:var(--ink);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.hero-label{font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.hero-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--cream);font-weight:700;line-height:1.25}
+.hero-meta{font-size:12px;color:rgba(250,248,243,0.55);margin-top:8px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.stat{background:#fff;border-radius:10px;padding:12px 10px;text-align:center;border:1px solid var(--border)}
+.stat-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--ink)}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+.section-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:10px}
+.q-row{background:#fff;border-radius:10px;border:1px solid var(--border);padding:13px 14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:border-color 0.2s}
+.q-row:hover{border-color:var(--gold)}
+.q-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);background:var(--gold-dim);padding:3px 7px;border-radius:6px;flex-shrink:0;margin-top:1px}
+.q-text{font-size:13px;color:var(--ink);line-height:1.5;flex:1}
+.q-marks{font-size:11px;color:var(--muted);margin-top:3px}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;background:var(--border)}
+.dot-good{background:var(--green)}.dot-ok{background:var(--gold)}.dot-poor{background:var(--red)}
+.prac-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.prac-progress{font-size:12px;color:var(--muted)}
+.prog-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:16px}
+.prog-bar-fill{height:4px;background:var(--gold);border-radius:2px;transition:width 0.4s}
+.section-chip{display:inline-block;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:500;letter-spacing:0.5px;margin-bottom:10px}
+.chip-a{background:#fff3cd;color:#6b4c00}.chip-b{background:#dbeafe;color:#1a3a5c}.chip-c{background:#f3e8ff;color:#5b21b6}
+.q-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:18px;margin-bottom:14px}
+.q-main{font-family:'Playfair Display',serif;font-size:16px;line-height:1.65;color:var(--ink);font-weight:500}
+.q-part{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:14px;color:var(--ink2);line-height:1.6}
+.q-part-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);margin-bottom:4px}
+.marks-tag{display:inline-flex;align-items:center;gap:4px;background:var(--gold-dim);color:#6b4c00;font-size:11px;padding:3px 9px;border-radius:20px;margin-bottom:10px;font-weight:500}
+.answer-area{background:#fff;border-radius:var(--radius);border:1.5px solid var(--border);padding:14px;margin-bottom:14px;transition:border-color 0.2s}
+.answer-area:focus-within{border-color:var(--gold)}
+.answer-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.answer-textarea{width:100%;min-height:120px;border:none;outline:none;resize:vertical;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);line-height:1.7;background:transparent}
+.answer-textarea::placeholder{color:var(--muted);font-style:italic}
+.btn-row{display:flex;gap:8px;margin-bottom:12px}
+.btn{padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.18s;font-family:'DM Sans',sans-serif}
+.btn-primary{background:var(--ink);color:var(--cream);flex:2}
+.btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--border);flex:1}
+.btn-gold{background:var(--gold);color:var(--ink);font-weight:500;width:100%;display:block;padding:12px;border-radius:10px;font-size:13px;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
+.model-answer-box{display:none;margin-bottom:8px}
+.model-section{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:10px}
+.model-section-title{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;font-weight:500;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.concept-pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font-size:12px;background:var(--blue-bg);color:var(--blue);padding:4px 10px;border-radius:20px}
+.model-text{font-size:13px;color:var(--ink2);line-height:1.75}
+.model-text p{margin-bottom:8px}
+.model-text strong{color:var(--ink);font-weight:500}
+.tip-box{background:var(--red-bg);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--red);line-height:1.6}
+.self-eval{background:var(--cream2);border-radius:10px;padding:14px;margin-bottom:12px}
+.self-eval-title{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:10px}
+.eval-btns{display:flex;gap:8px}
+.eval-btn{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:all 0.18s;font-family:'DM Sans',sans-serif}
+.eval-good{background:var(--green-bg);color:var(--green)}.eval-good.sel{background:var(--green);color:#fff}
+.eval-ok{background:#fff3cd;color:#6b4c00}.eval-ok.sel{background:#f0b429;color:var(--ink)}
+.eval-poor{background:var(--red-bg);color:var(--red)}.eval-poor.sel{background:var(--red);color:#fff}
+.timer-bar{background:var(--ink);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.timer-display{font-family:'DM Mono',monospace;font-size:26px;color:var(--gold);letter-spacing:2px}
+.timer-lbl{font-size:10px;color:rgba(250,248,243,0.5);text-transform:uppercase;letter-spacing:1px}
+.timer-btns{display:flex;gap:6px}
+.timer-btn{background:rgba(250,248,243,0.1);color:var(--cream);border:none;border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.timer-btn.running{background:var(--gold);color:var(--ink)}
+.mode-toggle{display:flex;background:var(--cream2);border-radius:10px;padding:3px;margin-bottom:16px}
+.mode-btn{flex:1;padding:8px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.mode-btn.active{background:var(--ink);color:var(--cream)}
+.topic-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.topic-row:last-child{border-bottom:none}
+.topic-name{font-size:13px;color:var(--ink);flex:1}
+.topic-bar-wrap{width:90px;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.topic-bar{height:6px;border-radius:3px;background:var(--gold)}
+.topic-pct{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);width:34px;text-align:right}
+.history-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.history-row:last-child{border-bottom:none}
+.history-q{font-size:12px;color:var(--ink2);flex:1}
+.history-status{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
+.hs-good{background:var(--green-bg);color:var(--green)}.hs-ok{background:#fff3cd;color:#6b4c00}.hs-poor{background:var(--red-bg);color:var(--red)}
+.mock-q-btn{background:#fff;color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn 0.25s ease}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div><div class="header-title">IES/ISS 2025</div><div class="header-sub">General Economics · Paper I</div></div>
+    <div class="header-badge">200 Marks</div>
+  </div>
+  <div class="nav">
+    <button class="nav-btn active" data-screen="home"><span style="font-size:16px">⊞</span>Home</button>
+    <button class="nav-btn" data-screen="practice"><span style="font-size:16px">✍</span>Practice</button>
+    <button class="nav-btn" data-screen="mock"><span style="font-size:16px">⏱</span>Mock</button>
+    <button class="nav-btn" data-screen="analytics"><span style="font-size:16px">◈</span>Analytics</button>
+  </div>
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen active scroll">
+    <div class="hero">
+      <div class="hero-label">IES/ISS Examination 2025</div>
+      <div class="hero-title">General Economics<br/>Paper – I</div>
+      <div class="hero-meta">3 Sections · 13 Questions · 200 Marks · 3 Hours</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-val" id="stat-done">0</div><div class="stat-lbl">Attempted</div></div>
+      <div class="stat"><div class="stat-val" id="stat-score">—</div><div class="stat-lbl">Avg Rating</div></div>
+      <div class="stat"><div class="stat-val">13</div><div class="stat-lbl">Total Qs</div></div>
+    </div>
+    <div class="section-label">Section A — Compulsory (35 Marks)</div>
+    <div id="home-sec-a"></div>
+    <div class="section-label">Section B — Attempt 5 of 7 (90 Marks)</div>
+    <div id="home-sec-b"></div>
+    <div class="section-label">Section C — Attempt 3 of 5 (75 Marks)</div>
+    <div id="home-sec-c"></div>
+  </div>
+
+  <!-- PRACTICE -->
+  <div id="screen-practice" class="screen scroll">
+    <div class="prac-top">
+      <button class="btn btn-secondary" id="btn-back" style="padding:7px 12px;font-size:12px;flex:none">← Back</button>
+      <div class="prac-progress" id="prac-progress">Q 1 of 13</div>
+    </div>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-fill" style="width:7%"></div></div>
+    <div id="q-display"></div>
+    <div class="answer-area">
+      <div class="answer-label">Your Answer</div>
+      <textarea class="answer-textarea" id="user-answer" placeholder="Write your answer here — use key terms, structure your points clearly…"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btn-prev">← Prev</button>
+      <button class="btn btn-primary" id="btn-show-answer">Show Model Answer</button>
+      <button class="btn btn-secondary" id="btn-next">Next →</button>
+    </div>
+    <div class="model-answer-box" id="model-answer-box">
+      <div id="model-answer-content"></div>
+      <div class="self-eval">
+        <div class="self-eval-title">How well did you answer this?</div>
+        <div class="eval-btns">
+          <button class="eval-btn eval-good" data-rating="good">Good ✓</button>
+          <button class="eval-btn eval-ok" data-rating="ok">Partial ~</button>
+          <button class="eval-btn eval-poor" data-rating="poor">Needs Work ✗</button>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" id="btn-next2" style="flex:1">Next Question →</button></div>
+    </div>
+  </div>
+
+  <!-- MOCK -->
+  <div id="screen-mock" class="screen scroll">
+    <div class="section-label">Test Mode</div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-timed">⏱ Timed (3 hrs)</button>
+      <button class="mode-btn" id="mode-free">∞ Free Practice</button>
+    </div>
+    <div class="timer-bar" id="timer-bar">
+      <div><div class="timer-lbl">Time Remaining</div><div class="timer-display" id="timer-display">3:00:00</div></div>
+      <div class="timer-btns">
+        <button class="timer-btn" id="timer-start-btn">Start</button>
+        <button class="timer-btn" id="timer-reset-btn">Reset</button>
+      </div>
+    </div>
+    <div class="card card-accent" style="margin-bottom:14px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Instructions</div>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.7">
+        • Section A: Q1 — <strong>Compulsory</strong> (35 marks)<br/>
+        • Section B: Attempt <strong>5 out of 7</strong> — Q2 to Q8 (90 marks)<br/>
+        • Section C: Attempt <strong>3 out of 5</strong> — Q9 to Q13 (75 marks)<br/>
+        • Total: <strong>200 marks</strong> in 3 hours
+      </div>
+    </div>
+    <div class="section-label">Jump to Question</div>
+    <div id="mock-q-grid" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px"></div>
+    <button class="btn-gold" id="btn-start-mock">Start Full Paper →</button>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div id="screen-analytics" class="screen scroll">
+    <div class="section-label">Your Progress</div>
+    <div class="stats-grid" style="margin-bottom:16px">
+      <div class="stat"><div class="stat-val" id="a-attempted">0</div><div class="stat-lbl">Attempted</div></div>
+      <div class="stat"><div class="stat-val" id="a-good">0</div><div class="stat-lbl">Good</div></div>
+      <div class="stat"><div class="stat-val" id="a-poor">0</div><div class="stat-lbl">Needs Work</div></div>
+    </div>
+    <div class="section-label">Topic Coverage</div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="topic-row"><span class="topic-name">Microeconomics</span><div class="topic-bar-wrap"><div class="topic-bar" id="tb-micro" style="width:0%"></div></div><span class="topic-pct" id="tp-micro">0%</span></div>
+      <div class="topic-row"><span class="topic-name">Market Structures</span><div class="topic-bar-wrap"><div class="topic-bar" id="tb-mkt" style="width:0%"></div></div><span class="topic-pct" id="tp-mkt">0%</span></div>
+      <div class="topic-row"><span class="topic-name">Public Economics</span><div class="topic-bar-wrap"><div class="topic-bar" id="tb-pub" style="width:0%"></div></div><span class="topic-pct" id="tp-pub">0%</span></div>
+      <div class="topic-row"><span class="topic-name">Maths / Statistics</span><div class="topic-bar-wrap"><div class="topic-bar" id="tb-stat" style="width:0%"></div></div><span class="topic-pct" id="tp-stat">0%</span></div>
+      <div class="topic-row"><span class="topic-name">Econometrics</span><div class="topic-bar-wrap"><div class="topic-bar" id="tb-eco" style="width:0%"></div></div><span class="topic-pct" id="tp-eco">0%</span></div>
+    </div>
+    <div class="section-label">Question History</div>
+    <div class="card" id="history-list"><div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No questions attempted yet.</div></div>
+    <button class="btn btn-secondary" id="btn-reset" style="width:100%;margin-top:8px">Reset All Progress</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {id:1,section:'A',num:'Q1',title:'Answer all seven parts',marks:35,marksNote:'5×7=35',topic:['micro','stat','eco'],
+   parts:[{label:'a',text:'Define MRS (Marginal Rate of Substitution). Calculate MRS for a utility function U = q\u2081\u1d45 q\u2082\u1d5d.',marks:5},{label:'b',text:'Specify the Cobb-Douglas production function taking two inputs in producing one output. Interpret the parameters.',marks:5},{label:'c',text:'Comment on the role of conjectural variations in the determination of oligopoly equilibrium.',marks:5},{label:'d',text:'"Rent is not the income of a particular factor of production but merely an aspect of income of any factor of production." Discuss.',marks:5},{label:'e',text:'State and explain the Coase theorem.',marks:5},{label:'f',text:'Write down the economic meaning of a first order derivative of a short-run production function. Interpret the situation where one second order derivative of that function is zero.',marks:5},{label:'g',text:'Explain why adjusted R\u00b2 is important for testing the goodness of fit of a regression model.',marks:5}],
+   concepts:['MRS','Cobb-Douglas','Conjectural Variations','Economic Rent','Coase Theorem','Marginal Product','Adjusted R\u00b2'],
+   modelAnswer:'<p><strong>(a) MRS:</strong> MRS is the rate at which a consumer substitutes one good for another while remaining on the same indifference curve. For U = q\u2081\u1d45 q\u2082\u1d5d: MRS = \u03b1q\u2082/\u03b2q\u2081. It diminishes along the curve.</p><p><strong>(b) Cobb-Douglas:</strong> Q = AL^\u03b1 K^\u03b2. A = TFP, \u03b1 = output elasticity of labour, \u03b2 = output elasticity of capital. \u03b1+\u03b2=1 \u2192 CRS; &gt;1 \u2192 IRS; &lt;1 \u2192 DRS.</p><p><strong>(c) Conjectural Variations:</strong> A firm\'s belief about a rival\'s output response. Cournot assumes zero CV; Bertrand assumes zero for price; Collusion assumes +1. Equilibrium type depends on this assumption.</p><p><strong>(d) Economic Rent:</strong> Rent is a surplus above transfer earnings (opportunity cost). Any factor earns rent if its supply is inelastic. This is the modern generalised rent concept.</p><p><strong>(e) Coase Theorem:</strong> With well-defined property rights and zero transaction costs, private bargaining leads to efficient allocation regardless of who holds the rights.</p><p><strong>(f) Derivatives:</strong> First-order derivative = Marginal Product. When second-order derivative = 0, MP is at its maximum \u2014 the inflection point where diminishing returns begin.</p><p><strong>(g) Adjusted R\u00b2:</strong> Adj R\u00b2 = 1 \u2212 [(1\u2212R\u00b2)(n\u22121)/(n\u2212k\u22121)]. It penalises for adding irrelevant variables and can decrease if a variable adds noise \u2014 superior to R\u00b2 for model comparison.</p>',
+   tips:'Each part = 5 marks. Write 3\u20134 focused sentences. For (a)-(b) show derivation. For (d) examiner expects the modern Paretian view of rent, not just classical land-rent theory.'},
+  {id:2,section:'B',num:'Q2',title:'Demand Functions & Revealed Preference',marks:18,marksNote:'10+8=18',topic:['micro'],
+   parts:[{label:'a',text:'How can an ordinary demand function be derived in a two-commodity framework? Show that the ordinary demand function is homogeneous of degree zero with respect to all prices and income.',marks:10},{label:'b',text:'A consumer purchases x=10, y=5 at P\u2093=1, P\u1d67=3. Also purchases x=9, y=3 at P\u2093=2, P\u1d67=2. Is this consistent with revealed preference axioms?',marks:8}],
+   concepts:['Utility Maximisation','Lagrangian Method','Homogeneity Degree Zero','Walras Law','WARP','SARP'],
+   modelAnswer:'<p><strong>(a) Deriving Ordinary Demand:</strong> Maximise U(x,y) subject to P\u2093x + P\u1d67y = M. FOCs give MU\u2093/MU\u1d67 = P\u2093/P\u1d67. Solving with budget constraint gives x*(P\u2093,P\u1d67,M).</p><p><strong>Homogeneity of degree zero:</strong> Multiplying all prices and income by \u03bb leaves the budget set unchanged \u2192 x*(\u03bbP\u2093,\u03bbP\u1d67,\u03bbM) = x*(P\u2093,P\u1d67,M). Only relative prices matter.</p><p><strong>(b) Revealed Preference:</strong> Bundle A=(10,5) at (1,3): cost=25. Bundle B=(9,3) at (2,2): cost=24. Cost of B at prices of A = 9+9=18 &lt; 25 \u2192 B was affordable when A chosen \u2192 A revealed preferred to B. Cost of A at prices of B = 20+10=30 &gt; 24 \u2192 A not affordable when B chosen. No WARP violation. Behaviour IS consistent.</p>',
+   tips:'For (a) show both the Lagrangian setup AND the mathematical proof of homogeneity. For (b) set up a clear 2\u00d72 affordability comparison \u2014 check both directions.'},
+  {id:3,section:'B',num:'Q3',title:'Cost Curves & Firm Equilibrium',marks:18,marksNote:'8+10=18',topic:['micro'],
+   parts:[{label:'a',text:'How do you construct the long-run average cost curve from short-run average cost curves? Explain why an average cost curve is U-shaped under variable returns to scale.',marks:8},{label:'b',text:'Derive the necessary and sufficient conditions for a firm\'s equilibrium in producing a good by using two inputs at a given cost. Illustrate graphically.',marks:10}],
+   concepts:['LAC Envelope Curve','SRAC','Returns to Scale','Economies of Scale','Isoquant','Isocost','Cost Minimisation','MRTS = w/r'],
+   modelAnswer:'<p><strong>(a) LAC Construction:</strong> LAC is the lower envelope of all SRAC curves. U-shape: at low output, increasing returns lower AC; at high output, decreasing returns raise AC.</p><p><strong>(b) Firm Equilibrium:</strong> Minimise C = wL + rK subject to Q = f(L,K) = Q\u2080. <em>Necessary (FOC):</em> MRTS = MPL/MPK = w/r \u2014 isoquant slope equals isocost slope. <em>Sufficient (SOC):</em> Isoquant strictly convex to origin (diminishing MRTS). Graphically: tangency of Q\u2080 isoquant with lowest possible isocost line.</p>',
+   tips:'The graphical illustration in (b) is worth significant marks \u2014 draw isoquant, two isocost lines, mark tangency, label K and L. LAC touches each SRAC at its minimum only at minimum efficient scale.'},
+  {id:4,section:'B',num:'Q4',title:'Mergers, Asymmetric Information & Public Goods',marks:18,marksNote:'6+6+6=18',topic:['micro','pub'],
+   parts:[{label:'a',text:'Explain horizontal, vertical and conglomerate mergers with examples. Discuss one objective in each case.',marks:6},{label:'b',text:'"Asymmetric information does not cause an efficiency problem, but it does have equity implications." Discuss critically.',marks:6},{label:'c',text:'What is the free rider problem? Explain how it makes private provision of public goods inefficient.',marks:6}],
+   concepts:['Horizontal Merger','Vertical Merger','Conglomerate Merger','Asymmetric Information','Adverse Selection','Moral Hazard','Public Goods','Non-excludability','Free Rider'],
+   modelAnswer:'<p><strong>(a) Mergers:</strong> <em>Horizontal:</em> Same industry, same stage (e.g., two steel companies). Objective: market power/economies of scale. <em>Vertical:</em> Different supply chain stages (e.g., automaker + tyre supplier). Objective: reduce transaction costs. <em>Conglomerate:</em> Unrelated industries. Objective: risk diversification.</p><p><strong>(b) Critique:</strong> Largely incorrect. Asymmetric information DOES cause efficiency problems \u2014 adverse selection (Akerlof\'s lemons) leads to market collapse; moral hazard causes inefficient over-consumption. Both efficiency and equity are affected.</p><p><strong>(c) Free Rider:</strong> When a good is non-excludable, rational agents can consume without paying. No firm can recover costs \u2192 under-provision. The market outcome is inefficient relative to the Samuelson condition (\u03a3MRSi = MRT), justifying public provision.</p>',
+   tips:'For (b) never accept the statement at face value \u2014 cite Akerlof and Stiglitz. For (c) distinguish non-rivalry from non-excludability clearly \u2014 the free rider problem arises specifically from non-excludability.'},
+  {id:5,section:'B',num:'Q5',title:'Factor Markets & Distribution Theory',marks:18,marksNote:'8+10=18',topic:['micro'],
+   parts:[{label:'a',text:'Why is input demand called a derived demand? Explain graphically how factor prices are determined when the product market is monopoly and factor market is perfectly competitive.',marks:8},{label:'b',text:'Critically examine the Marxian theory of distribution and explain how it differs from Kaldor\'s theory of distribution.',marks:10}],
+   concepts:['Derived Demand','MRP','VMPL','Monopoly Product Market','Surplus Value','Marxian Theory','Kaldor Distribution Theory'],
+   modelAnswer:'<p><strong>(a) Derived Demand:</strong> Firms demand inputs only for the output they produce. Demand for labour = MRPL = MR \u00d7 MPL. Under monopoly: MR &lt; P, so MRPL &lt; VMPL. The firm hires where MRPL = wage rate. The MRPL curve lies below VMPL \u2192 lower employment and wages than perfect competition.</p><p><strong>(b) Marxian vs Kaldor:</strong> <em>Marxian:</em> Workers get subsistence wages; capitalists extract surplus value (unpaid labour time). Distribution via class conflict. Based on labour theory of value. <em>Kaldor:</em> Distribution determined by investment-savings equilibrium at full employment. If I rises, prices rise faster than wages, shifting income to profits until S=I. Key difference: Marx = class exploitation; Kaldor = aggregate demand management.</p>',
+   tips:'Draw the MRPL and VMPL diagram for (a) \u2014 label both curves, wage line w, and mark employment under monopoly vs competition. A structured comparison table earns better marks than a narrative for (b).'},
+  {id:6,section:'B',num:'Q6',title:'Externalities & Sen\'s Social Choice',marks:18,marksNote:'10+8=18',topic:['pub','micro'],
+   parts:[{label:'a',text:'Define externalities in the context of public goods. Explain how externalities affect the efficiency of market outcomes.',marks:10},{label:'b',text:'Explain the main features of Sen\'s theory of social choice. How is it relevant in the present situation?',marks:8}],
+   concepts:['Externalities','Pigouvian Tax/Subsidy','Deadweight Loss','Market Failure','Arrow\'s Impossibility Theorem','Sen\'s Capabilities','Social Choice'],
+   modelAnswer:'<p><strong>(a) Externalities:</strong> Third-party effects without compensation. Negative externality: MSC &gt; MPC \u2192 overproduction \u2192 deadweight loss. Positive externality: MSB &gt; MPB \u2192 underproduction. Pigouvian correction: tax = marginal external cost; subsidy = marginal external benefit.</p><p><strong>(b) Sen\'s Social Choice:</strong> Sen resolved Arrow\'s impossibility by allowing richer information \u2014 interpersonal comparisons using ordinal + cardinal data. Key features: (i) Capability Approach \u2014 justice is about what people can do and be; (ii) functionings as welfare measures. Relevance: basis of HDI; poverty measurement beyond income; shows Arrow\'s impossibility dissolves with richer information sets.</p>',
+   tips:'Draw the negative externality diagram (MPC, MSC, demand) showing overproduction and the Pigouvian tax \u2014 worth 4\u20135 marks alone. For (b) link Sen explicitly to Arrow\'s theorem.'},
+  {id:7,section:'B',num:'Q7',title:'Linear Programming',marks:18,marksNote:'9+9=18',topic:['stat'],
+   parts:[{label:'a',text:'Define feasible solution, basic feasible solution and optimal solution of a linear programming problem. Explain with a constrained minimisation example.',marks:9},{label:'b',text:'Solve by graphical method: Maximise \u03c0 = 4x\u2081 + 3x\u2082 subject to x\u2081 + 2x\u2082 \u2264 8, x\u2081 \u2264 6, x\u2082 \u2264 3, x\u2081,x\u2082 \u2265 0.',marks:9}],
+   concepts:['Feasible Region','Basic Feasible Solution','Optimal Solution','Corner Point Theorem','Graphical Method','Objective Function'],
+   modelAnswer:'<p><strong>(a) LP Definitions:</strong> <em>Feasible Solution:</em> Any (x\u2081,x\u2082) satisfying ALL constraints. <em>Basic Feasible Solution:</em> Feasible solution where non-zero variables \u2264 number of constraints \u2014 corresponds to a corner/vertex. <em>Optimal Solution:</em> Feasible solution optimising the objective. By the Corner Point Theorem, optimum always occurs at a vertex.</p><p><strong>(b) Solution:</strong> Corner points: (0,0), (6,0), (6,1), (2,3), (0,3). Evaluate \u03c0=4x\u2081+3x\u2082: (0,0)\u21920; (6,0)\u219224; (6,1)\u219227; (2,3)\u219217; (0,3)\u21929. <strong>Maximum \u03c0 = 27 at (x\u2081=6, x\u2082=1).</strong> Binding constraints: x\u2081=6 and x\u2081+2x\u2082=8.</p>',
+   tips:'Part (b) is fully solvable \u2014 do not skip it. Draw the graph, label all 5 corner points, and show the \u03c0 evaluation table. Key is finding corner (6,1) \u2014 the intersection of x\u2081=6 and x\u2081+2x\u2082=8. Many students miss this and incorrectly choose (6,0).'},
+  {id:8,section:'B',num:'Q8',title:'Matrix Rank & Eigenvalues / PCA',marks:18,marksNote:'8+10=18',topic:['stat'],
+   parts:[{label:'a',text:'Define rank of a matrix. Write down the implications of full rank assumption in multiple linear regression. Why is it not required for simple linear regression?',marks:8},{label:'b',text:'Explain eigenvalues and eigenvectors of a square symmetric matrix. How are these used in principal component analysis?',marks:10}],
+   concepts:['Matrix Rank','Full Rank Assumption','Multicollinearity','OLS','Eigenvalue','Eigenvector','PCA','Variance Decomposition'],
+   modelAnswer:'<p><strong>(a) Rank:</strong> Rank = maximum number of linearly independent rows/columns. For regression Y=X\u03b2+\u03b5: full rank means rank(X)=k. Implications: (X\'X) invertible \u2192 unique OLS estimator \u03b2\u0302=(X\'X)\u207b\u00b9X\'Y; no perfect multicollinearity; model is identified. <em>Simple regression:</em> Only 2 parameters \u2014 as long as X varies, X\'X is automatically invertible.</p><p><strong>(b) Eigenvalues/PCA:</strong> For matrix A: Av = \u03bbv. Eigenvalues \u03bb are roots of det(A\u2212\u03bbI)=0. For symmetric matrices, eigenvalues are real and eigenvectors are orthogonal. <em>PCA:</em> \u03a3 = P\u039bP\', where P = eigenvectors (principal components), \u039b = diagonal eigenvalue matrix. Proportion of variance explained by component i = \u03bbi/\u03a3\u03bbj. PCA reduces dimensionality and addresses multicollinearity.</p>',
+   tips:'For (b) mention that the proportion of variance explained = \u03bbi/\u03a3\u03bbj. For (a) distinguish: perfect multicollinearity violates full rank; imperfect multicollinearity does not.'},
+  {id:9,section:'C',num:'Q9',title:'Nash Equilibrium, Risk & Expected Utility',marks:25,marksNote:'10+9+6=25',topic:['micro'],
+   parts:[{label:'a',text:'Explain Nash equilibrium in price competition. Why is it stable? Why can firms not raise prices to maximise joint profits?',marks:10},{label:'b',text:'Under what condition is an agent a risk averter? State and prove the Neumann-Morgenstern expected utility theorem.',marks:9},{label:'c',text:'Agent has 4 options A\u2081>A\u2082>A\u2083>A\u2084. U(A\u2081)=300, U(A\u2084)=100. Find U(A\u2082) if indifferent between A\u2082 and lottery [0.4A\u2081, 0.6A\u2084]. Find U(A\u2083) if indifferent between A\u2083 and lottery [0.3A\u2082, 0.7A\u2084].',marks:6}],
+   concepts:['Nash Equilibrium','Bertrand Paradox','Prisoner\'s Dilemma','Risk Aversion','Concave Utility','vNM Theorem','Expected Utility'],
+   modelAnswer:'<p><strong>(a) Bertrand Nash Equilibrium:</strong> Both firms price at MC, earning zero profit. Stability: if a firm raises price it loses all customers; if it lowers price it earns negative profit \u2014 no profitable deviation. <em>Why not collusion?</em> Prisoner\'s Dilemma \u2014 each firm has a dominant strategy to undercut. Without binding contracts equilibrium unravels to P=MC.</p><p><strong>(b) Risk Aversion:</strong> Agent is a risk averter if U(E[W]) &gt; E[U(W)] \u2014 requires concave utility (U\'\'&lt;0). <em>vNM Theorem:</em> If preferences satisfy completeness, transitivity, continuity, and independence axioms, there exists U such that L\u2081 \u227b L\u2082 iff E[U(L\u2081)] &gt; E[U(L\u2082)]. Proof: normalise U(best)=1, U(worst)=0; continuity axiom assigns utility to any outcome as probability p such that agent is indifferent between outcome and [p\u00b7best, (1\u2212p)\u00b7worst].</p><p><strong>(c) Calculation:</strong> U(A\u2082) = 0.4\u00d7300 + 0.6\u00d7100 = 120+60 = <strong>180</strong>. U(A\u2083) = 0.3\u00d7180 + 0.7\u00d7100 = 54+70 = <strong>124</strong>.</p>',
+   tips:'Part (c) is pure calculation \u2014 6 marks for 2 substitutions, do not skip. For (b) learn the 4 vNM axioms. For (a) be explicit this is Bertrand (price) not Cournot (quantity) competition.'},
+  {id:10,section:'C',num:'Q10',title:'Monopoly, Kinked Demand & Compensated Demand',marks:25,marksNote:'8+8+9=25',topic:['micro'],
+   parts:[{label:'a',text:'"A monopolist cannot increase price level indefinitely." Explain. What price would the government set as a ceiling to maximise the monopolist\'s output?',marks:8},{label:'b',text:'"Competitors match price reductions more closely than price increases." Explain using the kinked demand curve model. How is prisoner\'s dilemma associated with the duopoly model?',marks:8},{label:'c',text:'Construct the compensated demand function from U = q\u2081\u1d45 \u00b7 q\u2082. Explain the shape. What is the optimum expenditure function?',marks:9}],
+   concepts:['Monopoly Equilibrium','Price Elasticity Constraint','Price Ceiling','Kinked Demand','Sweezy Model','Prisoner\'s Dilemma','Hicksian Demand','Expenditure Function'],
+   modelAnswer:'<p><strong>(a) Monopoly Price Limit:</strong> MR = P(1\u22121/|e|). For positive MR, |e|&gt;1 is required \u2014 monopolist always on elastic portion. Beyond a price, revenue and profit decline. For maximum output: set ceiling at P=MC. The demand becomes horizontal, making MR = ceiling price \u2192 monopolist produces competitive quantity.</p><p><strong>(b) Kinked Demand (Sweezy):</strong> Each firm believes rivals match price cuts but not increases \u2192 kink at prevailing price \u2192 gap in MR curve \u2192 sticky prices. <em>Prisoner\'s Dilemma:</em> Each firm prefers to undercut, but if both do, both earn less. Cooperation is unstable without binding agreements.</p><p><strong>(c) Compensated Demand:</strong> Minimise E = P\u2081q\u2081 + P\u2082q\u2082 subject to q\u2081\u1d45\u00b7q\u2082 = U\u2080. FOC: \u03b1q\u2082/q\u2081 = P\u2081/P\u2082 \u2192 Hicksian demands expressed in terms of P\u2081, P\u2082, and U. Shape: downward sloping in own price (pure substitution effect \u2014 no income effect). Expenditure function E*(P\u2081,P\u2082,U) is increasing in Pi and U, concave in prices.</p>',
+   tips:'For (c) show all FOC steps. Hicksian demand has no income effect by definition \u2014 state this explicitly. For (a) the price ceiling = MC insight is often missed. For (b) draw the kinked demand diagram with the MR gap \u2014 worth 3\u20134 marks.'},
+  {id:11,section:'C',num:'Q11',title:'No Supply Curve, Signalling & Public Sector Pricing',marks:25,marksNote:'7+8+10=25',topic:['micro','pub'],
+   parts:[{label:'a',text:'Explain graphically why there is no supply curve in a monopoly market.',marks:7},{label:'b',text:'What is market signalling? Distinguish between separating equilibrium and pooling equilibrium. Which is efficient?',marks:8},{label:'c',text:'Explain the pricing policy of public sector enterprises using long-run marginal cost based price. How is it different from public utility and rate of return approaches?',marks:10}],
+   concepts:['No Monopoly Supply Curve','Market Signalling','Separating Equilibrium','Pooling Equilibrium','Spence Model','LRMC Pricing','Average Cost Pricing','Averch-Johnson Effect'],
+   modelAnswer:'<p><strong>(a) No Supply Curve:</strong> A supply curve shows Q supplied at each price independent of demand. In monopoly, quantity depends on both MC AND the demand curve (via MR). The same price can correspond to different outputs with different demand curves \u2014 hence no unique price-quantity relationship.</p><p><strong>(b) Signalling:</strong> An informed party communicates private information to uninformed parties (e.g., education signals ability). <em>Separating equilibrium:</em> High-type and low-type choose different signals \u2192 types revealed \u2192 efficient. <em>Pooling equilibrium:</em> All choose same signal \u2192 no information revealed \u2192 less efficient. Separating equilibrium is generally more efficient.</p><p><strong>(c) Public Sector Pricing:</strong> <em>LRMC:</em> P = LRMC \u2192 allocative efficiency. Problem: natural monopolies have LRMC &lt; LAC \u2192 losses requiring subsidy. <em>Average Cost:</em> P = AC \u2192 break-even but allocatively inefficient. <em>Rate of Return:</em> Allows fair return on capital. Risk: Averch-Johnson effect \u2014 firms over-invest in capital \u2192 productive inefficiency.</p>',
+   tips:'For (a) draw two demand curves giving same price but different outputs \u2014 most compelling graphical argument. For (c) the Averch-Johnson effect distinguishes excellent answers from average ones.'},
+  {id:12,section:'C',num:'Q12',title:'Input-Output Analysis, Econometrics & Lorenz Curve',marks:25,marksNote:'15+5+5=25',topic:['stat','eco'],
+   parts:[{label:'a',text:'Given coefficient matrix (I: 0.20,0.25,0.10 | II: 0.15,0.10,0.05 | III: 0.10,0.05,0.15). (i) Interpret each row and column. (ii) Calculate Leontief Inverse. (iii) Find required output for D=[40,50,60].',marks:15},{label:'b',text:'Explain the role of random error in an econometric model. Differentiate between error and residual in linear regression.',marks:5},{label:'c',text:'State the Lorenz dominance principle. How is the Gini Coefficient related to the Lorenz curve?',marks:5}],
+   concepts:['Input-Output Analysis','Leontief Matrix','Technical Coefficients','Leontief Inverse','Random Error','Residual','Lorenz Curve','Gini Coefficient'],
+   modelAnswer:'<p><strong>(a) Input-Output:</strong> Element a\u1d62\u2c7c = units of industry i required to produce one unit of industry j. Row: how much of industry i is used across all industries. Column: input requirements per unit of industry j. <em>Leontief Inverse:</em> X = (I\u2212A)\u207b\u00b9\u00b7D where (I\u2212A) = [[0.80,\u22120.25,\u22120.10],[\u22120.15,0.90,\u22120.05],[\u22120.10,\u22120.05,0.85]] and D=[40,50,60]\'. This gives gross output each industry must produce to meet both intermediate and final demands.</p><p><strong>(b) Error vs Residual:</strong> <em>Error (\u03b5):</em> True unobservable population disturbance in Y=X\u03b2+\u03b5. <em>Residual (\u00ea):</em> Observable estimate \u00ea = Y\u2212X\u03b2\u0302 = Y\u2212\u0176. Error has zero mean by assumption; residuals sum to exactly zero by OLS construction.</p><p><strong>(c) Lorenz Dominance & Gini:</strong> Distribution A dominates B if A\'s Lorenz curve lies everywhere above B\'s \u2192 A is unambiguously more equal. Gini = 2 \u00d7 (area between perfect equality line and Lorenz curve). Gini \u2208 [0,1]. If Lorenz curves cross, Gini may give ambiguous comparisons \u2014 Lorenz dominance is the stronger criterion.</p>',
+   tips:'Part (a)(ii) \u2014 computing the 3\u00d73 Leontief inverse by hand \u2014 is hardest. Show the cofactor/adjoint method clearly; partial marks given for correct methodology. For (c) draw a Lorenz diagram and shade the Gini area.'},
+  {id:13,section:'C',num:'Q13',title:'Time Series, OLS/MLE & Heteroscedasticity',marks:25,marksNote:'9+8+8=25',topic:['eco'],
+   parts:[{label:'a',text:'Distinguish seasonal and cyclical fluctuation in time series. Describe a deseasonalisation method. Why deseasonalise before estimating linear trend?',marks:9},{label:'b',text:'Write the basic principles of OLS and MLE in estimating a linear regression model Y = X\u03b2 + \u03b5.',marks:8},{label:'c',text:'Explain why heteroscedasticity creates problems in linear regression. Suggest an estimation method. Why is heteroscedasticity more likely in cross-section than time-series data?',marks:8}],
+   concepts:['Seasonal Fluctuation','Cyclical Fluctuation','Moving Average','Deseasonalisation','OLS Principle','MLE Principle','BLUE','Gauss-Markov','Heteroscedasticity','WLS','White\'s Test'],
+   modelAnswer:'<p><strong>(a) Time Series:</strong> <em>Seasonal:</em> Regular calendar-based patterns within a year. <em>Cyclical:</em> Long-wave fluctuations over multiple years. <em>Ratio-to-Moving-Average:</em> (i) Compute centred 12-month MA; (ii) divide original by MA to get seasonal indices; (iii) average and normalise; (iv) divide original by indices \u2192 adjusted series. <em>Why deseasonalise:</em> Seasonal variation masks the true trend; OLS on raw data conflates seasonal effects with trend.</p><p><strong>(b) OLS vs MLE:</strong> <em>OLS:</em> Minimise \u03a3\u00ea\u1d62\u00b2. Solution: \u03b2\u0302 = (X\'X)\u207b\u00b9X\'Y. Under Gauss-Markov assumptions, OLS is BLUE \u2014 no distributional assumption needed. <em>MLE:</em> Under normality \u03b5~N(0,\u03c3\u00b2I), maximise log L. MLE gives same \u03b2\u0302 as OLS but estimates \u03c3\u00b2 as (1/n)\u03a3\u00ea\u1d62\u00b2 (biased) vs OLS s\u00b2=(1/(n\u2212k))\u03a3\u00ea\u1d62\u00b2 (unbiased).</p><p><strong>(c) Heteroscedasticity:</strong> Var(\u03b5\u1d62)=\u03c3\u1d62\u00b2 \u2260 \u03c3\u00b2. Problems: OLS remains unbiased but NOT BLUE (inefficient); standard errors incorrect \u2192 invalid t and F tests. <em>Remedy:</em> WLS (weight by 1/\u03c3\u1d62 when \u03c3\u1d62 known) or White\'s robust SE. <em>Why cross-section?</em> Cross-section has units of vastly different sizes (households, firms) \u2014 larger units tend to have larger error variance. Time-series of a single unit has more homogeneous variance.</p>',
+   tips:'For (b) key contrast: OLS requires only Gauss-Markov (no distributional assumption) while MLE requires normality. For (c) mention both WLS and White\'s robust SE. For (a) walk through ratio-to-MA steps in sequence.'}
+];
+
+// ── STORAGE: localStorage with silent in-memory fallback ──────────
+const STORAGE_KEY = 'ies_prep_2025';
+let _lsAvailable = false;
+try { localStorage.setItem('__test__','1'); localStorage.removeItem('__test__'); _lsAvailable = true; } catch(e) {}
+
+function loadState() {
+  if (_lsAvailable) {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch(e) {}
+  }
+  return { ratings: {}, answers: {} };
+}
+
+function saveState() {
+  if (_lsAvailable) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+  }
+  // in-memory state is always up to date — nothing extra needed for fallback
+}
+
+const state = loadState();
+// Ensure keys exist in case of partial saved data
+if (!state.ratings) state.ratings = {};
+if (!state.answers) state.answers = {};
+
+let currentQIndex = 0;
+let timerSeconds = 10800;
+let timerRunning = false;
+let timerInterval = null;
+
+function G(id){ return document.getElementById(id); }
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  G('screen-'+name).classList.add('active');
+  document.querySelector('.nav-btn[data-screen="'+name+'"]').classList.add('active');
+  if(name==='home') renderHome();
+  if(name==='practice') renderQuestion();
+  if(name==='mock') renderMock();
+  if(name==='analytics') renderAnalytics();
+}
+
+function renderHome() {
+  ['a','b','c'].forEach(s => {
+    const qs = QUESTIONS.filter(q => q.section===s.toUpperCase());
+    G('home-sec-'+s).innerHTML = qs.map(q => {
+      const idx = QUESTIONS.indexOf(q);
+      const r = state.ratings[q.id];
+      const dc = r==='good'?'dot-good':r==='ok'?'dot-ok':r==='poor'?'dot-poor':'';
+      return '<div class="q-row" data-idx="'+idx+'"><span class="q-num">'+q.num+'</span><div style="flex:1"><div class="q-text">'+q.title+'</div><div class="q-marks">'+q.marksNote+' marks</div></div><div class="status-dot '+dc+'"></div></div>';
+    }).join('');
+  });
+  const done = Object.keys(state.ratings).length;
+  G('stat-done').textContent = done;
+  const rs = Object.values(state.ratings);
+  if(rs.length>0){
+    const avg = rs.reduce((s,r)=>s+({good:3,ok:2,poor:1}[r]),0)/rs.length;
+    G('stat-score').textContent = avg>=2.5?'Good':avg>=1.5?'Partial':'Weak';
+  } else { G('stat-score').textContent='—'; }
+  document.querySelectorAll('.q-row').forEach(el => {
+    el.addEventListener('click', function(){ currentQIndex=parseInt(this.dataset.idx); showScreen('practice'); });
+  });
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQIndex];
+  G('prac-progress').textContent = q.num+' ('+( currentQIndex+1)+' of '+QUESTIONS.length+')';
+  G('prog-fill').style.width = Math.round(((currentQIndex+1)/QUESTIONS.length)*100)+'%';
+  G('user-answer').value = state.answers[q.id]||'';
+  G('model-answer-box').style.display='none';
+  const cc = {A:'chip-a',B:'chip-b',C:'chip-c'}[q.section];
+  const cl = {A:'Section A \u2014 Compulsory',B:'Section B \u2014 Attempt 5 of 7',C:'Section C \u2014 Attempt 3 of 5'}[q.section];
+  const ph = q.parts.length===1?'<div class="q-main">'+q.parts[0].text+'</div>':q.parts.map(p=>'<div class="q-part"><div class="q-part-label">('+p.label+') \u2014 '+p.marks+' marks</div>'+p.text+'</div>').join('');
+  G('q-display').innerHTML='<span class="section-chip '+cc+'">'+cl+'</span><div class="q-card"><div class="marks-tag">\u2726 '+q.marksNote+' marks</div>'+ph+'</div>';
+  document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));
+  if(state.ratings[q.id]) document.querySelector('.eval-btn[data-rating="'+state.ratings[q.id]+'"]').classList.add('sel');
+}
+
+function showModelAnswer() {
+  const q = QUESTIONS[currentQIndex];
+  state.answers[q.id] = G('user-answer').value;
+  saveState();
+  const box = G('model-answer-box');
+  box.style.display='block';
+  G('model-answer-content').innerHTML =
+    '<div class="model-section"><div class="model-section-title" style="color:var(--blue)">\u25c8 Key Concepts to Cover</div><div class="concept-pills">'+q.concepts.map(c=>'<span class="pill">'+c+'</span>').join('')+'</div></div>'+
+    '<div class="model-section"><div class="model-section-title" style="color:var(--green)">\u2713 Model Answer</div><div class="model-text">'+q.modelAnswer+'</div></div>'+
+    '<div class="model-section"><div class="model-section-title" style="color:var(--red)">! Examiner Tips</div><div class="tip-box">'+q.tips+'</div></div>';
+  document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));
+  if(state.ratings[q.id]) document.querySelector('.eval-btn[data-rating="'+state.ratings[q.id]+'"]').classList.add('sel');
+  setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function goNext(){if(currentQIndex<QUESTIONS.length-1){currentQIndex++;renderQuestion();G('screen-practice').scrollTop=0;}}
+function goPrev(){if(currentQIndex>0){currentQIndex--;renderQuestion();G('screen-practice').scrollTop=0;}}
+
+function renderMock() {
+  G('mock-q-grid').innerHTML = QUESTIONS.map((q,i)=>{
+    const r=state.ratings[q.id];
+    const bg=r==='good'?'var(--green-bg)':r==='ok'?'#fff3cd':r==='poor'?'var(--red-bg)':'#fff';
+    const co=r==='good'?'var(--green)':r==='ok'?'#6b4c00':r==='poor'?'var(--red)':'var(--ink)';
+    return '<button class="mock-q-btn" data-idx="'+i+'" style="background:'+bg+';color:'+co+'">'+q.num+'</button>';
+  }).join('');
+  document.querySelectorAll('.mock-q-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');});
+  });
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay(){
+  const h=Math.floor(timerSeconds/3600),m=Math.floor((timerSeconds%3600)/60),s=timerSeconds%60;
+  G('timer-display').textContent=h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+
+function renderAnalytics(){
+  const rs=state.ratings;
+  G('a-attempted').textContent=Object.keys(rs).length;
+  G('a-good').textContent=Object.values(rs).filter(r=>r==='good').length;
+  G('a-poor').textContent=Object.values(rs).filter(r=>r==='poor').length;
+  ['micro','mkt','pub','stat','eco'].forEach(tk=>{
+    const tqs=QUESTIONS.filter(q=>q.topic.includes(tk));
+    const pct=tqs.length?Math.round((tqs.filter(q=>rs[q.id]).length/tqs.length)*100):0;
+    G('tb-'+tk).style.width=pct+'%';
+    G('tp-'+tk).textContent=pct+'%';
+  });
+  const aqs=QUESTIONS.filter(q=>rs[q.id]);
+  G('history-list').innerHTML=aqs.length===0
+    ?'<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No questions attempted yet.</div>'
+    :aqs.map(q=>{const r=rs[q.id];const cls={good:'hs-good',ok:'hs-ok',poor:'hs-poor'}[r];const lbl={good:'Good \u2713',ok:'Partial ~',poor:'Needs Work \u2717'}[r];return '<div class="history-row" data-idx="'+QUESTIONS.indexOf(q)+'"><div class="history-q">'+q.num+': '+q.title+'</div><span class="history-status '+cls+'">'+lbl+'</span></div>';}).join('');
+  document.querySelectorAll('.history-row').forEach(el=>{
+    el.addEventListener('click',function(){currentQIndex=parseInt(this.dataset.idx);showScreen('practice');});
+  });
+}
+
+// ── BIND ALL EVENTS ──
+document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',function(){showScreen(this.dataset.screen);}));
+G('btn-back').addEventListener('click',()=>showScreen('home'));
+G('btn-prev').addEventListener('click',goPrev);
+G('btn-next').addEventListener('click',goNext);
+G('btn-next2').addEventListener('click',goNext);
+G('btn-show-answer').addEventListener('click',showModelAnswer);
+
+document.querySelectorAll('.eval-btn').forEach(btn=>btn.addEventListener('click',function(){
+  const q=QUESTIONS[currentQIndex];
+  state.ratings[q.id]=this.dataset.rating;
+  saveState();
+  document.querySelectorAll('.eval-btn').forEach(b=>b.classList.remove('sel'));
+  this.classList.add('sel');
+}));
+
+G('mode-timed').addEventListener('click',()=>{
+  G('mode-timed').classList.add('active');G('mode-free').classList.remove('active');
+  G('timer-bar').style.opacity='1';
+});
+G('mode-free').addEventListener('click',()=>{
+  G('mode-free').classList.add('active');G('mode-timed').classList.remove('active');
+  G('timer-bar').style.opacity='0.4';
+  clearInterval(timerInterval);timerRunning=false;
+  G('timer-start-btn').textContent='Start';G('timer-start-btn').classList.remove('running');
+});
+G('timer-start-btn').addEventListener('click',()=>{
+  if(G('mode-free').classList.contains('active')) return;
+  if(timerRunning){
+    clearInterval(timerInterval);timerRunning=false;
+    G('timer-start-btn').textContent='Resume';G('timer-start-btn').classList.remove('running');
+  } else {
+    timerRunning=true;G('timer-start-btn').textContent='Pause';G('timer-start-btn').classList.add('running');
+    timerInterval=setInterval(()=>{
+      if(timerSeconds>0){timerSeconds--;updateTimerDisplay();}
+      else{clearInterval(timerInterval);timerRunning=false;G('timer-start-btn').textContent='Done';G('timer-start-btn').classList.remove('running');}
+    },1000);
+  }
+});
+G('timer-reset-btn').addEventListener('click',()=>{
+  clearInterval(timerInterval);timerRunning=false;timerSeconds=10800;updateTimerDisplay();
+  G('timer-start-btn').textContent='Start';G('timer-start-btn').classList.remove('running');
+});
+G('btn-start-mock').addEventListener('click',()=>{currentQIndex=0;showScreen('practice');});
+G('btn-reset').addEventListener('click',()=>{
+  if(confirm('Reset all progress?')){
+    Object.keys(state.ratings).forEach(k=>delete state.ratings[k]);
+    Object.keys(state.answers).forEach(k=>delete state.answers[k]);
+    saveState();
+    renderAnalytics();renderHome();
+  }
+});
+
+// ── INIT ──
+renderHome();
+renderMock();
+</script>
+</body>
+</html>
